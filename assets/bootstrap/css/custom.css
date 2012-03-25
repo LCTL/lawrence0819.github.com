@@ -19,6 +19,10 @@ footer p { font-size: 12px; color: #999; }
 
 .navbar-inner { padding: 0 10px; }
 
+figure.code{ margin:0 }
+figure.code figcaption{ font-size:1.1em; }
+figure.code table{ width:100% }
+
 a:hover{ text-decoration: none; }
 
 /* Label fixes */

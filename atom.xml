@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-25T15:31:24+08:00</updated>
+  <updated>2012-03-26T00:32:15+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[由 Blogspot 搬家到 Octopress Github Page]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html"/>
+    <updated>2012-03-25T15:41:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/03/25/blogger-migrate-to-octopress-github-page</id>
+    <content type="html"><![CDATA[<p><img src="http://octopress.org/images/logo.png"></p>
+
+<p>由於在 Blogspot 的 Blog 頁面引入太多的 Javascript、CSS 和圖片，令到瀏覽速度援慢。反正要來一個大修改，倒不如連平台亦一起換掉。</p>
+
+<p>現在這個 Blog 是使用 Octopress Blogging Framework 管理文章並放到 Github page 上，速度算不錯，順便將廣告和一些不必要的功能全部移除掉，令整個版面更簡潔，閱讀起來比較舒服。</p>
+
+<p>Octopress 對比 Blogspot 的好處:</p>
+
+<ul>
+<li>方便插入程式碼，支援 Gist</li>
+<li>使用 Markdown 來編排交章格式，比 HTML 簡單得多</li>
+<li>快速，因為所有頁面都是靜態 HTML 內容</li>
+<li>方便使用 Git 管理</li>
+<li>高度自由，可自己寫一些 Plugin 或更改原有程式碼，製作 Theme 亦很簡單（我到現在亦不懂製作 Blogspot Theme）</li>
+<li>放到 Github page 或 Heroku 上，中國網民都可以瀏覽得到</li>
+</ul>
+
+
+<p>當然 Octopress 對比 Blogspot 亦有一些壞處:</p>
+
+<ul>
+<li>不能隨時隨地修改文章（因為沒有 Web admin console）</li>
+<li>對於普通用家來說，設定非常複雜</li>
+</ul>
+
+
+<p>其實要將 Blogspot 上的文章轉換成 Octopress 的文章格式亦很容易，已經有好心人提供了 Script 去轉換了。</p>
+
+<p>但這個 Script 有一個限制，就是最多支援 500 篇文章，所有文章都是 HTML 格式，而不是 Markdown。</p>
+
+<figure class='code'><figcaption><span>Blogspot posts migrate to Octopress posts</span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://gist.github.com/1807781
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>1807781
+</span><span class='line'><span class="nv">$ </span>./bloggerImport.sh &lt;blogname&gt; <span class="c"># &lt;blogname&gt;.blogspot.com</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果你的 Blogspot 使用了其他 Domain name，你需要修改 bloggerImport.sh:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span> -z <span class="s2">&quot;$WGET&quot;</span> <span class="o">]</span> <span class="o">||</span> wget <span class="s2">&quot;http://${BLOGGER}.blogspot.com/feeds/posts/full?alt=rss&amp;max-results=500&quot;</span> -O <span class="k">${</span><span class="nv">BLOGGER</span><span class="k">}</span>.xml
+</span><span class='line'><span class="o">[</span> -z <span class="s2">&quot;$CURL&quot;</span> <span class="o">]</span> <span class="o">||</span> curl <span class="s2">&quot;http://${BLOGGER}.blogspot.com/feeds/posts/full?alt=rss&amp;max-results=500&quot;</span> -o <span class="k">${</span><span class="nv">BLOGGER</span><span class="k">}</span>.xml
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>換為</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span> -z <span class="s2">&quot;$WGET&quot;</span> <span class="o">]</span> <span class="o">||</span> wget <span class="s2">&quot;http://&lt;your_domain&gt;/feeds/posts/full?alt=rss&amp;max-results=500&quot;</span> -O <span class="k">${</span><span class="nv">BLOGGER</span><span class="k">}</span>.xml
+</span><span class='line'><span class="o">[</span> -z <span class="s2">&quot;$CURL&quot;</span> <span class="o">]</span> <span class="o">||</span> curl <span class="s2">&quot;http://&lt;your_domain&gt;/feeds/posts/full?alt=rss&amp;max-results=500&quot;</span> -o <span class="k">${</span><span class="nv">BLOGGER</span><span class="k">}</span>.xml
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>執行後會多了一個 _posts 的資料夾，將這個資料夾放左 source 就可以了。</p>
+
+<p>以下是轉換程式的 Source Code:</p>
+
+<div><script src='https://gist.github.com/1807781.js?file='></script>
+<noscript><pre><code>jekyll
+</code></pre></noscript></div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Shacial 的資料庫設計]]></title>
@@ -181,15 +247,6 @@
     <updated>2011-01-07T15:24:00+08:00</updated>
     <id>http://pro.ctlok.com/2011/01/maven-jboss-embedded-seam-unit-test</id>
     <content type="html"><![CDATA[在 <b>Maven</b> 的測試中要測試 <b>Seam</b> 元件是需要一個 <b>Java EE</b> 的環境去運行 <b>Seam</b>，而 <b>Jboss</b> 亦提供了一個 Java EE 的環境去幫助我們去測試 Seam 元件，這個就是 <b>Jboss Embedded</b>。使用 <b>Jboss Embedded</b> 加上 <b>TestNG</b> 這一套 <b>Testing Framework</b>，很簡單就可以做到全自動測試。<br /><br />首先要在 <b>pom.xml</b> 去加入以下的 <b>dependency</b>:<br /><pre class="brush: xml">&lt;dependency&gt;<br />    &lt;groupId&gt;org.testng&lt;/groupId&gt;<br />    &lt;artifactId&gt;testng&lt;/artifactId&gt;<br />    &lt;version&gt;5.14.2&lt;/version&gt;<br />    &lt;type&gt;jar&lt;/type&gt;<br />    &lt;scope&gt;test&lt;/scope&gt;<br />&lt;/dependency&gt;<br /><br />&lt;dependency&gt;<br />    &lt;groupId&gt;org.jboss.seam.embedded&lt;/groupId&gt;<br />    &lt;artifactId&gt;jboss-embedded-api&lt;/artifactId&gt;<br />    &lt;version&gt;beta3.SP12&lt;/version&gt;<br />    &lt;type&gt;jar&lt;/type&gt;<br />    &lt;scope&gt;test&lt;/scope&gt;<br />    &lt;exclusions&gt;<br />        &lt;exclusion&gt;<br />            &lt;groupId&gt;org.jboss.microcontainer&lt;/groupId&gt;<br />            &lt;artifactId&gt;jboss-deployers-client-spi&lt;/artifactId&gt;<br />        &lt;/exclusion&gt;<br />        &lt;exclusion&gt;<br />            &lt;groupId&gt;org.jboss.microcontainer&lt;/groupId&gt;<br />            &lt;artifactId&gt;jboss-deployers-core-spi&lt;/artifactId&gt;<br />        &lt;/exclusion&gt;<br />    &lt;/exclusions&gt;<br />&lt;/dependency&gt;<br /><br />&lt;dependency&gt;<br /> &lt;groupId&gt;org.jboss.seam.embedded&lt;/groupId&gt;<br /> &lt;artifactId&gt;jboss-embedded-all&lt;/artifactId&gt;<br /> &lt;version&gt;beta3.SP12&lt;/version&gt;<br /> &lt;type&gt;jar&lt;/type&gt;<br /> &lt;scope&gt;test&lt;/scope&gt;<br />&lt;/dependency&gt;<br /><br />&lt;dependency&gt;<br /> &lt;groupId&gt;org.jboss.seam.embedded&lt;/groupId&gt;<br /> &lt;artifactId&gt;thirdparty-all&lt;/artifactId&gt;<br /> &lt;version&gt;beta3.SP12&lt;/version&gt;<br /> &lt;type&gt;jar&lt;/type&gt;<br /> &lt;scope&gt;test&lt;/scope&gt;<br />&lt;/dependency&gt;<br /><br />&lt;dependency&gt;<br /> &lt;groupId&gt;org.jboss.seam.embedded&lt;/groupId&gt;<br /> &lt;artifactId&gt;hibernate-all&lt;/artifactId&gt;<br /> &lt;version&gt;beta3.SP12&lt;/version&gt;<br /> &lt;type&gt;jar&lt;/type&gt;<br /> &lt;scope&gt;test&lt;/scope&gt;<br />&lt;/dependency&gt;<br /><br />&lt;dependency&gt;<br /> &lt;groupId&gt;javax.faces&lt;/groupId&gt;<br /> &lt;artifactId&gt;jsf-api&lt;/artifactId&gt;<br /> &lt;version&gt;1.2_13&lt;/version&gt;<br /> &lt;type&gt;jar&lt;/type&gt;<br /> &lt;scope&gt;test&lt;/scope&gt;<br />&lt;/dependency&gt;<br /></pre><br />加入後就到在 <b>Seam</b> 的下載檔案內找出 <b>bootstrap</b> 這個資料夾，然將這個資料夾複製到 <b>Maven Project</b> 的 src/test/resource 下，這個資料夾是起動 <b>Jboss Embedded</b> 的設定檔案。<br /><br />再到 <b>pom.xml</b> 加入以下的 <b>plugin</b>:<br /><pre class="brush: xml">&lt;plugin&gt;<br />    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;<br />    &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;<br />    &lt;configuration&gt;<br />        &lt;useManifestOnlyJar&gt;false&lt;/useManifestOnlyJar&gt;<br />        &lt;forkMode&gt;once&lt;/forkMode&gt;<br />        &lt;argLine&gt;-Dsun.lang.ClassLoader.allowArraySyntax=true&lt;/argLine&gt;<br />        &lt;additionalClasspathElements&gt;<br />            &lt;additionalClasspathElement&gt;${basedir}/src/resource/bootstrap&lt;/additionalClasspathElement&gt;<br />        &lt;/additionalClasspathElements&gt;<br />        &lt;suiteXmlFiles&gt;<br />            &lt;suiteXmlFile&gt;${project.build.testOutputDirectory}/testing.xml&lt;/suiteXmlFile&gt;<br />        &lt;/suiteXmlFiles&gt;<br />        &lt;classpathDependencyExcludes&gt;<br />            &lt;classpathDependencyExclude&gt;javaee:javaee-api&lt;/classpathDependencyExclude&gt;<br />            &lt;classpathDependencyExclude&gt;javax.ejb:ejb-api&lt;/classpathDependencyExclude&gt;<br />        &lt;/classpathDependencyExcludes&gt;<br />    &lt;/configuration&gt;<br />&lt;/plugin&gt;<br /></pre><br />如果你的 <b>pom.xml</b> 有加入到 <b>javaee-api</b> 或 <b>ejb-api</b> 的 dependency，在測試時不要將這 2 個 <b>JAR</b> 加到 <b>Classpath</b> 中，<b>Jboss Embedded</b> 會不能起動的。<br /><br />如果要連接 <b>Database</b>，可以在 src/test/resource/META-INF 加入一個 xxx-ds.xml 去設定 <b>Data Source</b>，<b>Jboss Embedded</b> 會自動加入此 <b>Data Source</b>。<br /><br /><b>Data Source</b> 的大概是以下的樣子:<br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />&lt;!DOCTYPE datasources<br />    PUBLIC &quot;-//JBoss//DTD JBOSS JCA Config 1.5//EN&quot;<br />    &quot;http://www.jboss.org/j2ee/dtd/jboss-ds_1_5.dtd&quot;&gt;<br />&lt;datasources&gt;<br /><br />    &lt;local-tx-datasource&gt;<br />        &lt;jndi-name&gt;jdbc/ctlok&lt;/jndi-name&gt;<br />        &lt;use-java-context&gt;true&lt;/use-java-context&gt;<br />        &lt;connection-url&gt;jdbc:oracle:thin:@pro.ctlok.com:1521:ctlok&lt;/connection-url&gt;<br />        &lt;driver-class&gt;oracle.jdbc.OracleDriver&lt;/driver-class&gt;<br />        &lt;user-name&gt;ctlok&lt;/user-name&gt;<br />        &lt;password&gt;ctlok&lt;/password&gt;<br />    &lt;/local-tx-datasource&gt;<br /><br />&lt;/datasources&gt;<br /></pre><br />在 <b>persistence.xml</b> 使用 <b>java:jdbc/ctlok</b> 的 <b>JNDI</b> 就可以找到 <b>Data Source</b> 了。<br /><br />設定大致上完成了，可以寫一些 <b>Test Class</b> 去測試一下。<br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Seam-Action-Dan-Allen/dp/1933988401?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Seam in Action" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1933988401&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1933988401" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Seam-Framework-Experience-Evolution-Java/dp/0137129394?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Seam Framework: Experience the Evolution of Java EE (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0137129394&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0137129394" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Practical-JBoss%C3%82%C2%AE-Seam-Projects-Farley/dp/1590598636?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Practical JBoss® Seam Projects" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1590598636&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1590598636" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-1166507011383147875?l=lawpronotes.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[將 Seam 的 Hibernate Persistence Provider 轉為 EclipseLink]]></title>
-    <link href="http://pro.ctlok.com/2010/10/seam-eclipselink-persistence-provider.html"/>
-    <updated>2010-10-07T11:51:00+08:00</updated>
-    <id>http://pro.ctlok.com/2010/10/seam-eclipselink-persistence-provider</id>
-    <content type="html"><![CDATA[<b>JBoss Seam Framework</b> 預設的 <b>Persistence Provider</b> 是 <b>Hibernate</b>，但 <b>Hibernate</b> 未必能夠滿足不同 <b>Database</b> 的需求，Seam 亦提供了一種方法將 <b>Hibernate</b> 轉為 <b>OpenJPA</b> 或其他 <b>Persistence Provider</b>。<br /><br />如果你需要將 <b>Hibernate</b> 轉為使用 <b>OpenJPA</b> 可參考這篇: <a href="http://seamframework.org/Documentation/UsingOpenJPAAsPersistenceProviderInsteadOfHibernate">http://seamframework.org/Documentation/UsingOpenJPAAsPersistenceProviderInsteadOfHibernate</a><br /><br />以下的是將 <b>Hibernate</b> 轉為使用 <b>EclipseLink</b> 的方法。<br /><br />首先要更改 <b>persistence.xml</b>:<br /><pre class="brush: xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence"<br /> xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br /> xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"<br /> version="1.0"&gt;<br /> &lt;persistence-unit name="ctlok" transaction-type="RESOURCE_LOCAL"&gt;<br />  &lt;provider&gt;org.eclipse.persistence.jpa.PersistenceProvider&lt;/provider&gt;<br />  &lt;non-jta-data-source&gt;jdbc/oracle&lt;/non-jta-data-source&gt;<br />  &lt;class&gt;com.ctlok.pro.entity.User&lt;/class&gt;<br />  &lt;class&gt;com.ctlok.pro.entity.UserInfo&lt;/class&gt;<br />  &lt;exclude-unlisted-classes&gt;false&lt;/exclude-unlisted-classes&gt;<br />  &lt;properties&gt;<br />   &lt;property name="eclipselink.target-server" value="Websphere" /&gt;<br />   &lt;property name="eclipselink.target-database" value="Oracle" /&gt;<br />   &lt;property name="eclipselink.logging.level" value="INFO" /&gt;<br />   &lt;property name="eclipselink.logging.timestamp" value="true" /&gt;<br />   &lt;property name="eclipselink.logging.session" value="true" /&gt;<br />   &lt;property name="eclipselink.logging.thread" value="false" /&gt;<br />   &lt;property name="eclipselink.logging.exceptions" value="true" /&gt;<br />   &lt;property name="eclipselink.cache.type.default" value="NONE" /&gt;<br />  &lt;/properties&gt;<br /> &lt;/persistence-unit&gt;<br />&lt;/persistence&gt;<br /></pre><br /><b>properties</b> 的設定請自行更改。<br /><br />重要的是: <br /><ul><li><b>transaction-type</b> 一定要是 <b>RESOURCE_LOCAL</b></li><li><b>provider</b> 改成是 <b>EclipseLink</b> 的 <b>PersistenceProvider</b></li><li>一定要是 <b>non-jta-data-source</b></li><li>將所有 <b>Entity Class</b> 也加到 <b>persistence.xml</b> 中</li></ul><br />設定好 <b>persistence.xml</b> 後，要設定 <b>components.xml</b>:<br /><br />在 <b>components.xml</b> 加入以下的設定:<br /><pre class="brush: xml">&lt;transaction:entity-transaction<br /> entity-manager=&quot;#{entityManager}&quot; /&gt;<br /><br />&lt;persistence:entity-manager-factory<br /> persistence-unit-name=&quot;ctlok&quot; name=&quot;entityManagerFactory&quot; startup=&quot;false&quot; /&gt;<br /><br />&lt;persistence:managed-persistence-context<br /> name=&quot;entityManager&quot; auto-create=&quot;true&quot; entity-manager-factory=&quot;#{entityManagerFactory}&quot; /&gt;<br /><br />&lt;component class=&quot;org.jboss.seam.persistence.PersistenceProvider&quot;<br /> name=&quot;org.jboss.seam.persistence.persistenceProvider&quot; scope=&quot;stateless&quot; /&gt;<br /></pre><br />請記得要更改 <b>persistence-unit-name</b> 為 <b>persistence.xml</b> 所設定的名稱。<br /><br />這樣就可以將 <b>Hibernate</b> 轉為使用 <b>EclipseLink</b> 了。<br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/JBoss-Seam-Simplicity-Power-Beyond/dp/0131347969?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="JBoss(R) Seam: Simplicity and Power Beyond Java(TM) EE" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0131347969&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0131347969" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Beginning-trade-JBoss-Experts-Voice/dp/143021922X?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Beginning JSF&amp;trade; 2 APIs and JBoss® Seam (Expert&#39;s Voice in Java)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=143021922X&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=143021922X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Beginning-trade-APIs-JBoss-ebook/dp/B003U89104?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Beginning JSF&amp;trade; 2 APIs and JBoss® Seam" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=B003U89104&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=B003U89104" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-6176392827455301235?l=lawpronotes.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
