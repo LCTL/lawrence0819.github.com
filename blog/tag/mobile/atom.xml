@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Mobile | Programming Design Notes]]></title>
-  <link href="http://lawrence0819.github.com/blog/tag/mobile/atom.xml" rel="self"/>
-  <link href="http://lawrence0819.github.com/"/>
-  <updated>2012-03-25T13:18:01+08:00</updated>
-  <id>http://lawrence0819.github.com/</id>
+  <link href="http://pro.ctlok.com/blog/tag/mobile/atom.xml" rel="self"/>
+  <link href="http://pro.ctlok.com/"/>
+  <updated>2012-03-25T13:21:25+08:00</updated>
+  <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[偵查用戶是否使用手機瀏覽]]></title>
-    <link href="http://lawrence0819.github.com/2010/06/detect-mobile-browser.html"/>
+    <link href="http://pro.ctlok.com/2010/06/detect-mobile-browser.html"/>
     <updated>2010-06-08T11:29:00+08:00</updated>
-    <id>http://lawrence0819.github.com/2010/06/detect-mobile-browser</id>
+    <id>http://pro.ctlok.com/2010/06/detect-mobile-browser</id>
     <content type="html"><![CDATA[<p>替公司做的網站需要知道用戶是否使用手機上來，但手機品牌很多，就算同一品牌也可能會有數款瀏覽器，又沒有那麼多手機可測試，幸好找到一個 Open Source 項目是可以偵查用戶是否使用手機上來的。<br /><br />這個 Open Source 項目支援八款不同語言和 Apache Server 上的設定，有 ASP、ASP.NET、ColdFusion、C#、JSP、Javascript、PHP、Python 等等。<br /><br />網址: <a href="http://detectmobilebrowser.com/">http://detectmobilebrowser.com/</a><br /><br />特定型號手機的 User Agent: <a href="http://en.wikipedia.org/wiki/List_of_user_agents_for_mobile_phones">http://en.wikipedia.org/wiki/List_of_user_agents_for_mobile_phones</a><br /><br />相關書籍: <a href="http://www.amazon.com/Mobile-Agents-Telecommunication-Applications-ebook/dp/B001E6P7K2?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Mobile Agents for Telecommunication Applications: 5th International Workshop, MATA 2003, Marakech, Morocco, October 8-10, 2003, Proceedings" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=B001E6P7K2&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=B001E6P7K2" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Mobile-Agents-Concepts-Mobility-Toolkit/dp/1558608176?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Mobile Agents: Basic Concepts, Mobility Models, and the Tracy Toolkit" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1558608176&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1558608176" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Customer-based-Service-Monitoring-Software-ebook/dp/B000QJMCCO?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Customer-based IP Service Monitoring with Mobile Software Agents" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=B000QJMCCO&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=B000QJMCCO" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-5366626106034627871?l=pro.ctlok.com' alt='' /></div></p>
 ]]></content>
   </entry>

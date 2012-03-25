@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: IDE | Programming Design Notes]]></title>
-  <link href="http://lawrence0819.github.com/blog/tag/ide/atom.xml" rel="self"/>
-  <link href="http://lawrence0819.github.com/"/>
-  <updated>2012-03-25T13:18:01+08:00</updated>
-  <id>http://lawrence0819.github.com/</id>
+  <link href="http://pro.ctlok.com/blog/tag/ide/atom.xml" rel="self"/>
+  <link href="http://pro.ctlok.com/"/>
+  <updated>2012-03-25T13:21:25+08:00</updated>
+  <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Eclipse Web Development Plugin - Aptana Studio]]></title>
-    <link href="http://lawrence0819.github.com/2011/03/eclipse-web-development-plugin-aptana.html"/>
+    <link href="http://pro.ctlok.com/2011/03/eclipse-web-development-plugin-aptana.html"/>
     <updated>2011-03-12T00:10:00+08:00</updated>
-    <id>http://lawrence0819.github.com/2011/03/eclipse-web-development-plugin-aptana</id>
+    <id>http://pro.ctlok.com/2011/03/eclipse-web-development-plugin-aptana</id>
     <content type="html"><![CDATA[<p>介紹一款非常好用的 <b>Web</b> 開發工具 - <b>Aptana Studio</b>。(其實我用了很久，以為已經發過文章介紹...）<br /><br />這款工具對編寫 <b>HTML</b>，<b>CSS</b> 和 <b>Javascript</b> 都非常有幫助，而且對 <b>Javascript Framework</b> (例如 <b>jQuery</b> 和 <b>Prototype</b> 等等) 有題示功能(需要再安裝 Plugin)，比起 Eclipse 預設的工具好用多了。<br /><br />除了 <b>HTML</b>，<b>CSS</b> 和 <b>Javascript</b> 外。<b>Aptana Studio</b> 亦支援 <b>Ruby</b>，<b>Python</b> 和 <b>PHP</b> 的開發 (<b>PHP</b> 支援已經停止更新)。<br /><br />官方網址: <a href="http://www.aptana.com/">http://www.aptana.com/</a><br /><br />下載頁面: <a href="http://www.aptana.com/products/studio2/download">http://www.aptana.com/products/studio2/download</a><br /><br />進入下載頁面後只需選擇 <b>Eclipse Plugin</b>，然後按 <b>Download</b>，就會出現 <b>Eclipse</b> 的 <b>Update Site URL</b>。<br /><br />如果不喜歡作為 <b>Eclipse Plugin</b> 去使用，亦可以下載安裝版本去使用 (我覺得安裝版沒有那麼方便...)。 <br /><br />亦可以試用開發版本的 <b>Aptana Studio 3</b>。現在的版本已經很穩定，我用的時候亦沒發現什麼 Bug 了。<br />下載頁面: <a href="http://www.aptana.com/products/studio3/download">http://www.aptana.com/products/studio3/download</a><br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Dynamic-Web-Programming-Beginners-Osborne/dp/0071633448?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Dynamic Web Programming: A Beginner&#39;s Guide (Beginner&#39;s Guide (Osborne Mcgraw Hill))" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0071633448&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0071633448" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Pro-Javascript-RIA-Techniques-Presentation/dp/1430219343?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Pro Javascript RIA Techniques: Best Practices, Performance and Presentation" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1430219343&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1430219343" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Aptana-RadRails-Development-comprehensive-professional/dp/1847193986?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Aptana RadRails: An IDE for Rails Development: A comprehensive guide to using RadRails to develop your Ruby on Rails projects in a professional and productive manner" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1847193986&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1847193986" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-1902012302779561873?l=pro.ctlok.com' alt='' /></div></p>
 ]]></content>
   </entry>

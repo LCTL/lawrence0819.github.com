@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Slf4j | Programming Design Notes]]></title>
-  <link href="http://lawrence0819.github.com/blog/tag/slf4j/atom.xml" rel="self"/>
-  <link href="http://lawrence0819.github.com/"/>
-  <updated>2012-03-25T13:18:01+08:00</updated>
-  <id>http://lawrence0819.github.com/</id>
+  <link href="http://pro.ctlok.com/blog/tag/slf4j/atom.xml" rel="self"/>
+  <link href="http://pro.ctlok.com/"/>
+  <updated>2012-03-25T13:21:25+08:00</updated>
+  <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[自訂 EclipseLink Logger]]></title>
-    <link href="http://lawrence0819.github.com/2011/12/customize-eclipselink-logger.html"/>
+    <link href="http://pro.ctlok.com/2011/12/customize-eclipselink-logger.html"/>
     <updated>2011-12-19T16:02:00+08:00</updated>
-    <id>http://lawrence0819.github.com/2011/12/customize-eclipselink-logger</id>
+    <id>http://pro.ctlok.com/2011/12/customize-eclipselink-logger</id>
     <content type="html"><![CDATA[<div class="separator" style="clear: both; text-align: center;"><a href="http://www.eclipse.org/eclipselink/images/logos/eclipselink-logo.png" imageanchor="1" style=""><img border="0" height="71" width="242" src="http://www.eclipse.org/eclipselink/images/logos/eclipselink-logo.png" /></a></div>
 
 

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: EclipseLink | Programming Design Notes]]></title>
-  <link href="http://lawrence0819.github.com/blog/tag/eclipselink/atom.xml" rel="self"/>
-  <link href="http://lawrence0819.github.com/"/>
-  <updated>2012-03-25T13:18:01+08:00</updated>
-  <id>http://lawrence0819.github.com/</id>
+  <link href="http://pro.ctlok.com/blog/tag/eclipselink/atom.xml" rel="self"/>
+  <link href="http://pro.ctlok.com/"/>
+  <updated>2012-03-25T13:21:25+08:00</updated>
+  <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[自訂 EclipseLink Logger]]></title>
-    <link href="http://lawrence0819.github.com/2011/12/customize-eclipselink-logger.html"/>
+    <link href="http://pro.ctlok.com/2011/12/customize-eclipselink-logger.html"/>
     <updated>2011-12-19T16:02:00+08:00</updated>
-    <id>http://lawrence0819.github.com/2011/12/customize-eclipselink-logger</id>
+    <id>http://pro.ctlok.com/2011/12/customize-eclipselink-logger</id>
     <content type="html"><![CDATA[<div class="separator" style="clear: both; text-align: center;"><a href="http://www.eclipse.org/eclipselink/images/logos/eclipselink-logo.png" imageanchor="1" style=""><img border="0" height="71" width="242" src="http://www.eclipse.org/eclipselink/images/logos/eclipselink-logo.png" /></a></div>
 
 
@@ -28,9 +28,9 @@
   
   <entry>
     <title type="html"><![CDATA[將 Seam 的 Hibernate Persistence Provider 轉為 EclipseLink]]></title>
-    <link href="http://lawrence0819.github.com/2010/10/seam-eclipselink-persistence-provider.html"/>
+    <link href="http://pro.ctlok.com/2010/10/seam-eclipselink-persistence-provider.html"/>
     <updated>2010-10-07T11:51:00+08:00</updated>
-    <id>http://lawrence0819.github.com/2010/10/seam-eclipselink-persistence-provider</id>
+    <id>http://pro.ctlok.com/2010/10/seam-eclipselink-persistence-provider</id>
     <content type="html"><![CDATA[<p><b>JBoss Seam Framework</b> 預設的 <b>Persistence Provider</b> 是 <b>Hibernate</b>，但 <b>Hibernate</b> 未必能夠滿足不同 <b>Database</b> 的需求，Seam 亦提供了一種方法將 <b>Hibernate</b> 轉為 <b>OpenJPA</b> 或其他 <b>Persistence Provider</b>。<br /><br />如果你需要將 <b>Hibernate</b> 轉為使用 <b>OpenJPA</b> 可參考這篇: <a href="http://seamframework.org/Documentation/UsingOpenJPAAsPersistenceProviderInsteadOfHibernate">http://seamframework.org/Documentation/UsingOpenJPAAsPersistenceProviderInsteadOfHibernate</a><br /><br />以下的是將 <b>Hibernate</b> 轉為使用 <b>EclipseLink</b> 的方法。<br /><br />首先要更改 <b>persistence.xml</b>:<br /><pre class="brush: xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence"<br /> xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br /> xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"<br /> version="1.0"&gt;<br /> &lt;persistence-unit name="ctlok" transaction-type="RESOURCE_LOCAL"&gt;<br />  &lt;provider&gt;org.eclipse.persistence.jpa.PersistenceProvider&lt;/provider&gt;<br />  &lt;non-jta-data-source&gt;jdbc/oracle&lt;/non-jta-data-source&gt;<br />  &lt;class&gt;com.ctlok.pro.entity.User&lt;/class&gt;<br />  &lt;class&gt;com.ctlok.pro.entity.UserInfo&lt;/class&gt;<br />  &lt;exclude-unlisted-classes&gt;false&lt;/exclude-unlisted-classes&gt;<br />  &lt;properties&gt;<br />   &lt;property name="eclipselink.target-server" value="Websphere" /&gt;<br />   &lt;property name="eclipselink.target-database" value="Oracle" /&gt;<br />   &lt;property name="eclipselink.logging.level" value="INFO" /&gt;<br />   &lt;property name="eclipselink.logging.timestamp" value="true" /&gt;<br />   &lt;property name="eclipselink.logging.session" value="true" /&gt;<br />   &lt;property name="eclipselink.logging.thread" value="false" /&gt;<br />   &lt;property name="eclipselink.logging.exceptions" value="true" /&gt;<br />   &lt;property name="eclipselink.cache.type.default" value="NONE" /&gt;<br />  &lt;/properties&gt;<br /> &lt;/persistence-unit&gt;<br />&lt;/persistence&gt;<br /></pre><br /><b>properties</b> 的設定請自行更改。<br /><br />重要的是: <br /><ul><li><b>transaction-type</b> 一定要是 <b>RESOURCE_LOCAL</b></li><li><b>provider</b> 改成是 <b>EclipseLink</b> 的 <b>PersistenceProvider</b></li><li>一定要是 <b>non-jta-data-source</b></li><li>將所有 <b>Entity Class</b> 也加到 <b>persistence.xml</b> 中</li></ul><br />設定好 <b>persistence.xml</b> 後，要設定 <b>components.xml</b>:<br /><br />在 <b>components.xml</b> 加入以下的設定:<br /><pre class="brush: xml">&lt;transaction:entity-transaction<br /> entity-manager=&quot;#{entityManager}&quot; /&gt;<br /><br />&lt;persistence:entity-manager-factory<br /> persistence-unit-name=&quot;ctlok&quot; name=&quot;entityManagerFactory&quot; startup=&quot;false&quot; /&gt;<br /><br />&lt;persistence:managed-persistence-context<br /> name=&quot;entityManager&quot; auto-create=&quot;true&quot; entity-manager-factory=&quot;#{entityManagerFactory}&quot; /&gt;<br /><br />&lt;component class=&quot;org.jboss.seam.persistence.PersistenceProvider&quot;<br /> name=&quot;org.jboss.seam.persistence.persistenceProvider&quot; scope=&quot;stateless&quot; /&gt;<br /></pre><br />請記得要更改 <b>persistence-unit-name</b> 為 <b>persistence.xml</b> 所設定的名稱。<br /><br />這樣就可以將 <b>Hibernate</b> 轉為使用 <b>EclipseLink</b> 了。<br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/JBoss-Seam-Simplicity-Power-Beyond/dp/0131347969?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="JBoss(R) Seam: Simplicity and Power Beyond Java(TM) EE" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0131347969&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0131347969" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Beginning-trade-JBoss-Experts-Voice/dp/143021922X?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Beginning JSF&amp;trade; 2 APIs and JBoss® Seam (Expert&#39;s Voice in Java)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=143021922X&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=143021922X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Beginning-trade-APIs-JBoss-ebook/dp/B003U89104?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Beginning JSF&amp;trade; 2 APIs and JBoss® Seam" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=B003U89104&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=B003U89104" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-6176392827455301235?l=pro.ctlok.com' alt='' /></div></p>
 ]]></content>
   </entry>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ERD | Programming Design Notes]]></title>
-  <link href="http://lawrence0819.github.com/blog/tag/erd/atom.xml" rel="self"/>
-  <link href="http://lawrence0819.github.com/"/>
-  <updated>2012-03-25T13:18:01+08:00</updated>
-  <id>http://lawrence0819.github.com/</id>
+  <link href="http://pro.ctlok.com/blog/tag/erd/atom.xml" rel="self"/>
+  <link href="http://pro.ctlok.com/"/>
+  <updated>2012-03-25T13:21:25+08:00</updated>
+  <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
     
@@ -15,18 +15,18 @@
   
   <entry>
     <title type="html"><![CDATA[Shacial 的資料庫設計]]></title>
-    <link href="http://lawrence0819.github.com/2012/03/shacial-database-design.html"/>
+    <link href="http://pro.ctlok.com/2012/03/shacial-database-design.html"/>
     <updated>2012-03-23T14:40:00+08:00</updated>
-    <id>http://lawrence0819.github.com/2012/03/shacial-database-design</id>
+    <id>http://pro.ctlok.com/2012/03/shacial-database-design</id>
     <content type="html"><![CDATA[<p><a href="http://www.shacial.com">Shacial</a> 上線時間差不多有 4 星期了，雖然使用的人並不多，但仍然想再將這個服務做得更加好。<br />在這裡我先公開資料庫設計給大家看看。以後可能會再公開程式碼。(Open Source Project ?)<br /><br />以下就是 <a href="http://www.shacial.com">Shacial</a> 的 ERD:<br /><br /><a href="http://3.bp.blogspot.com/-IuTFgpUweFM/T2wZLbHTBhI/AAAAAAAAA94/r_OJn2IS4Cc/s1600/ERD.png" imageanchor="1" style=""><img border="0" height="345" width="400" src="http://3.bp.blogspot.com/-IuTFgpUweFM/T2wZLbHTBhI/AAAAAAAAA94/r_OJn2IS4Cc/s400/ERD.png" /></a><br /><br />已經設計好支援檔案版本控制。下一步應該要想想如何支援 <b>News Feed</b>，即時的信息傳遞。<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-987543225069631026?l=pro.ctlok.com' alt='' /></div></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Eclipse Plugin - Clay Mark II for Entity-Relationship Model (ERD)]]></title>
-    <link href="http://lawrence0819.github.com/2010/02/eclipse-plugin-clay-mark-ii-for-entity.html"/>
+    <link href="http://pro.ctlok.com/2010/02/eclipse-plugin-clay-mark-ii-for-entity.html"/>
     <updated>2010-02-17T12:38:00+08:00</updated>
-    <id>http://lawrence0819.github.com/2010/02/eclipse-plugin-clay-mark-ii-for-entity</id>
+    <id>http://pro.ctlok.com/2010/02/eclipse-plugin-clay-mark-ii-for-entity</id>
     <content type="html"><![CDATA[<p>在 Eclipse 制作 ERD 的工具不是很多，Clay Mark II 這工具有收費版本和免費版本，免費版本不支援商業廠商出的資料庫，例如 Oracle 9i/10g/11g， IBM DB2，MSSQL 等等。而免費版本支援大部份開源資料庫，例如 MySQL，SQLite，PostgreSQL&nbsp;等等。如果你只是使用 MySQL 亦可下載&nbsp;MySQL Workbench，一樣有工具可制作 ERD。<br /><br />官方網址:&nbsp;<a href="http://www.azzurri.jp/en/clay/index.html">http://www.azzurri.jp/en/clay/index.html</a> <br /><br />安裝方法:<br /><br /><ol><li>按下 Eclipse 上方的選單</li><li>選擇 Install New Software</li><li>按下 Add</li><li>名稱輸入 Properties Editor</li><li>網址:&nbsp;<a href="http://www.azzurri.co.jp/eclipse/plugins/">http://www.azzurri.co.jp/eclipse/plugins/</a></li><li>按下 OK</li><li>選取&nbsp;Clay Mark II</li><li>按下 Next</li><li>跟步驟完成安裝</li></ol><div>相關書籍:&nbsp;<a href="http://www.amazon.com/Extended-Entity-Relationship-Model-Fundamentals-Pragmatics/dp/3540576487?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="An Extended Entity-Relationship Model: Fundamentals and Pragmatics (Lecture Notes in Computer Science)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=3540576487&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=3540576487" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Data-Model-Resource-Book-Vol/dp/0470178450?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="The Data Model Resource Book, Vol. 3: Universal Patterns for Data Modeling" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0470178450&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0470178450" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Critical-evaluation-conceptual-data-models/dp/B000RR36D4?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Critical evaluation of conceptual data models [An article from: International Journal of Accounting Information Systems]" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=B000RR36D4&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=B000RR36D4" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-3304731020802072317?l=pro.ctlok.com' alt='' /></div></p>
 ]]></content>
   </entry>
