@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Windows | Programming Design Notes]]></title>
+  <link href="http://lawrence0819.github.com/blog/tag/windows/atom.xml" rel="self"/>
+  <link href="http://lawrence0819.github.com/"/>
+  <updated>2012-03-25T11:22:02+08:00</updated>
+  <id>http://lawrence0819.github.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在 Windows 手動移除 PostgreSQL 8.4]]></title>
+    <link href="http://lawrence0819.github.com/2010/03/windows-postgresql-84.html"/>
+    <updated>2010-03-31T11:57:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2010/03/windows-postgresql-84</id>
+    <content type="html"><![CDATA[<p>如果你在安裝&nbsp;PostgreSQL 中途發生錯誤，而又用不到 Uninstaller 去移除&nbsp;PostgreSQL，可以跟以下的步驟去手動移除然後重新安裝。<br /><ol><li>移除安裝目錄: <b>rd /s /q "C:\Program Files\PostgreSQL\8.4</b></li><li>移除 PostgreSQL 的用戶: <b>net user postgres /delete</b></li><li>移除在 Registry 的安裝資料: <b>HKEY_LOCAL_MACHINE\SOFTWARE\PostgreSQL\Installations\postgresql-8.4</b></li><li>移除在 Registry 的服務資料: <b>HKEY_LOCAL_MACHINE\SOFTWARE\PostgreSQL\Services\postgresql-8.4</b></li><li>移除 PostgreSQL 服務:&nbsp;<b>sc delete postgresql-8.4</b></li></ol><div>相關書籍:&nbsp;<a href="http://www.amazon.com/PostgreSQL-8-4-Official-Documentation-Language/dp/1596821582?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="PostgreSQL 8.4 Official Documentation - Volume I. The SQL Language" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1596821582&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1596821582" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/PostgreSQL-8-4-Official-Documentation-Programming/dp/1596821604?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="PostgreSQL 8.4 Official Documentation - Volume III. Server Programming" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1596821604&amp;tag=program06-20" /></a><a href="http://www.amazon.com/PostgreSQL-8-4-Official-Documentation-Administration/dp/1596821590?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="PostgreSQL 8.4 Official Documentation - Volume II. Server Administration" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1596821590&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1596821590" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1596821604" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-2876045594631775164?l=pro.ctlok.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+</feed>

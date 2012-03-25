@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Shacial | Programming Design Notes]]></title>
+  <link href="http://lawrence0819.github.com/blog/tag/shacial/atom.xml" rel="self"/>
+  <link href="http://lawrence0819.github.com/"/>
+  <updated>2012-03-25T11:22:02+08:00</updated>
+  <id>http://lawrence0819.github.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Shacial 的資料庫設計]]></title>
+    <link href="http://lawrence0819.github.com/2012/03/shacial-database-design.html"/>
+    <updated>2012-03-23T14:40:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2012/03/shacial-database-design</id>
+    <content type="html"><![CDATA[<p><a href="http://www.shacial.com">Shacial</a> 上線時間差不多有 4 星期了，雖然使用的人並不多，但仍然想再將這個服務做得更加好。<br />在這裡我先公開資料庫設計給大家看看。以後可能會再公開程式碼。(Open Source Project ?)<br /><br />以下就是 <a href="http://www.shacial.com">Shacial</a> 的 ERD:<br /><br /><a href="http://3.bp.blogspot.com/-IuTFgpUweFM/T2wZLbHTBhI/AAAAAAAAA94/r_OJn2IS4Cc/s1600/ERD.png" imageanchor="1" style=""><img border="0" height="345" width="400" src="http://3.bp.blogspot.com/-IuTFgpUweFM/T2wZLbHTBhI/AAAAAAAAA94/r_OJn2IS4Cc/s400/ERD.png" /></a><br /><br />已經設計好支援檔案版本控制。下一步應該要想想如何支援 <b>News Feed</b>，即時的信息傳遞。<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-987543225069631026?l=pro.ctlok.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[自行開發的檔案分享應用程式 - Shacial]]></title>
+    <link href="http://lawrence0819.github.com/2012/02/shacial-web-application.html"/>
+    <updated>2012-02-28T18:21:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2012/02/shacial-web-application</id>
+    <content type="html"><![CDATA[<p>用了 3 個多月時間，終於完成了這個應用程式。<br /><br />這個應用程式是一個網路硬碟，但不像一般網路硬碟只是拿來備份東西或發放某些東西，<b>Shacial</b> 著重於分享的功能，雖然現在還有很大部份功能仍然開發中，但基本的功能如: 共同協作、傳送檔案、圖片空間或公開檔案等等已經完成。<br /><br />背後儲存檔案的是 <b>Amazon S3</b> 加上 <b>EC2</b> 作為 <b>Web Server</b>，速度有一定保證。<br /><br />希望各位網友能夠試用這個應用程式並給小弟一點點意見。<br /><br />現時測試為每一個用戶提供 <b>2GB</b> 的空間，並不設類型限制和單一檔案容量上限 (只要不超過配額就可以上載)。<br /><br /><a href="http://www.shacial.com/">http://www.shacial.com/</a><br /><br />如有任何問題可用電子郵件聯絡我。<br /><br />2012-03-11: 提供 Facebook 和 Google account 登入<br /><br />測試貼圖:<br />193 KB<br /><a href="http://www.shacial.com/f/12/logo-java-blue.png"><img src="http://www.shacial.com/f/12/logo-java-blue.png" style="width:30%;height:30%" /></a><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-3995517410954114390?l=pro.ctlok.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+</feed>

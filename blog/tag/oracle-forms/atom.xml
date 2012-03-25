@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Oracle Forms | Programming Design Notes]]></title>
+  <link href="http://lawrence0819.github.com/blog/tag/oracle-forms/atom.xml" rel="self"/>
+  <link href="http://lawrence0819.github.com/"/>
+  <updated>2012-03-25T11:22:02+08:00</updated>
+  <id>http://lawrence0819.github.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Oracle Forms Builder + IE 8]]></title>
+    <link href="http://lawrence0819.github.com/2010/05/oracle-forms-builder-ie-8.html"/>
+    <updated>2010-05-28T12:17:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2010/05/oracle-forms-builder-ie-8</id>
+    <content type="html"><![CDATA[<p>安裝好 Forms Builder 後使用 IE 8 打開時會提示安裝 Oracle JInitiator，可在這裡下載最新版本: <a href="http://www.oracle.com/technology/software/products/developer/htdocs/jinit.htm">Oracle JInitiator</a><br /><br />安裝完成後再次使用 IE 8 開啟，IE 8 會沒有反應。<br />解決方法是使用 Java 的 jvm.dll 而不使用 JInitiator 的 jvm.dll，將<br />C:\Program Files\Java\jre6\bin\client\jvm.dll 複製到<br />C:\Program Files\Oracle\JInitiator 1.x.x.x\bin\hotspot (記得將 jvm.dll 備份)<br /><br />然後到開啟 IE 並修改設定:<br /><ol><li>工具 -&gt; 網際網路選項 -&gt; 安全性 -&gt; 自訂 -&gt; 停用 XSS 篩選器</li><li>工具 -&gt; 網際網路選項&nbsp;-&gt; 進階 -&gt; 不要選取 "啟用記憶體保護以拹助防止網路攻擊"</li></ol><div>如果用了以上的方法還是有問題，可下載這個&nbsp;<a href="http://sites.google.com/site/lawrencespace/lawpronotes/download/jvm.zip">jvm.zip</a>&nbsp;放到&nbsp;:\Program Files\Oracle\JInitiator 1.x.x.x\bin\hotspot 下。</div><div><br /></div><div>現在應該沒有問題的了。</div><div><br /></div><div><a href="http://www.amazon.com/Oracle-Forms-Interactive-Workbook-Motivala/dp/0130158089?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Oracle Forms Interactive Workbook" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0130158089&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0130158089" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Oracle-Developer-Advanced-Forms-Reports/dp/0072120487?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Oracle Developer Advanced Forms and Reports" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0072120487&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0072120487" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Oracle-Developer-Techniques-Bulusu-Lakshman/dp/0672318466?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Oracle Developer Forms Techniques" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0672318466&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0672318466" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-9155037019807592498?l=pro.ctlok.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+</feed>

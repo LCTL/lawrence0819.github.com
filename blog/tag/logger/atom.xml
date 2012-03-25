@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Logger | Programming Design Notes]]></title>
+  <link href="http://lawrence0819.github.com/blog/tag/logger/atom.xml" rel="self"/>
+  <link href="http://lawrence0819.github.com/"/>
+  <updated>2012-03-25T11:22:02+08:00</updated>
+  <id>http://lawrence0819.github.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[自訂 EclipseLink Logger]]></title>
+    <link href="http://lawrence0819.github.com/2011/12/customize-eclipselink-logger.html"/>
+    <updated>2011-12-19T16:02:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2011/12/customize-eclipselink-logger</id>
+    <content type="html"><![CDATA[<div class="separator" style="clear: both; text-align: center;"><a href="http://www.eclipse.org/eclipselink/images/logos/eclipselink-logo.png" imageanchor="1" style=""><img border="0" height="71" width="242" src="http://www.eclipse.org/eclipselink/images/logos/eclipselink-logo.png" /></a></div>
+
+
+<br /><br />預設的 <b>EclipseLink logger</b> 是會將所有訊息都會打印到 <b>System.out</b> 去，但 <b>System.out</b> 的記錄通常很難查找。如果不同的應用程式都在同一台 <b>Server</b> 上運行就更加混亂，不同的應用程式都會向 <b>System.out</b> 送出資料，根本不能拿來分析特定一個應用程式的行為。通常做法是會將不同的應用程式都設定不同的日誌檔案，以便分析。<br /><br />要將 <b>EclipseLink</b> 的日誌寫到自己的日誌檔案是很簡單的，只需 <b>Extend</b> <b>org.eclipse.persistence.logging.AbstractSessionLog</b> 這個 <b>class</b>，並且實現 <b>public void log(SessionLogEntry sessionLogEntry)</b> 就可以了，以下有一個例子是將 <b>EclipseLink</b> 的日誌經由 <b>Slf4j</b> 傳送到自訂的日誌檔案中。<br /><br /><pre class="brush: java">package com.ctlok.pro.log<br /><br />import org.eclipse.persistence.logging.AbstractSessionLog;<br />import org.eclipse.persistence.logging.SessionLogEntry;<br /><br />import org.slf4j.Logger;<br />import org.slf4j.LoggerFactory;<br /><br />public class MyEclipseLinkLogger extends AbstractSessionLog {<br />    <br />    private static final Logger logger = LoggerFactory.getLogger(MyEclipseLinkLogger.class);<br />    <br />    @Override<br />    public void log(SessionLogEntry sessionLogEntry) {<br />        switch (sessionLogEntry.getLevel()) {<br />        case SEVERE:<br />            logger.error(sessionLogEntry.getMessage());<br />            break;<br />        case WARNING:<br />            logger.warn(sessionLogEntry.getMessage());<br />            break;<br />        case INFO:<br />            logger.info(sessionLogEntry.getMessage());<br />            break;<br />        case FINE:<br />        default:<br />            logger.debug(sessionLogEntry.getMessage());<br />        }<br />    }<br />    <br />}<br /></pre><br />然後在 persistence.xml 的 propertiese 中加上:<br /><pre class="brush:xml">&lt;property name=&quot;eclipselink.logging.logger&quot; value=&quot;com.ctlok.pro.log.MyEclipseLinkLogger &quot;/&gt;<br /></pre><br />這樣就可以令 <b>EclipseLink</b> 使用自訂的 <b>Logger</b> 去打印日誌了。<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-5255208762444246598?l=pro.ctlok.com' alt='' /></div>
+
+]]></content>
+  </entry>
+  
+</feed>

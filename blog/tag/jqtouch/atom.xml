@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: jQTouch | Programming Design Notes]]></title>
+  <link href="http://lawrence0819.github.com/blog/tag/jqtouch/atom.xml" rel="self"/>
+  <link href="http://lawrence0819.github.com/"/>
+  <updated>2012-03-25T11:22:02+08:00</updated>
+  <id>http://lawrence0819.github.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iPhone Web App Framework - jQTouch]]></title>
+    <link href="http://lawrence0819.github.com/2010/07/iphone-web-app-framework-jqtouch-ajax.html"/>
+    <updated>2010-07-22T10:32:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2010/07/iphone-web-app-framework-jqtouch-ajax</id>
+    <content type="html"><![CDATA[<p>發現了一款 <b>Open Source</b> 的工具，可以用來開發 <b>iPhone Web App</b>。<br /><br /><b>jQTouch</b> 是一款基於 <b>jQuery Javascript Framework</b> 開發給 <b>iPhone / iPad / iPoad Touch</b> 使用的一套 <b>Framework</b>，擁有比 <b>iWebKit</b> 更華麗的特效，亦可以自由去替換各種主題 (Theme)，因為是建基於 <b>jQuery</b>，因此可以自由加入插件 (Extensions)。<b>jQTouch</b> 亦已經處理了一些只有在手機裝置 (Mobile Device) 上或觸摸屏 (Touch Screen) 上發生的事件 (Event)。和 <b>iWebKit</b> 最大分別的地方是使用了 <b>AJAX</b> 技術去拿取資料，即是說你的瀏覽器不會去跳頁，這樣可以增加瀏覽速度，令用戶有更好的瀏覽體驗。<br /><br />我這樣說應該也不會太明白的，看看以下的影片吧:<br /><br /><object height="480" width="320"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=6353874&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=6353874&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="320" height="480"></embed></object><br /><a href="http://vimeo.com/6353874">jQTouch Preview</a> from <a href="http://vimeo.com/davidkaneda">David Kaneda</a> on <a href="http://vimeo.com/">Vimeo</a>.<br /><br /><b>jQTouch</b> 網址: <a href="http://jqtouch.com/">http://jqtouch.com/</a><br />示範網址: <a href="http://jqtouch.com/preview/demos/main/#home">Demo</a><br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Beginning-iPhone-Web-Apps-JavaScript/dp/1430230061?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Beginning iPhone Web Apps: HTML5, CSS3, and JavaScript for WebKit" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1430230061&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1430230061" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Building-iPhone-Apps-HTML-JavaScript/dp/0596805780?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Building iPhone Apps with HTML, CSS, and JavaScript: Making App Store Apps Without Objective-C or Cocoa" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596805780&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596805780" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Learn-iPhone-iPad-Web-Development/dp/1430230452?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Learn iPhone &amp; iPad Web App Development: Mobile Web Standards, UI Design, HTML5, CSS3, and JavasScript" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1430230452&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1430230452" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-8872033409645374925?l=pro.ctlok.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+</feed>

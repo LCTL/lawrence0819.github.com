@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Subversion | Programming Design Notes]]></title>
+  <link href="http://lawrence0819.github.com/blog/tag/subversion/atom.xml" rel="self"/>
+  <link href="http://lawrence0819.github.com/"/>
+  <updated>2012-03-25T11:22:02+08:00</updated>
+  <id>http://lawrence0819.github.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Eclipse Subversion Plugin - Subclipse]]></title>
+    <link href="http://lawrence0819.github.com/2010/04/eclipse-subversion-plugin-subclipse.html"/>
+    <updated>2010-04-16T22:45:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2010/04/eclipse-subversion-plugin-subclipse</id>
+    <content type="html"><![CDATA[<p>Subclipse 在這裡下載: http://subclipse.tigris.org/servlets/ProjectProcess?pageID=p4wYuA<br />安裝後發現是中文，想轉回英文的可以在 eclipse.ini 加上 -Duser.language=en。<br />亦可以在啟動時加入參數(以下是在 Mac OSX 10.6 環境，Linux 環境應該也一樣):<br /><pre class="brush: bash">/Applications/eclipse/eclipse -nl en_us<br /></pre><br />Windows 環境可以建立捷徑，然後在目標那行的最尾加上 -nl en_us。<br />即是像以下這樣:<br /><pre class="brush: text">&quot;C:\xxx\xxxx\xxxx\xxxx\eclipse\eclipse.exe&quot; -nl en_us<br /></pre><br />Subclipse 本身沒有選項提供轉換語言，還是我找不到?<br /><br />相關書籍: <a href="http://www.amazon.com/Pragmatic-Version-Control-Subversion-Starter/dp/0977616657?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Pragmatic Version Control: Using Subversion (The Pragmatic Starter Kit Series)(2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0977616657&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0977616657" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Version-Control-Subversion-1-6-Reference/dp/1440495874?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Version Control With Subversion for Subversion 1.6: The Official Guide And Reference Manual" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1440495874&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1440495874" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Managing-Software-Development-Trac-Subversion/dp/1847191665?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Managing Software Development with Trac and Subversion: Simple project management for software development." src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1847191665&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1847191665" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-6022660532383347792?l=pro.ctlok.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[免費的 Subversion Server]]></title>
+    <link href="http://lawrence0819.github.com/2010/04/subversion-server.html"/>
+    <updated>2010-04-16T21:23:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2010/04/subversion-server</id>
+    <content type="html"><![CDATA[<p>網址:&nbsp;<a href="http://www.javaforge.com/project/11">http://www.javaforge.com/project/11</a><br /><br />這個 Subversion Server 的服務不單止是免費，還可以將 Project 設定為私人 (Private) ，即是說不會好像 Google 的 Subversion Server 服務要將原始碼公開出來，而且可以將權限設定得很仔細。速度方面還可接受，不算太慢，除了 Subversion 外，還有以下這些選擇:<br /><ol><li>CVS&nbsp;</li><li>Mercurial&nbsp;</li><li>Git&nbsp;</li><li>Telelogic CM Synergy&nbsp;</li><li>Microsoft Visual Source Safe&nbsp;</li><li>PVCS&nbsp;</li><li>Rational ClearCase</li></ol><br />相關書籍:&nbsp;<a href="http://www.amazon.com/Version-Control-Subversion-Michael-Pilato/dp/0596510330?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Version Control with Subversion" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0596510330&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0596510330" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Version-Control-Subversion-Official-Reference/dp/1441437762?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Version Control With Subversion - The Official Guide And Reference Manual" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1441437762&amp;tag=program06-20" /></a><a href="http://www.amazon.com/Practical-Subversion-Second-Experts-Source/dp/1590597532?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Practical Subversion, Second Edition (Expert's Voice in Open Source)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1590597532&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1590597532" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1441437762" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-3432062025953571414?l=pro.ctlok.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+</feed>

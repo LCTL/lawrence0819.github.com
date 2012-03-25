@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Properties | Programming Design Notes]]></title>
+  <link href="http://lawrence0819.github.com/blog/tag/properties/atom.xml" rel="self"/>
+  <link href="http://lawrence0819.github.com/"/>
+  <updated>2012-03-25T11:22:02+08:00</updated>
+  <id>http://lawrence0819.github.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Eclipse Plugin - Properties Editor]]></title>
+    <link href="http://lawrence0819.github.com/2010/02/eclipse-plugin-properties-editor.html"/>
+    <updated>2010-02-08T11:23:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2010/02/eclipse-plugin-properties-editor</id>
+    <content type="html"><![CDATA[<p>在 properties 檔案是不能輸入中文字的，一定要將中文字變成 Unicode 才可以，雖然 Java 已經有一個&nbsp;natice2ascii 的工具，但還是不夠方便，上網找一找便發現了一個非常方便的工具。<br /><br />Eclupse Plugin 的網址:&nbsp;<a href="http://propedit.sourceforge.jp/index_en.html">http://propedit.sourceforge.jp/index_en.html</a><br /><br />這工具會自動將中文字轉換成 Unicode。<br /><br />安裝方法<br /><br /><ol><li>按下 Eclipse 上方的選單</li><li>選擇 Install New Software</li><li>按下 Add</li><li>名稱輸入 Properties Editor</li><li>網址:&nbsp;<a href="http://propedit.sourceforge.jp/eclipse/updates/">http://propedit.sourceforge.jp/eclipse/updates/</a></li><li>按下 OK</li><li>選取&nbsp;Properties Editor</li><li>按下 Next</li><li>跟步驟完成安裝</li></ol><div>相關書籍:&nbsp;<a href="http://www.amazon.com/Head-First-Java-Kathy-Sierra/dp/0596009208?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Head First Java, 2nd Edition" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0596009208&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0596009208" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Effective-Java-2nd-Joshua-Bloch/dp/0321356683?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Effective Java (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0321356683&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0321356683" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Introduction-Java-Programming-Comprehensive-Version/dp/0136012671?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Introduction to Java Programming, Comprehensive Version (7th Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0136012671&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0136012671" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-5072301891665260963?l=pro.ctlok.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+</feed>

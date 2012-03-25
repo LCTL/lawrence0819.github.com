@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Xcode | Programming Design Notes]]></title>
+  <link href="http://lawrence0819.github.com/blog/tag/xcode/atom.xml" rel="self"/>
+  <link href="http://lawrence0819.github.com/"/>
+  <updated>2012-03-25T11:22:02+08:00</updated>
+  <id>http://lawrence0819.github.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[用新的 iPhone SDK 開發舊系統的應用程式]]></title>
+    <link href="http://lawrence0819.github.com/2010/07/new-iphone-sdk-develop-old-version-app.html"/>
+    <updated>2010-07-20T17:45:00+08:00</updated>
+    <id>http://lawrence0819.github.com/2010/07/new-iphone-sdk-develop-old-version-app</id>
+    <content type="html"><![CDATA[<p>新的 <b>iPhone SDK 4</b> 已經推出了，但手上又沒有升級了 <b>iOS 4</b> 的 <b>iPhone</b> 提供測試，你可以在 <b>Xcode</b> 內設置回舊版本的 <b>iPhone</b> 可用的應用程式。<br /><br />首先打開你的 <b>Project</b>，然後開啟 <b>Project Setting</b>:<br /><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/TEVuigLip1I/AAAAAAAAAmQ/RNh354D9hJI/s1600/xcode1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="276" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/TEVuigLip1I/AAAAAAAAAmQ/RNh354D9hJI/s320/xcode1.png" width="320" /></a></div><br />打開後在搜尋位置打上 <b>deployment</b>，找到 <b>iPhone OS Deployment Target</b>:<br /><div class="separator" style="clear: both; text-align: left;"><a href="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TEVukW6RHDI/AAAAAAAAAmU/DtYwsA4WUik/s1600/xcode2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="285" src="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TEVukW6RHDI/AAAAAAAAAmU/DtYwsA4WUik/s320/xcode2.png" width="320" /></a></div><br />將 <b>OS</b> 版本改回你想要的版本:<br /><div class="separator" style="clear: both; text-align: left;"><a href="http://2.bp.blogspot.com/_fDN8R2Wgbcs/TEVuk0J-aBI/AAAAAAAAAmY/JrqpQROICPY/s1600/xcode3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="136" src="http://2.bp.blogspot.com/_fDN8R2Wgbcs/TEVuk0J-aBI/AAAAAAAAAmY/JrqpQROICPY/s320/xcode3.png" width="320" /></a></div><br />這樣就可以了，我已在實機測試過是沒問題的。<br /><br />相關書籍: <a href="http://www.amazon.com/Iphone-Advanced-Programming-Advanced-Development-Apple/dp/0470971231?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Iphone SDK 4 Advanced Programming--Advanced Development for Apple Iphone &amp; iPod Touch" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0470971231&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0470971231" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/iPhone-SDK-Programming-Beginners-Guide/dp/0071626492?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="iPhone SDK Programming, A Beginner's Guide" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0071626492&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0071626492" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Beginning-iPhone-Programming-Objective-C-Programmer/dp/0470500972?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Beginning iPhone SDK Programming with Objective-C (Wrox Programmer to Programmer)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0470500972&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0470500972" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-4348132161334068763?l=pro.ctlok.com' alt='' /></div></p>
+]]></content>
+  </entry>
+  
+</feed>
