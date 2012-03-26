@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Octopress | Programming Design Notes]]></title>
+  <link href="http://pro.ctlok.com/blog/tag/octopress/atom.xml" rel="self"/>
+  <link href="http://pro.ctlok.com/"/>
+  <updated>2012-03-26T22:10:22+08:00</updated>
+  <id>http://pro.ctlok.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在 Windows 設定 Octopress]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/03/26/windows-install-octopress.html"/>
+    <updated>2012-03-26T12:13:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/03/26/windows-install-octopress</id>
+    <content type="html"><![CDATA[<p>因為公司的電腦是 Windows，又想閒來沒事時可以寫寫文章，所以需要在 Windows 上設定 Octopress。
+在 Windows 上要設定好 <a href="http://octopress.org/">Octopress</a> 是比在 Mac 上麻煩得多。</p>
+
+<h3>Install Ruby</h3>
+
+<p>首先要安裝 <a href="http://www.ruby-lang.org">Ruby</a>，Windows 上使用 RubyInstaller 安裝 Ruby，
+RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
+
+<p>RubyInstaller 在這裡下載: <a href="http://rubyinstaller.org/downloads/">http://rubyinstaller.org/downloads/</a></p>
+
+<p>我安裝的版本是 Ruby 1.9.3-p125</p>
+
+<p>順便下載 Ruby 的 Development Kit: DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe</p>
+
+<p>安裝好 Ruby 後解壓 Development Kit，再到 Development Kit 資料夾內執行以下指令:</p>
+
+<p><code>sh
+ruby dk.rb init
+ruby dk.rb install
+</code></p>
+
+<h3>Install Python</h3>
+
+<p>安裝 Python 是因為 Octopress 處理文章內的程式碼是會用到 <a href="http://pygments.org/">Pygments syntax highlighting</a>。</p>
+
+<p>Python 在這裡下載: <a href="http://www.python.org/getit/">http://www.python.org/getit/</a></p>
+
+<p>版本是 2.7.2</p>
+
+<p>更新: 我在 64bit 的 Windows 7 上安裝 64bit 的 Python 2.7.2 在執行 <code>rake generate</code> 時會出現找不到 <code>.dll</code> 的問題，轉了 32bit 的 Python 2.7.2 就沒有問題了。(奇怪)</p>
+
+<h3>Setup Octopress</h3>
+
+<p>輸入以下指令設定 Octopress:</p>
+
+<p><code>sh
+git clone git://github.com/imathis/octopress.git octopress
+cd octopress
+bundle install
+</code>
+將語言環境設定為台灣，編碼是 UTF-8:
+<code>sh
+set LC_ALL=zh_TW.UTF-8
+set LANG=zh_TW.UTF-8
+</code></p>
+
+<h3>Setup Deploy Setting</h3>
+
+<p>最後就是設定整個 Blog 會放置的地方。</p>
+
+<p>放到 Github Page 上:</p>
+
+<ol>
+<li>到 Github 新增一個 Repo</li>
+<li>名稱輸入 &lt;username>.github.com</li>
+</ol>
+
+
+<p><code>sh
+rake setup_github_pages  #enter git@github.com:&lt;username&gt;/&lt;username&gt;.github.com.git
+rake generate
+rake deploy
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[由 Blogspot 搬家到 Octopress Github Page]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html"/>
+    <updated>2012-03-25T15:41:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/03/25/blogger-migrate-to-octopress-github-page</id>
+    <content type="html"><![CDATA[<p><img src="http://octopress.org/images/logo.png"></p>
+
+<p>由於在 Blogspot 的 Blog 頁面引入太多的 Javascript、CSS 和圖片，令到瀏覽速度援慢。反正要來一個大修改，倒不如連平台亦一起換掉。</p>
+
+<p>現在這個 Blog 是使用 Octopress Blogging Framework 管理文章並放到 Github page 上，速度算不錯，順便將廣告和一些不必要的功能全部移除掉，令整個版面更簡潔，閱讀起來比較舒服。</p>
+
+<p>Octopress 對比 Blogspot 的好處:</p>
+
+<ul>
+<li>方便插入程式碼，支援 Gist</li>
+<li>使用 Markdown 來編排交章格式，比 HTML 簡單得多</li>
+<li>快速，因為所有頁面都是靜態 HTML 內容</li>
+<li>方便使用 Git 管理</li>
+<li>高度自由，可自己寫一些 Plugin 或更改原有程式碼，製作 Theme 亦很簡單（我到現在亦不懂製作 Blogspot Theme）</li>
+<li>放到 Github page 或 Heroku 上，中國網民都可以瀏覽得到</li>
+</ul>
+
+
+<p>當然 Octopress 對比 Blogspot 亦有一些壞處:</p>
+
+<ul>
+<li>不能隨時隨地修改文章（因為沒有 Web admin console）</li>
+<li>對於普通用家來說，設定非常複雜</li>
+</ul>
+
+
+<p>其實要將 Blogspot 上的文章轉換成 Octopress 的文章格式亦很容易，已經有好心人提供了 Script 去轉換了。</p>
+
+<p>但這個 Script 有一個限制，就是最多支援 500 篇文章，所有文章都是 HTML 格式，而不是 Markdown。</p>
+
+<p><code>sh Blogspot posts migrate to Octopress posts
+$ git clone git://gist.github.com/1807781
+$ cd 1807781
+$ ./bloggerImport.sh &lt;blogname&gt; # &lt;blogname&gt;.blogspot.com
+</code></p>
+
+<p>如果你的 Blogspot 使用了其他 Domain name，你需要修改 bloggerImport.sh:</p>
+
+<p><code>sh
+[ -z "$WGET" ] || wget "http://${BLOGGER}.blogspot.com/feeds/posts/full?alt=rss&amp;max-results=500" -O ${BLOGGER}.xml
+[ -z "$CURL" ] || curl "http://${BLOGGER}.blogspot.com/feeds/posts/full?alt=rss&amp;max-results=500" -o ${BLOGGER}.xml
+</code></p>
+
+<p>換為</p>
+
+<p><code>sh
+[ -z "$WGET" ] || wget "http://&lt;your_domain&gt;/feeds/posts/full?alt=rss&amp;max-results=500" -O ${BLOGGER}.xml
+[ -z "$CURL" ] || curl "http://&lt;your_domain&gt;/feeds/posts/full?alt=rss&amp;max-results=500" -o ${BLOGGER}.xml
+</code></p>
+
+<p>執行後會多了一個 _posts 的資料夾，將這個資料夾放左 source 就可以了。</p>
+
+<p>以下是轉換程式的 Source Code:</p>
+
+<p><div><script src='https://gist.github.com/1807781.js?file='></script>
+<noscript><pre><code>jekyll
+</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+</feed>

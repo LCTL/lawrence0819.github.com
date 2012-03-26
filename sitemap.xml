@@ -457,15 +457,25 @@
         <lastmod>2012-03-25T15:22:05+08:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://pro.ctlok.com/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html
+        </loc>
+        <lastmod>2012-03-26T19:52:46+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://pro.ctlok.com/blog/2012/03/26/windows-install-octopress.html</loc>
+        <lastmod>2012-03-26T22:08:59+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://pro.ctlok.com/404.html</loc>
         <lastmod>2012-03-25T14:59:53+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/blog/archives/</loc>
-        <lastmod>2012-03-25T14:59:53+08:00</lastmod>
+        <lastmod>2012-03-26T22:08:59+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/</loc>
-        <lastmod>2012-03-25T15:26:17+08:00</lastmod>
+        <lastmod>2012-03-26T22:08:59+08:00</lastmod>
     </url>
 </urlset>
