@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-26T14:22:02+08:00</updated>
+  <updated>2012-03-26T14:29:28+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Windows Install Octopress]]></title>
+    <title type="html"><![CDATA[在 Windows 設定 Octopress]]></title>
     <link href="http://pro.ctlok.com/blog/2012/03/26/windows-install-octopress.html"/>
     <updated>2012-03-26T12:13:00+08:00</updated>
     <id>http://pro.ctlok.com/blog/2012/03/26/windows-install-octopress</id>
@@ -57,9 +57,16 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p>將語言環境設定為台灣，編碼是 UTF-8:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='sh'><span class='line'><span class="nb">set </span><span class="nv">LC_ALL</span><span class="o">=</span>zh_TW.UTF-8
+</span><span class='line'><span class="nb">set </span><span class="nv">LANG</span><span class="o">=</span>zh_TW.UTF-8
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h3>Setup Deploy Setting</h3>
 
-<p>最後就是設定整個 Blog 會放置的地區。</p>
+<p>最後就是設定整個 Blog 會放置的地方。</p>
 
 <p>放到 Github Page 上:</p>
 

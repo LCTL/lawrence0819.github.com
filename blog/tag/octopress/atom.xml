@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Octopress | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/octopress/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-26T14:22:50+08:00</updated>
+  <updated>2012-03-26T14:29:28+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Windows Install Octopress]]></title>
+    <title type="html"><![CDATA[在 Windows 設定 Octopress]]></title>
     <link href="http://pro.ctlok.com/blog/2012/03/26/windows-install-octopress.html"/>
     <updated>2012-03-26T12:13:00+08:00</updated>
     <id>http://pro.ctlok.com/blog/2012/03/26/windows-install-octopress</id>
@@ -55,11 +55,16 @@ ruby dk.rb install
 git clone git://github.com/imathis/octopress.git octopress
 cd octopress
 bundle install
+</code>
+將語言環境設定為台灣，編碼是 UTF-8:
+<code>sh
+set LC_ALL=zh_TW.UTF-8
+set LANG=zh_TW.UTF-8
 </code></p>
 
 <h3>Setup Deploy Setting</h3>
 
-<p>最後就是設定整個 Blog 會放置的地區。</p>
+<p>最後就是設定整個 Blog 會放置的地方。</p>
 
 <p>放到 Github Page 上:</p>
 
@@ -82,7 +87,7 @@ rake deploy
     <link href="http://pro.ctlok.com/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html"/>
     <updated>2012-03-25T15:41:00+08:00</updated>
     <id>http://pro.ctlok.com/blog/2012/03/25/blogger-migrate-to-octopress-github-page</id>
-    <content type="html"><![CDATA[<p>{% img http://octopress.org/images/logo.png %}</p>
+    <content type="html"><![CDATA[<p><img src="http://octopress.org/images/logo.png"></p>
 
 <p>由於在 Blogspot 的 Blog 頁面引入太多的 Javascript、CSS 和圖片，令到瀏覽速度援慢。反正要來一個大修改，倒不如連平台亦一起換掉。</p>
 
@@ -136,7 +141,10 @@ $ ./bloggerImport.sh &lt;blogname&gt; # &lt;blogname&gt;.blogspot.com
 
 <p>以下是轉換程式的 Source Code:</p>
 
-<p>{% gist 1807781 %}</p>
+<p><div><script src='https://gist.github.com/1807781.js?file='></script>
+<noscript><pre><code>jekyll
+</code></pre></noscript></div>
+</p>
 ]]></content>
   </entry>
   
