@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-26T14:29:28+08:00</updated>
+  <updated>2012-03-26T14:34:17+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -26,7 +26,7 @@
 <p>首先要安裝 <a href="http://www.ruby-lang.org">Ruby</a>，Windows 上使用 RubyInstaller 安裝 Ruby，
 RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
 
-<p>RubyInstaller 在這裡下載: (http://rubyinstaller.org/downloads/)</p>
+<p>RubyInstaller 在這裡下載: <a href="http://rubyinstaller.org/downloads/">http://rubyinstaller.org/downloads/</a></p>
 
 <p>我安裝的版本是 Ruby 1.9.3-p125</p>
 
@@ -43,7 +43,7 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
 
 <p>安裝 Python 是因為 Octopress 處理文章內的程式碼是會用到 <a href="http://pygments.org/">Pygments syntax highlighting</a>。</p>
 
-<p>Python 在這裡下載: (http://www.python.org/getit/)</p>
+<p>Python 在這裡下載: <a href="http://www.python.org/getit/">http://www.python.org/getit/</a></p>
 
 <p>版本是 2.7.2</p>
 
