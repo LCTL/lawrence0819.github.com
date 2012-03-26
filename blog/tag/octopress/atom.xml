@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Octopress | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/octopress/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-26T22:22:29+08:00</updated>
+  <updated>2012-03-26T22:29:12+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -30,7 +30,7 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
 
 <p>我安裝的版本是 Ruby 1.9.3-p125</p>
 
-<p>順便下載 Ruby 的 Development Kit: DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe</p>
+<p>順便下載 Ruby 的 Development Kit: <code>DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe</code></p>
 
 <p>安裝好 Ruby 後解壓 Development Kit，再到 Development Kit 資料夾內執行以下指令:</p>
 
@@ -63,7 +63,7 @@ cd octopress
 gem install bundle
 bundle install
 </code>
-將語言環境設定為台灣，編碼是 UTF-8:
+令 Octopress 支援中文，要將語言環境設定為台灣，編碼是 <code>UTF-8</code>:
 <code>sh
 set LC_ALL=zh_TW.UTF-8
 set LANG=zh_TW.UTF-8
@@ -77,7 +77,7 @@ set LANG=zh_TW.UTF-8
 
 <ol>
 <li>到 Github 新增一個 Repo</li>
-<li>名稱輸入 &lt;username>.github.com</li>
+<li>名稱輸入 <code>\&lt;username\&gt;.github.com</code></li>
 </ol>
 
 
