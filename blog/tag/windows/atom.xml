@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Windows | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/windows/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-26T22:10:22+08:00</updated>
+  <updated>2012-03-26T22:22:29+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -49,6 +49,10 @@ ruby dk.rb install
 
 <p>更新: 我在 64bit 的 Windows 7 上安裝 64bit 的 Python 2.7.2 在執行 <code>rake generate</code> 時會出現找不到 <code>.dll</code> 的問題，轉了 32bit 的 Python 2.7.2 就沒有問題了。(奇怪)</p>
 
+<h3>Install Git</h3>
+
+<p>msysgit: <a href="http://code.google.com/p/msysgit/">http://code.google.com/p/msysgit/</a></p>
+
 <h3>Setup Octopress</h3>
 
 <p>輸入以下指令設定 Octopress:</p>
@@ -56,6 +60,7 @@ ruby dk.rb install
 <p><code>sh
 git clone git://github.com/imathis/octopress.git octopress
 cd octopress
+gem install bundle
 bundle install
 </code>
 將語言環境設定為台灣，編碼是 UTF-8:
