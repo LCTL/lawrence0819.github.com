@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-29T10:41:52+08:00</updated>
+  <updated>2012-03-29T10:46:38+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -30,7 +30,7 @@
 <p>你的公司要你開發一個遊戲，這個遊戲是一個古代戰爭遊戲，每個人扮演一個特定角色。
 公司希望可以隨時增加角色，你一開始的設計可能會這樣:</p>
 
-<p><img src="downloads/code/design-pattern-strategy/sample1/uml.png"></p>
+<p><img src="http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample1/uml.png"></p>
 
 <figure class='code'><figcaption><span> (Character.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample1/Character.java'>download</a></figcaption>
  <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
@@ -106,7 +106,7 @@
 <p>公司高層認為每個角色的攻擊都一樣，太乏味了，建議你改一改程式去令每一個角色都拿不同武器去攻擊。
 你可能會更改程式成為這樣:</p>
 
-<p><img src="downloads/code/design-pattern-strategy/sample2/uml.png"></p>
+<p><img src="http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample2/uml.png"></p>
 
 <figure class='code'><figcaption><span> (Character.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample2/Character.java'>download</a></figcaption>
  <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
@@ -193,7 +193,7 @@
 上次的程式是不容許角色更換武器，因為在 attack() 內限制了角色使用的武器。
 今次需要使用 Strategy Pattern 令程式更具彈性:</p>
 
-<p><img src="downloads/code/design-pattern-strategy/sample3/uml.png"></p>
+<p><img src="http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample3/uml.png"></p>
 
 <figure class='code'><figcaption><span> (Character.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample3/Character.java'>download</a></figcaption>
  <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
