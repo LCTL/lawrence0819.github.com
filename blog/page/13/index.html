@@ -1,1 +1,449 @@
-<!DOCTYPE html> <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]--> <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]--> <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]--> <head> <meta charset="utf-8"> <title>Programming Design Notes</title> <meta name="author" content="Lawrence Cheung"> <meta name="description" content="很久以前開發過給 iPhone 用的網頁，今天無意中看到那些程式碼，順便記錄下來。iPhone 看普通網頁時會將屏幕像素闊度變成 980 像素，如果想將屏幕像素闊度變回原本大小，可以在 head 加入以下設定:&lt;meta name="viewport" content="width= &hellip;"> <meta name="HandheldFriendly" content="True"> <meta name="MobileOptimized" content="320"> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="canonical" href="http://pro.ctlok.com/blog/page/13/index.html"> <link href="/favicon.ico" rel="icon"> <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css"> <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"> <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css"> <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml"> <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-16811171-1"]);_gaq.push(["_trackPageview"]);(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)})();</script> </head> <body data-spy="scroll"> <div class="container"> <header class="jumbotron subhead" id="overview"> <div class="subscribe"> <table> <tr> <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png"/></td> <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png"/></a></td> <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png"/></a></td> </tr> </table> </div> <h1 class="title">Programming Design Notes</h1> <div class="navbar"> <div class="navbar-inner"> <div class="container" style="width: auto;"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <div class="nav-collapse"> <ul class="nav"> <li> <a href="/"><i class="icon icon-home"></i>Home</a> </li> <li> <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a> </li> </ul> <form action="http://google.com/search" method="get" class="navbar-search pull-right"> <fieldset role="search"> <input type="hidden" name="q" value="site:pro.ctlok.com"/> <input type="text" name="q" results="0" placeholder="Search" class="span3"/> </fieldset> </form> </div> </div> </div> </div> </header> <div id="main"> <div id="content"> <div class="row"> <div class="span8"> <div class="blog-index"> <article> <header> <h2 class="entry-title"><a href="/2010/06/iphone-web-app.html">開發 iPhone Web App 的小技巧</a></h2> <p class="meta"> <time datetime="2010-06-08T16:04:00+08:00" pubdate data-updated="true">Jun 8<span>th</span>, 2010</time> | <a href="/2010/06/iphone-web-app.html#disqus_thread">Comments</a> </p> </header> <div class="entry-content">很久以前開發過給 iPhone 用的網頁，今天無意中看到那些程式碼，順便記錄下來。<br/><br/>iPhone 看普通網頁時會將屏幕像素闊度變成 980 像素，如果想將屏幕像素闊度變回原本大小，可以在 head 加入以下設定:<br/><pre class="brush: html">&lt;meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1, user-scalable=no" /&gt;<br /></pre><br/><ul><li>width=device-width 是用 iPhone 屏幕像素來定義網頁闊度。</li><li>minimum-scale 是用戶可將畫面縮小的倍率。</li><li>maximum-scale 是用戶可將畫面放大的倍率。</li><li>user-scalable 是否給用戶可將畫面放大或縮小。</li></ul><br/>用戶將網頁收藏為書並加到主畫面時，可以令最下的選單消失，令網頁變為全屏幕，在 head 加入以下設定:<br/><pre class="brush: html">&lt;meta name=&quot;apple-mobile-web-app-capable&quot; content=&quot;yes&quot; /&gt;<br /></pre><br/>用戶將網頁收藏為書並加到主畫面時，可加入自定義的 icon，在 head 加入以下設定:<br/><pre class="brush: html">&lt;link rel=&quot;apple-touch-icon&quot; href=&quot;/custom_icon.png&quot;/&gt;<br /></pre><br/>用戶將網頁收藏為書並加到主畫面時，可以設定在載入網頁時的等待畫面，在 head 加入以下設定:<br/><pre class="brush: html">&lt;link rel=&quot;apple-touch-startup-image&quot; href=&quot;/startup.png&quot;&gt;<br /></pre><br/>用戶將網頁收藏為書並加到主畫面時，可以將最上的狀態列設定為其他顏色(發覺只能設定為黑色)，在 head 加入以下設定:<br/><pre class="brush: html">&lt;meta name=&quot;apple-mobile-web-app-status-bar-style&quot; content=&quot;black&quot; /&gt;<br /></pre><br/>想在網頁載入完成時隱藏最頂的網址列，可加入以下的 Javascript:<br/><pre class="brush: js">window.onload = function(){<br />    setTimeout(function(){<br />        window.scrollTo(0, 1);<br />    }, 100);<br />}<br /></pre><br/>防止用戶拉動網頁，可加入以下的 Javascript:<br/><pre class="brush: js">document.addEventListener(&quot;touchmove&quot;, function(event){<br />    event.preventDefault();<br />}, false);<br /></pre><br/>相關書籍: <a imageanchor="1" target="_blank" href="http://www.amazon.com/Building-iPhone-Apps-HTML-JavaScript/dp/0596805780?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Building iPhone Apps with HTML, CSS, and JavaScript: Making App Store Apps Without Objective-C or Cocoa" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596805780&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596805780" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/Safari-WebKit-Development-iPhone-ebook/dp/B0035IICRM?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Safari and WebKit Development for iPhone OS 3.0" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=B0035IICRM&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=B0035IICRM" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/Beginning-iPhone-Web-Apps-JavaScript/dp/1430230061?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Beginning iPhone Web Apps: HTML5, CSS3, and JavaScript for WebKit" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1430230061&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1430230061" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-7506966417544217731?l=lawpronotes.blogspot.com' alt=''/></div> </div> </article> <hr/> <article> <header> <h2 class="entry-title"><a href="/2010/06/detect-mobile-browser.html">偵查用戶是否使用手機瀏覽</a></h2> <p class="meta"> <time datetime="2010-06-08T11:29:00+08:00" pubdate data-updated="true">Jun 8<span>th</span>, 2010</time> | <a href="/2010/06/detect-mobile-browser.html#disqus_thread">Comments</a> </p> </header> <div class="entry-content">替公司做的網站需要知道用戶是否使用手機上來，但手機品牌很多，就算同一品牌也可能會有數款瀏覽器，又沒有那麼多手機可測試，幸好找到一個 Open Source 項目是可以偵查用戶是否使用手機上來的。<br/><br/>這個 Open Source 項目支援八款不同語言和 Apache Server 上的設定，有 ASP、ASP.NET、ColdFusion、C#、JSP、Javascript、PHP、Python 等等。<br/><br/>網址: <a href="http://detectmobilebrowser.com/">http://detectmobilebrowser.com/</a><br/><br/>特定型號手機的 User Agent: <a href="http://en.wikipedia.org/wiki/List_of_user_agents_for_mobile_phones">http://en.wikipedia.org/wiki/List_of_user_agents_for_mobile_phones</a><br/><br/>相關書籍: <a href="http://www.amazon.com/Mobile-Agents-Telecommunication-Applications-ebook/dp/B001E6P7K2?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Mobile Agents for Telecommunication Applications: 5th International Workshop, MATA 2003, Marakech, Morocco, October 8-10, 2003, Proceedings" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=B001E6P7K2&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=B001E6P7K2" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><a href="http://www.amazon.com/Mobile-Agents-Concepts-Mobility-Toolkit/dp/1558608176?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Mobile Agents: Basic Concepts, Mobility Models, and the Tracy Toolkit" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1558608176&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1558608176" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><a href="http://www.amazon.com/Customer-based-Service-Monitoring-Software-ebook/dp/B000QJMCCO?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Customer-based IP Service Monitoring with Mobile Software Agents" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=B000QJMCCO&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=B000QJMCCO" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-5366626106034627871?l=lawpronotes.blogspot.com' alt=''/></div> </div> </article> <hr/> <article> <header> <h2 class="entry-title"><a href="/2010/06/php-framework-codeigniter.html">PHP Framework - CodeIgniter</a></h2> <p class="meta"> <time datetime="2010-06-07T12:13:00+08:00" pubdate data-updated="true">Jun 7<span>th</span>, 2010</time> | <a href="/2010/06/php-framework-codeigniter.html#disqus_thread">Comments</a> </p> </header> <div class="entry-content">最近要替公司制作一個小型網站，便到 GoDaddy 申請 Domain Name，因為 Domain Name 連 Hosting 服務一起購買會便宜很多，所以順便看看 GoDaddy 的 Hosting 服務。我看到 Linux 主機詳細支援有列出 Servlet/JSP，心想那麼好便試試吧，怎知我的 JSP 連打印 Hello World 出來也不能，Server 不能將我的 JSP 編譯，真奇怪(有那位網友知道怎麼解決嗎？)。最後唯有改用 PHP。以前寫 PHP 時不會理什麼 MVC 架構，快點完成便可以，但現在又接受不到那種混亂的格式，上網找尋一下發現 PHP Framework 有數十種，沒可能每一個也去試吧，經朋友介紹下使用了 CodeIgniter 這套 Framework，在這裡記錄安裝步驟。<br/><br/>官方網址: <a href="http://codeigniter.com/">CodeIgniter</a><br/><br/>下載網址: <a href="http://codeigniter.com/download.php">Download</a><br/><br/>下載完成並解壓縮後會有 system 目錄、user_guide 目錄、index.php 和 license.txt，為了提高安全性，請將 system 目錄變更為其他名稱，例如: pro_ctlok_system。變更名稱後打開 index.php 更改參數，將 <br/><pre class="brush: php">$system_folder = &quot;system&quot;; <br /></pre><br/>變更為:<br/><pre class="brush: php">$system_folder = &quot;pro_ctlok_system&quot;;<br /></pre><br/>現在設定網站的 Domain name，打開 pro_ctlok_system/application/config/config.php 更改參數，將<br/><pre class="brush: php">$config[&#39;base_url&#39;] = &quot;http://example.com/&quot;;<br /></pre><br/>變更為網站的 Domain name:<br/><pre class="brush: php">$config[&#39;base_url&#39;] = &quot;pro.ctlok.com&quot;;<br /></pre><br/>要使用到 Database 的可以打開 pro_ctlok_system/application/config/database.php 做一些設定:<br/><pre class="brush: php">$db[&#39;default&#39;][&#39;hostname&#39;] = &quot;localhost&quot;;<br />$db[&#39;default&#39;][&#39;username&#39;] = &quot;lawrence&quot;;<br />$db[&#39;default&#39;][&#39;password&#39;] = &quot;123456&quot;;<br />$db[&#39;default&#39;][&#39;database&#39;] = &quot;ctlok&quot;;<br />$db[&#39;default&#39;][&#39;dbdriver&#39;] = &quot;mysql&quot;;<br />$db[&#39;default&#39;][&#39;dbprefix&#39;] = &quot;&quot;;<br />$db[&#39;default&#39;][&#39;pconnect&#39;] = TRUE;<br />$db[&#39;default&#39;][&#39;db_debug&#39;] = TRUE;<br />$db[&#39;default&#39;][&#39;cache_on&#39;] = FALSE;<br />$db[&#39;default&#39;][&#39;cachedir&#39;] = &quot;&quot;;<br />$db[&#39;default&#39;][&#39;char_set&#39;] = &quot;utf8&quot;;<br />$db[&#39;default&#39;][&#39;dbcollat&#39;] = &quot;utf8_general_ci&quot;;<br /></pre><br/>CodeIgniter 亦支援自動連接 Database，打開 pro_ctlok_system/application/config/autoload.php 更改參數，將<br/><pre class="brush: php">$autoload['libraries'] = array();<br /></pre><br/>變更為<br/><pre class="brush: php">$autoload['libraries'] = array('database');<br /></pre><br/>現在可以將 pro_ctlok_system 目錄和 index.php 放到網站的根目錄，然後打開 index.php 看看是否出現 CodeIgniter 的歡迎頁面。<br/><br/>***使用 GoDaddy Hosting 服務要作出以下更改***<br/><br/>使用上面的設定然後放上 GoDaddy Hosting 是不行的，雖然打開 index.php 出現 CodeIgniter 的歡迎頁面， 但其他Controller 是不能正常運作的。<br/><br/>打開 config.php 更改以下參數:<br/><pre class="brush: php">$config[&#39;index_page&#39;] = &quot;index.php?&quot;;<br />$config[&#39;uri_protocol&#39;] = &quot;QUERY_STRING&quot;;<br /></pre><br/>然後在根目錄新增 .htaccess 檔案並輸入以下內容:<br/><pre class="brush: text">RewriteEngine on<br />RewriteCond %{REQUEST_FILENAME} !-f<br />RewriteCond %{REQUEST_FILENAME} !-d<br />RewriteRule ^(.*)$ /index.php?$1 [L]<br /></pre><br/>現在可以以這種方式打開 Controller 了<br/><pre class="brush: text">http://pro.ctlok.com/controller/action/etc<br /></pre><br/>相關書籍: <a imageanchor="1" target="_blank" href="http://www.amazon.com/CodeIgniter-Rapid-PHP-Application-Development/dp/1847191746?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="CodeIgniter for Rapid PHP Application Development: Improve your PHP coding productivity with the free compact open-source MVC CodeIgniter framework!" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1847191746&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1847191746" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/Professional-CodeIgniter-Thomas-Myer/dp/0470282452?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Professional CodeIgniter" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0470282452&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0470282452" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/CodeIgniter-professional-development-Adam-Griffith/dp/1849510903?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="CodeIgniter 1.7 professional development" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1849510903&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1849510903" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-4800080292002533507?l=lawpronotes.blogspot.com' alt=''/></div> </div> </article> <hr/> <article> <header> <h2 class="entry-title"><a href="/2010/06/aspectj-record-spring-bean-method.html">使用 AspectJ 記錄 Spring Bean 執行時間從而改善系統效能</a></h2> <p class="meta"> <time datetime="2010-06-07T10:47:00+08:00" pubdate data-updated="true">Jun 7<span>th</span>, 2010</time> | <a href="/2010/06/aspectj-record-spring-bean-method.html#disqus_thread">Comments</a> </p> </header> <div class="entry-content">有時為了改善系統效能，需要知道那一個程序用了較多時間，而每一個程序又會用到很多不同的 Method 去完成，如果每一個 Method 也要記錄執行時間，而 Method 數目又有很多，不可能在每一個 Method 前加上 Timer 後面記錄 Timer 時間，這時候 AspectJ 便大派用場了。<br/><br/>這篇文章是 Spring + AspectJ，不是單純使用 AspectJ，所以要記錄執行時間的 Method 必須是 Spring bean，非 Spring 管理的 bean 是記錄不到的。<br/><br/>首先是在設定 bean 的 xml 檔案加上以下內容:<br/><br/><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;<br />    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot;<br />    xmlns:context=&quot;http://www.springframework.org/schema/context&quot;<br /> xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;<br />    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd<br /> http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd<br /> http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd&quot;&gt;<br /> <br />    &lt;aop:aspectj-autoproxy /&gt;<br />    &lt;context:component-scan base-package=&quot;com.ctlok.pro.bean.aspect&quot; /&gt;<br /><br />&lt;/beans&gt;<br /></pre><br/>我是使用註解的方式去設定 Spring bean 的，如果你不是使用這種方式請自行更改。<br/>現在制作記錄執行時間的 bean。<br/><br/><pre class="brush: java">package com.ctlok.pro.bean.aspect;<br /><br />import org.aspectj.lang.annotation.Aspect;<br />import org.springframework.stereotype.Component;<br /><br />@Aspect<br />@Component<br />public class ProcessTimeLogger {<br /><br />}<br /></pre><br/>在這裡 AspectJ 也是使用註解的方式去設定，加上 @Component 是要令 Spring Loader 也將這個 POJO 載入成 Spring bean。<br/><br/>要記錄時間當然也要使用 Logger 去記錄，而且要令 AspectJ 知道記錄那一此 Method，請加上以下內容:<br/><br/><pre class="brush: java">private static final Logger logger = Logger.getLogger(ProcessTimeLogger.class.getName());<br /><br />@Pointcut(&quot;execution(* com.ctlok.pro.bean.service.*.*(..))&quot;)<br />public void service(){}<br /></pre><br/>在這裡我使用 java.util.logging.Logger 去記錄時間，你喜歡可以改為 log4j 或 slf4j 也可以。<br/><br/>@Pointcut 這個註解是用來設定在程式那一倨位置設入。<br/><br/>* com.ctlok.pro.bean.service.*.*(..) 的第一顆 * 是 public、 protected、 privat 或預設 method，如果你<br/><br/>只想記錄 public method，可以改成以下這樣:<br/><pre class="brush: java">@Pointcut(&quot;execution(public com.ctlok.pro.bean.service.*.*(..))&quot;)<br />public void service(){}<br /></pre><br/>而 service.*.*(..) 第一顆 * 是代表 class，因為我的 Spring bean 也放在 service 目錄下，而第二顆是代表 Method 名稱，(..) 即是這個 Method 有變數輸入或是沒有變數輸入都可以。<br/><br/>而在可以新增一個 Method 去記錄時間，輸入以下內容:<br/><pre class="brush: java">@Around(&quot;service()&quot;)<br />public Object logging(ProceedingJoinPoint joinPoint) throws Throwable{<br />    String clazz = joinPoint.getTarget().getClass().getSimpleName();  <br />    String method = joinPoint.getSignature().getName(); <br />    StopWatch watch = new StopWatch(); <br />    watch.start();<br />    Object result = joinPoint.proceed();<br />    watch.stop();   <br />    String log = clazz + &quot; Run &quot; + method + &quot;method complete in &quot; + watch.getTime() + &quot; ms&quot;;<br />    logger.info(log);   <br />    return result;<br />}<br /></pre><br/>@Around 可以用來設定在 Method 執行前後所做的動作。<br/><br/>ProceedingJoinPoint joinPoint 可以用來提取一些資訊，AspectJ 會自動將變數傳。<br/><br/>joinPoint.getTarget() 則可以取得現在將會執行的 Method 的 Class。<br/><br/>joinPoint.getSignature() 可以取得現在將會執行的 Method 名稱。<br/><br/>StopWatch 是一個 Timer，在 Method 執行前開始記錄時間。<br/><br/>joinPoint.proceed() 用來執行 Method。<br/><br/>最後便是記錄執行時間了。<br/><br/>完整的 ProcessTimeLogger:<br/><pre class="brush: java">package com.ctlok.pro.bean.aspect;<br /><br />import java.util.logging.Logger;<br /><br />import org.apache.commons.lang.time.StopWatch;<br />import org.aspectj.lang.ProceedingJoinPoint;<br />import org.aspectj.lang.annotation.Around;<br />import org.aspectj.lang.annotation.Aspect;<br />import org.aspectj.lang.annotation.Pointcut;<br />import org.springframework.stereotype.Component;<br /><br />@Aspect<br />@Component<br />public class ProcessTimeLogger {<br /><br />    private static final Logger logger = Logger<br />            .getLogger(ProcessTimeLogger.class.getName());<br /><br />    @Pointcut(&quot;execution(* com.ctlok.pro.bean.service.*.*(..))&quot;)<br />    public void service() {<br />    }<br /><br />    @Around(&quot;service()&quot;)<br />    public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {<br />        String clazz = joinPoint.getTarget().getClass().getSimpleName();<br />        String method = joinPoint.getSignature().getName();<br />        StopWatch watch = new StopWatch();<br />        watch.start();<br />        Object result = joinPoint.proceed();<br />        watch.stop();<br />        String log = clazz + &quot; Run &quot; + method + &quot;method complete in &quot;<br />                + watch.getTime() + &quot; ms&quot;;<br />        logger.info(log);<br />        return result;<br />    }<br />}<br /></pre><br/>在這裡有一點要注意，如果 A method 會使用到 B method 和 C method，那 A method 的執行時間一定是 B method 和 C method 執行時間總和再加 A method 的執行時間。<br/><br/>現在可以去測試一下那一個 Method 用了比預期多的時間去完成任務。<br/><br/>相關書籍: <a imageanchor="1" target="_blank" href="http://www.amazon.com/Aspectj-Action-Enterprise-Spring-Applications/dp/1933988053?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Aspectj in Action: Enterprise AOP with Spring Applications" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1933988053&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1933988053" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/Eclipse-AspectJ-Aspect-Oriented-Programming-Development/dp/0321245873?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Eclipse AspectJ: Aspect-Oriented Programming with AspectJ and the Eclipse AspectJ Development Tools" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0321245873&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0321245873" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/AspectJ-Action-Ramnivas-Laddad/dp/1930110936?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="AspectJ in Action: Practical Aspect-Oriented Programming" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1930110936&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1930110936" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-4055444111559084172?l=lawpronotes.blogspot.com' alt=''/></div> </div> </article> <hr/> <article> <header> <h2 class="entry-title"><a href="/2010/06/javascript-actionscript.html">Javascript 呼叫 Actionscript 3</a></h2> <p class="meta"> <time datetime="2010-06-06T15:33:00+08:00" pubdate data-updated="true">Jun 6<span>th</span>, 2010</time> | <a href="/2010/06/javascript-actionscript.html#disqus_thread">Comments</a> </p> </header> <div class="entry-content">Javascript call Asctionscript 的 function:<br/><br/>Actionscript 3 部份:<br/><pre class="brush: as3">ExternalInterface.addCallback(&quot;flashHello&quot;, flashHello);<br /><br />public function flashHello():void{<br />    trace(&quot;hello&quot;);<br />}<br /></pre><br/>如果你是使用 Flash Builder 4，ExternalInterface 那行會報錯的，解決方法是將那行放到 function 中，待 Flash 完全載入完成再執行那個 function。<br/><br/><pre class="brush: as3">public function init():void {<br />    ExternalInterface.addCallback(&quot;flashHello&quot;, flashHello);<br />}<br /></pre><br/>在 s:Application 這個 tag 內加上 applicationComplete，這樣便會在完全載入完成時執行 init 這個 function。<br/><pre class="brush: xml">&lt;s:Application xmlns:fx=&quot;http://ns.adobe.com/mxml/2009&quot; <br />      xmlns:s=&quot;library://ns.adobe.com/flex/spark&quot; <br />      xmlns:mx=&quot;library://ns.adobe.com/flex/mx&quot; minWidth=&quot;955&quot; minHeight=&quot;600&quot; applicationComplete=&quot;init()&quot;&gt;<br /></pre><br/>現在到 Javascript 部份，首先 Javascript 要先取得到 Flash 物件，如果沒有使用 SWFObject 的先要加上要下 function。<br/><pre class="brush: js">function getFlashMovieObject(movieName){<br />    if (window.document[movieName]){<br />        return window.document[movieName];<br />    }<br />    if (navigator.appName.indexOf(&quot;Microsoft Internet&quot;)==-1){<br />        if (document.embeds &amp;&amp; document.embeds[movieName])<br />            return document.embeds[movieName];<br />    }<br />    else{<br />        return document.getElementById(movieName);<br />    }<br />}<br /></pre><br/>取得 Flash 物件:<br/><pre class="brush: js">var obj = getFlashMovieObject(&quot;flashId&quot;);<br /></pre><br/>有使用 SWFObject 只需用以下方法便可取得 Flash 物件。<br/><pre class="brush: js">var obj = swfobject.getObjectById(&quot;flashId&quot;);<br /></pre><br/>現在 Javascript 執行 Actionscript 3 的 function:<br/><pre class="brush: js">if(obj)<br />    obj.flashHello();<br /></pre><br/>要輸入變數也沒有問題:<br/>Actionscript 3:<br/><pre class="brush: as3">public function init():void {<br />    ExternalInterface.addCallback(&quot;flashSomething&quot;, flashSomething);<br />}<br /><br />public function flashSomething(message:String):void{<br />    trace(message);<br />}<br /></pre><br/>Javascript:<br/><pre class="brush: js">if(obj)<br />    obj.flashSomething();<br /></pre><br/>返回數值:<br/>Actionscript:<br/><pre class="brush: as3">public function init():void {<br />    ExternalInterface.addCallback(&quot;flashSomething&quot;, flashSomething);<br />}<br /><br />public function flashSomething(message:String):String{<br />    trace(message);<br />    return message + &quot; from flash &quot;;<br />}<br /></pre><br/>Javascript:<br/><pre class="brush: js">if(obj)<br />    alert(obj.flashSomething());<br /></pre><br/>相關書籍: <a imageanchor="1" target="_blank" href="http://www.amazon.com/Flex-Cookbook-Real-world-developing-Applications/dp/0596805616?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Flex 4 Cookbook: Real-world recipes for developing Rich Internet Applications" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596805616&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596805616" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/Flash-Builder-Bible-David-Gassner/dp/0470488956?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Flash Builder 4 and Flex 4 Bible" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0470488956&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0470488956" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/Learning-ActionScript-3-0-Beginners-Guide/dp/059652787X?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Learning ActionScript 3.0: A Beginner&#39;s Guide" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=059652787X&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=059652787X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-6657865989853865276?l=lawpronotes.blogspot.com' alt=''/></div> </div> </article> <hr/> <div class="pagination"> <ul> <li> <a class="prev" href="/blog/page/14/">&larr; Older</a> </li> <li> <a href="/blog/archives">Blog Archives</a> </li> <li> <a class="next" href="/blog/page/12/">Newer &rarr;</a> </li> </ul> </div> </div> </div> <div class="span4 sidebar"> <section> <h2>About Me</h2> <div class="well"> <p>Lawrence Cheung</p> <a href="mailto:lawrence0819@gmail.com" target="_blank"><img src="/images/mail.png"/></a> </div> </section> <section> <h2>Recent Posts</h2> <div class="well" style="padding: 8px 0;"> <ul id="recent_posts" class="nav nav-list"> <li class="post"> <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a> </li> <li class="post"> <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a> </li> <li class="post"> <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a> </li> <li class="post"> <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a> </li> <li class="post"> <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a> </li> <li class="post"> <a href="/2011/12/speed-up-develop-web-site-twitter.html">助你快速開發網站的 Twitter Bootstrap</a> </li> <li class="post"> <a href="/2011/12/customize-eclipselink-logger.html">自訂 EclipseLink Logger</a> </li> <li class="post"> <a href="/2011/12/php-codeigniter-i18n-browser-locale.html">PHP CodeIgniter 根據瀏覽器語言來顯示語言</a> </li> <li class="post"> <a href="/2011/10/gae-aws.html">放棄 Google App Engine 轉投 Amazon Web Service</a> </li> <li class="post"> <a href="/2011/10/closure-compiler-run-time-compress.html">使用 Google Closure Compiler 在執行期間壓縮 Javascript</a> </li> </ul> </div> </section><section> <div id="popularthreads" class="dsq-widget"> <h2 class="dsq-widget-title">Popular Posts</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script> </div> </div> </section> <section> <div id="recentcomment" class="dsq-widget"> <h2 class="dsq-widget-title">Recent Comments</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script> </div> </div> </section> </div> </div> </div> </div> <footer class="footer"><p> Copyright &copy; 2012 - Lawrence Cheung - <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> </p></footer> <script type="text/javascript">var disqus_shortname="pdn",disqus_script="count.js";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src="http://"+disqus_shortname+".disqus.com/"+disqus_script;(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();</script> <div id="fb-root"></div> <script>(function(a,b,c){var d=a.getElementsByTagName(b)[0];if(!a.getElementById(c))a=a.createElement(b),a.id=c,a.src="//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1",d.parentNode.insertBefore(a,d)})(document,"script","facebook-jssdk");</script> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> <script src="/assets/bootstrap/js/bootstrap.min.js"></script> <script src="/assets/google-code-prettify/js/prettify.js"></script> <script>(function(a){a(function(){a("pre").each(function(){a(this).parents(".gist").size()==0&&a(this).addClass("prettyprint linenums")});prettyPrint()})})(jQuery);</script> </div> </body> </html>
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Programming Design Notes</title>
+  <meta name="author" content="Lawrence Cheung">
+
+  
+  <meta name="description" content="在上一篇也提過使用 AspectJ 可輕鬆地將大量 Method 前後插入程式碼，網址: AspectJ 記錄執行時間今次這篇是使用 AspectJ 去記錄 Spring Bean 丟出的 Exception，一樣是非常簡單就可達成目的。首先要先在設定 bean 的 xml 檔案加上以下內容:& &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pro.ctlok.com/blog/page/13/index.html">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css">
+  
+  <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml">
+  
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-16811171-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    data-spy="scroll">
+
+  <div class="container">
+    <header class="jumbotron subhead" id="overview">
+      <div class="subscribe">
+    <table>
+        <tr>
+            <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png" /></td>
+            <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png" /></a></td>
+            <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png" /></a></td>
+        </tr>
+    </table>
+</div>
+<h1 class="title">Programming Design Notes</h1>
+
+      <div class="navbar">
+    <div class="navbar-inner">
+        <div class="container" style="width: auto;">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="/"><i class="icon icon-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a>
+                    </li>
+                </ul>
+                
+                <form action="http://google.com/search" method="get" class="navbar-search pull-right">
+                    <fieldset role="search">
+                        <input type="hidden" name="q" value="site:pro.ctlok.com" />
+                        <input type="text" name="q" results="0" placeholder="Search" class="span3" />
+                    </fieldset>
+                </form>
+                
+            </div><!-- /.nav-collapse -->
+        </div>
+    </div><!-- /navbar-inner -->
+</div>
+
+    </header>
+    <div id="main">
+      <div id="content">
+        <div class="row">
+    <div class="span8">
+        <div class="blog-index">
+          
+          
+          
+            <article>
+              
+  <header>
+    
+      <h2 class="entry-title"><a href="/2010/06/aspectj-record-spring-bean-method-throw.html">使用 AspectJ 記錄 Spring Bean 丟出的 Exception</a></h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-09T11:06:00+08:00" pubdate data-updated="true">Jun 9<span>th</span>, 2010</time>
+        
+         | <a href="/2010/06/aspectj-record-spring-bean-method-throw.html#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">在上一篇也提過使用 AspectJ 可輕鬆地將大量 Method 前後插入程式碼，網址: <a href="http://pro.ctlok.com/2010/06/aspectj-record-spring-bean-method.html">AspectJ 記錄執行時間</a><br /><br />今次這篇是使用 AspectJ 去記錄 Spring Bean 丟出的 Exception，一樣是非常簡單就可達成目的。<br /><br />首先要先在設定 bean 的 xml 檔案加上以下內容:<br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;<br />    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot;<br />    xmlns:context=&quot;http://www.springframework.org/schema/context&quot;<br /> xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;<br />    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd<br /> http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd<br /> http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd&quot;&gt;<br /> <br />    &lt;aop:aspectj-autoproxy /&gt;<br />    &lt;context:component-scan base-package=&quot;com.ctlok.pro.bean.aspect&quot; /&gt;<br /><br />&lt;/beans&gt;<br /></pre><br />製作一個 CommonLogger 的 class:<br /><pre class="brush: java">package com.ctlok.pro.bean.aspect;<br /><br />import org.aspectj.lang.annotation.Aspect;<br />import org.aspectj.lang.annotation.Pointcut;<br />import java.util.logging.Logger;<br />import org.springframework.stereotype.Component;<br /><br />@Aspect<br />@Component<br />public class CommonLogger {<br /><br />    private static final Logger logger = Logger.getLogger(CommonLogger.class.getName());<br /><br />    @Pointcut(&quot;execution(* com.ctlok.pro.bean.service.*.*(..))&quot;)<br />    public void service() {<br />    }<br /><br />}<br /></pre><br />首先定義那些 bean method 要被記錄，在這裡是些有 com.ctlok.pro.bean.service 內的 class 和所有 method 都記錄起來。<br /><br />再來是加入記錄程式碼:<br /><pre class="brush: java">@AfterThrowing(pointcut = &quot;service()&quot;, throwing = &quot;throwable&quot;)<br />public void exceptionLogger(JoinPoint joinPoint, Throwable throwable) {<br />    String clazz = joinPoint.getTarget().getClass().getSimpleName();<br />    String method = joinPoint.getSignature().getName();<br />    String log = &quot;Class: &quot; + clazz + &quot;run Method: &quot; + method + &quot; throw Exception: &quot; + throwable.toString();<br />    logger.warning(log);<br />}<br /></pre><br />@AfterThrowing 注解用來設定被記錄的 method 丟出 exception 後便執行。<br />throwing 用來設定 Throwable class 的名稱。<br /><br />完整的 CommonLogger:<br /><pre class="brush: java">package com.ctlok.pro.bean.aspect;<br /><br />import org.aspectj.lang.JoinPoint;<br />import org.aspectj.lang.annotation.AfterThrowing;<br />import org.aspectj.lang.annotation.Aspect;<br />import org.aspectj.lang.annotation.Pointcut;<br />import java.util.logging.Logger;<br />import org.springframework.stereotype.Component;<br /><br />@Aspect<br />@Component<br />public class CommonLogger {<br /><br />    private static final Logger logger = Logger.getLogger(CommonLogger.class<br />            .getName());<br /><br />    @Pointcut(&quot;execution(* com.ctlok.pro.bean.service.*.*(..))&quot;)<br />    public void service() {<br />    }<br /><br />    @AfterThrowing(pointcut = &quot;service()&quot;, throwing = &quot;throwable&quot;)<br />    public void exceptionLogger(JoinPoint joinPoint, Throwable throwable) {<br />        String clazz = joinPoint.getTarget().getClass().getSimpleName();<br />        String method = joinPoint.getSignature().getName();<br />        String log = &quot;Class: &quot; + clazz + &quot;run Method: &quot; + method<br />                + &quot; throw Exception: &quot; + throwable.toString();<br />        logger.warning(log);<br />    }<br /><br />}<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Aspectj-Action-Enterprise-Spring-Applications/dp/1933988053?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Aspectj in Action: Enterprise AOP with Spring Applications" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1933988053&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1933988053" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/AspectJ-Action-Practical-Aspect-Oriented-Programming/dp/1930110936?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="AspectJ in Action: Practical Aspect-Oriented Programming" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1930110936&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1930110936" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Eclipse-AspectJ-Aspect-Oriented-Programming-Development/dp/0321245873?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Eclipse AspectJ: Aspect-Oriented Programming with AspectJ and the Eclipse AspectJ Development Tools" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0321245873&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0321245873" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-1885450191955309087?l=lawpronotes.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+            </article>
+            <hr />
+          
+          
+            <article>
+              
+  <header>
+    
+      <h2 class="entry-title"><a href="/2010/06/iphone-web-app.html">開發 iPhone Web App 的小技巧</a></h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-08T16:04:00+08:00" pubdate data-updated="true">Jun 8<span>th</span>, 2010</time>
+        
+         | <a href="/2010/06/iphone-web-app.html#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">很久以前開發過給 iPhone 用的網頁，今天無意中看到那些程式碼，順便記錄下來。<br /><br />iPhone 看普通網頁時會將屏幕像素闊度變成 980 像素，如果想將屏幕像素闊度變回原本大小，可以在 head 加入以下設定:<br /><pre class="brush: html">&lt;meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1, user-scalable=no" /&gt;<br /></pre><br /><ul><li>width=device-width 是用 iPhone 屏幕像素來定義網頁闊度。</li><li>minimum-scale 是用戶可將畫面縮小的倍率。</li><li>maximum-scale 是用戶可將畫面放大的倍率。</li><li>user-scalable 是否給用戶可將畫面放大或縮小。</li></ul><br />用戶將網頁收藏為書並加到主畫面時，可以令最下的選單消失，令網頁變為全屏幕，在 head 加入以下設定:<br /><pre class="brush: html">&lt;meta name=&quot;apple-mobile-web-app-capable&quot; content=&quot;yes&quot; /&gt;<br /></pre><br />用戶將網頁收藏為書並加到主畫面時，可加入自定義的 icon，在 head 加入以下設定:<br /><pre class="brush: html">&lt;link rel=&quot;apple-touch-icon&quot; href=&quot;/custom_icon.png&quot;/&gt;<br /></pre><br />用戶將網頁收藏為書並加到主畫面時，可以設定在載入網頁時的等待畫面，在 head 加入以下設定:<br /><pre class="brush: html">&lt;link rel=&quot;apple-touch-startup-image&quot; href=&quot;/startup.png&quot;&gt;<br /></pre><br />用戶將網頁收藏為書並加到主畫面時，可以將最上的狀態列設定為其他顏色(發覺只能設定為黑色)，在 head 加入以下設定:<br /><pre class="brush: html">&lt;meta name=&quot;apple-mobile-web-app-status-bar-style&quot; content=&quot;black&quot; /&gt;<br /></pre><br />想在網頁載入完成時隱藏最頂的網址列，可加入以下的 Javascript:<br /><pre class="brush: js">window.onload = function(){<br />    setTimeout(function(){<br />        window.scrollTo(0, 1);<br />    }, 100);<br />}<br /></pre><br />防止用戶拉動網頁，可加入以下的 Javascript:<br /><pre class="brush: js">document.addEventListener(&quot;touchmove&quot;, function(event){<br />    event.preventDefault();<br />}, false);<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Building-iPhone-Apps-HTML-JavaScript/dp/0596805780?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Building iPhone Apps with HTML, CSS, and JavaScript: Making App Store Apps Without Objective-C or Cocoa" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596805780&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596805780" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Safari-WebKit-Development-iPhone-ebook/dp/B0035IICRM?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Safari and WebKit Development for iPhone OS 3.0" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=B0035IICRM&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=B0035IICRM" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Beginning-iPhone-Web-Apps-JavaScript/dp/1430230061?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Beginning iPhone Web Apps: HTML5, CSS3, and JavaScript for WebKit" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1430230061&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1430230061" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-7506966417544217731?l=lawpronotes.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+            </article>
+            <hr />
+          
+          
+            <article>
+              
+  <header>
+    
+      <h2 class="entry-title"><a href="/2010/06/detect-mobile-browser.html">偵查用戶是否使用手機瀏覽</a></h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-08T11:29:00+08:00" pubdate data-updated="true">Jun 8<span>th</span>, 2010</time>
+        
+         | <a href="/2010/06/detect-mobile-browser.html#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">替公司做的網站需要知道用戶是否使用手機上來，但手機品牌很多，就算同一品牌也可能會有數款瀏覽器，又沒有那麼多手機可測試，幸好找到一個 Open Source 項目是可以偵查用戶是否使用手機上來的。<br /><br />這個 Open Source 項目支援八款不同語言和 Apache Server 上的設定，有 ASP、ASP.NET、ColdFusion、C#、JSP、Javascript、PHP、Python 等等。<br /><br />網址: <a href="http://detectmobilebrowser.com/">http://detectmobilebrowser.com/</a><br /><br />特定型號手機的 User Agent: <a href="http://en.wikipedia.org/wiki/List_of_user_agents_for_mobile_phones">http://en.wikipedia.org/wiki/List_of_user_agents_for_mobile_phones</a><br /><br />相關書籍: <a href="http://www.amazon.com/Mobile-Agents-Telecommunication-Applications-ebook/dp/B001E6P7K2?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Mobile Agents for Telecommunication Applications: 5th International Workshop, MATA 2003, Marakech, Morocco, October 8-10, 2003, Proceedings" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=B001E6P7K2&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=B001E6P7K2" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Mobile-Agents-Concepts-Mobility-Toolkit/dp/1558608176?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Mobile Agents: Basic Concepts, Mobility Models, and the Tracy Toolkit" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1558608176&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1558608176" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Customer-based-Service-Monitoring-Software-ebook/dp/B000QJMCCO?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Customer-based IP Service Monitoring with Mobile Software Agents" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=B000QJMCCO&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=B000QJMCCO" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-5366626106034627871?l=lawpronotes.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+            </article>
+            <hr />
+          
+          
+            <article>
+              
+  <header>
+    
+      <h2 class="entry-title"><a href="/2010/06/php-framework-codeigniter.html">PHP Framework - CodeIgniter</a></h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-07T12:13:00+08:00" pubdate data-updated="true">Jun 7<span>th</span>, 2010</time>
+        
+         | <a href="/2010/06/php-framework-codeigniter.html#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">最近要替公司制作一個小型網站，便到 GoDaddy 申請 Domain Name，因為 Domain Name 連 Hosting 服務一起購買會便宜很多，所以順便看看 GoDaddy 的 Hosting 服務。我看到 Linux 主機詳細支援有列出 Servlet/JSP，心想那麼好便試試吧，怎知我的 JSP 連打印 Hello World 出來也不能，Server 不能將我的 JSP 編譯，真奇怪(有那位網友知道怎麼解決嗎？)。最後唯有改用 PHP。以前寫 PHP 時不會理什麼 MVC 架構，快點完成便可以，但現在又接受不到那種混亂的格式，上網找尋一下發現 PHP Framework 有數十種，沒可能每一個也去試吧，經朋友介紹下使用了 CodeIgniter 這套 Framework，在這裡記錄安裝步驟。<br /><br />官方網址: <a href="http://codeigniter.com/">CodeIgniter</a><br /><br />下載網址: <a href="http://codeigniter.com/download.php">Download</a><br /><br />下載完成並解壓縮後會有 system 目錄、user_guide 目錄、index.php 和 license.txt，為了提高安全性，請將 system 目錄變更為其他名稱，例如: pro_ctlok_system。變更名稱後打開 index.php 更改參數，將 <br /><pre class="brush: php">$system_folder = &quot;system&quot;; <br /></pre><br />變更為:<br /><pre class="brush: php">$system_folder = &quot;pro_ctlok_system&quot;;<br /></pre><br />現在設定網站的 Domain name，打開 pro_ctlok_system/application/config/config.php 更改參數，將<br /><pre class="brush: php">$config[&#39;base_url&#39;] = &quot;http://example.com/&quot;;<br /></pre><br />變更為網站的 Domain name:<br /><pre class="brush: php">$config[&#39;base_url&#39;] = &quot;pro.ctlok.com&quot;;<br /></pre><br />要使用到 Database 的可以打開 pro_ctlok_system/application/config/database.php 做一些設定:<br /><pre class="brush: php">$db[&#39;default&#39;][&#39;hostname&#39;] = &quot;localhost&quot;;<br />$db[&#39;default&#39;][&#39;username&#39;] = &quot;lawrence&quot;;<br />$db[&#39;default&#39;][&#39;password&#39;] = &quot;123456&quot;;<br />$db[&#39;default&#39;][&#39;database&#39;] = &quot;ctlok&quot;;<br />$db[&#39;default&#39;][&#39;dbdriver&#39;] = &quot;mysql&quot;;<br />$db[&#39;default&#39;][&#39;dbprefix&#39;] = &quot;&quot;;<br />$db[&#39;default&#39;][&#39;pconnect&#39;] = TRUE;<br />$db[&#39;default&#39;][&#39;db_debug&#39;] = TRUE;<br />$db[&#39;default&#39;][&#39;cache_on&#39;] = FALSE;<br />$db[&#39;default&#39;][&#39;cachedir&#39;] = &quot;&quot;;<br />$db[&#39;default&#39;][&#39;char_set&#39;] = &quot;utf8&quot;;<br />$db[&#39;default&#39;][&#39;dbcollat&#39;] = &quot;utf8_general_ci&quot;;<br /></pre><br />CodeIgniter 亦支援自動連接 Database，打開 pro_ctlok_system/application/config/autoload.php 更改參數，將<br /><pre class="brush: php">$autoload['libraries'] = array();<br /></pre><br />變更為<br /><pre class="brush: php">$autoload['libraries'] = array('database');<br /></pre><br />現在可以將 pro_ctlok_system 目錄和 index.php 放到網站的根目錄，然後打開 index.php 看看是否出現 CodeIgniter 的歡迎頁面。<br /><br />***使用 GoDaddy Hosting 服務要作出以下更改***<br /><br />使用上面的設定然後放上 GoDaddy Hosting 是不行的，雖然打開 index.php 出現 CodeIgniter 的歡迎頁面， 但其他Controller 是不能正常運作的。<br /><br />打開 config.php 更改以下參數:<br /><pre class="brush: php">$config[&#39;index_page&#39;] = &quot;index.php?&quot;;<br />$config[&#39;uri_protocol&#39;] = &quot;QUERY_STRING&quot;;<br /></pre><br />然後在根目錄新增 .htaccess 檔案並輸入以下內容:<br /><pre class="brush: text">RewriteEngine on<br />RewriteCond %{REQUEST_FILENAME} !-f<br />RewriteCond %{REQUEST_FILENAME} !-d<br />RewriteRule ^(.*)$ /index.php?$1 [L]<br /></pre><br />現在可以以這種方式打開 Controller 了<br /><pre class="brush: text">http://pro.ctlok.com/controller/action/etc<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/CodeIgniter-Rapid-PHP-Application-Development/dp/1847191746?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="CodeIgniter for Rapid PHP Application Development: Improve your PHP coding productivity with the free compact open-source MVC CodeIgniter framework!" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1847191746&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1847191746" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Professional-CodeIgniter-Thomas-Myer/dp/0470282452?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Professional CodeIgniter" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0470282452&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0470282452" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/CodeIgniter-professional-development-Adam-Griffith/dp/1849510903?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="CodeIgniter 1.7 professional development" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1849510903&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1849510903" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-4800080292002533507?l=lawpronotes.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+            </article>
+            <hr />
+          
+          
+            <article>
+              
+  <header>
+    
+      <h2 class="entry-title"><a href="/2010/06/aspectj-record-spring-bean-method.html">使用 AspectJ 記錄 Spring Bean 執行時間從而改善系統效能</a></h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-07T10:47:00+08:00" pubdate data-updated="true">Jun 7<span>th</span>, 2010</time>
+        
+         | <a href="/2010/06/aspectj-record-spring-bean-method.html#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">有時為了改善系統效能，需要知道那一個程序用了較多時間，而每一個程序又會用到很多不同的 Method 去完成，如果每一個 Method 也要記錄執行時間，而 Method 數目又有很多，不可能在每一個 Method 前加上 Timer 後面記錄 Timer 時間，這時候 AspectJ 便大派用場了。<br /><br />這篇文章是 Spring + AspectJ，不是單純使用 AspectJ，所以要記錄執行時間的 Method 必須是 Spring bean，非 Spring 管理的 bean 是記錄不到的。<br /><br />首先是在設定 bean 的 xml 檔案加上以下內容:<br /><br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;<br />    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot;<br />    xmlns:context=&quot;http://www.springframework.org/schema/context&quot;<br /> xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;<br />    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd<br /> http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd<br /> http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd&quot;&gt;<br /> <br />    &lt;aop:aspectj-autoproxy /&gt;<br />    &lt;context:component-scan base-package=&quot;com.ctlok.pro.bean.aspect&quot; /&gt;<br /><br />&lt;/beans&gt;<br /></pre><br />我是使用註解的方式去設定 Spring bean 的，如果你不是使用這種方式請自行更改。<br />現在制作記錄執行時間的 bean。<br /><br /><pre class="brush: java">package com.ctlok.pro.bean.aspect;<br /><br />import org.aspectj.lang.annotation.Aspect;<br />import org.springframework.stereotype.Component;<br /><br />@Aspect<br />@Component<br />public class ProcessTimeLogger {<br /><br />}<br /></pre><br />在這裡 AspectJ 也是使用註解的方式去設定，加上 @Component 是要令 Spring Loader 也將這個 POJO 載入成 Spring bean。<br /><br />要記錄時間當然也要使用 Logger 去記錄，而且要令 AspectJ 知道記錄那一此 Method，請加上以下內容:<br /><br /><pre class="brush: java">private static final Logger logger = Logger.getLogger(ProcessTimeLogger.class.getName());<br /><br />@Pointcut(&quot;execution(* com.ctlok.pro.bean.service.*.*(..))&quot;)<br />public void service(){}<br /></pre><br />在這裡我使用 java.util.logging.Logger 去記錄時間，你喜歡可以改為 log4j 或 slf4j 也可以。<br /><br />@Pointcut 這個註解是用來設定在程式那一倨位置設入。<br /><br />* com.ctlok.pro.bean.service.*.*(..) 的第一顆 * 是 public、 protected、 privat 或預設 method，如果你<br /><br />只想記錄 public method，可以改成以下這樣:<br /><pre class="brush: java">@Pointcut(&quot;execution(public com.ctlok.pro.bean.service.*.*(..))&quot;)<br />public void service(){}<br /></pre><br />而 service.*.*(..) 第一顆 * 是代表 class，因為我的 Spring bean 也放在 service 目錄下，而第二顆是代表 Method 名稱，(..) 即是這個 Method 有變數輸入或是沒有變數輸入都可以。<br /><br />而在可以新增一個 Method 去記錄時間，輸入以下內容:<br /><pre class="brush: java">@Around(&quot;service()&quot;)<br />public Object logging(ProceedingJoinPoint joinPoint) throws Throwable{<br />    String clazz = joinPoint.getTarget().getClass().getSimpleName();  <br />    String method = joinPoint.getSignature().getName(); <br />    StopWatch watch = new StopWatch(); <br />    watch.start();<br />    Object result = joinPoint.proceed();<br />    watch.stop();   <br />    String log = clazz + &quot; Run &quot; + method + &quot;method complete in &quot; + watch.getTime() + &quot; ms&quot;;<br />    logger.info(log);   <br />    return result;<br />}<br /></pre><br />@Around 可以用來設定在 Method 執行前後所做的動作。<br /><br />ProceedingJoinPoint joinPoint 可以用來提取一些資訊，AspectJ 會自動將變數傳。<br /><br />joinPoint.getTarget() 則可以取得現在將會執行的 Method 的 Class。<br /><br />joinPoint.getSignature() 可以取得現在將會執行的 Method 名稱。<br /><br />StopWatch 是一個 Timer，在 Method 執行前開始記錄時間。<br /><br />joinPoint.proceed() 用來執行 Method。<br /><br />最後便是記錄執行時間了。<br /><br />完整的 ProcessTimeLogger:<br /><pre class="brush: java">package com.ctlok.pro.bean.aspect;<br /><br />import java.util.logging.Logger;<br /><br />import org.apache.commons.lang.time.StopWatch;<br />import org.aspectj.lang.ProceedingJoinPoint;<br />import org.aspectj.lang.annotation.Around;<br />import org.aspectj.lang.annotation.Aspect;<br />import org.aspectj.lang.annotation.Pointcut;<br />import org.springframework.stereotype.Component;<br /><br />@Aspect<br />@Component<br />public class ProcessTimeLogger {<br /><br />    private static final Logger logger = Logger<br />            .getLogger(ProcessTimeLogger.class.getName());<br /><br />    @Pointcut(&quot;execution(* com.ctlok.pro.bean.service.*.*(..))&quot;)<br />    public void service() {<br />    }<br /><br />    @Around(&quot;service()&quot;)<br />    public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {<br />        String clazz = joinPoint.getTarget().getClass().getSimpleName();<br />        String method = joinPoint.getSignature().getName();<br />        StopWatch watch = new StopWatch();<br />        watch.start();<br />        Object result = joinPoint.proceed();<br />        watch.stop();<br />        String log = clazz + &quot; Run &quot; + method + &quot;method complete in &quot;<br />                + watch.getTime() + &quot; ms&quot;;<br />        logger.info(log);<br />        return result;<br />    }<br />}<br /></pre><br />在這裡有一點要注意，如果 A method 會使用到 B method 和 C method，那 A method 的執行時間一定是 B method 和 C method 執行時間總和再加 A method 的執行時間。<br /><br />現在可以去測試一下那一個 Method 用了比預期多的時間去完成任務。<br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Aspectj-Action-Enterprise-Spring-Applications/dp/1933988053?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Aspectj in Action: Enterprise AOP with Spring Applications" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1933988053&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1933988053" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Eclipse-AspectJ-Aspect-Oriented-Programming-Development/dp/0321245873?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Eclipse AspectJ: Aspect-Oriented Programming with AspectJ and the Eclipse AspectJ Development Tools" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0321245873&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0321245873" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/AspectJ-Action-Ramnivas-Laddad/dp/1930110936?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="AspectJ in Action: Practical Aspect-Oriented Programming" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1930110936&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1930110936" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-4055444111559084172?l=lawpronotes.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+            </article>
+            <hr />
+          
+          <div class="pagination">
+                <ul>
+                    
+                        <li>
+                            <a class="prev" href="/blog/page/14/">&larr; Older</a>
+                        </li>
+                    
+                        <li>
+                            <a href="/blog/archives">Blog Archives</a>
+                        </li>
+                    
+                        <li>
+                            <a class="next" href="/blog/page/12/">Newer &rarr;</a>
+                        </li>
+                    
+                </ul>
+          </div>
+        </div>
+    </div>
+    
+    
+  <div class="span4 sidebar">
+      
+        <section>
+    <h2>About Me</h2>
+    <div class="well">
+        <p>Lawrence Cheung</p>
+        <a href="mailto:lawrence0819@gmail.com" target="_blank"><img src="/images/mail.png" /></a>
+    </div>
+</section>
+<section>
+    <h2>Recent Posts</h2>
+    <div class="well" style="padding: 8px 0;">
+        <ul id="recent_posts" class="nav nav-list">
+            
+            <li class="post">
+                <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2011/12/speed-up-develop-web-site-twitter.html">助你快速開發網站的 Twitter Bootstrap</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2011/12/customize-eclipselink-logger.html">自訂 EclipseLink Logger</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2011/12/php-codeigniter-i18n-browser-locale.html">PHP CodeIgniter 根據瀏覽器語言來顯示語言</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2011/10/gae-aws.html">放棄 Google App Engine 轉投 Amazon Web Service</a>
+            </li>
+            
+        </ul>
+    </div>
+</section><section>
+    <div id="popularthreads" class="dsq-widget">
+        <h2 class="dsq-widget-title">Popular Posts</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script>
+        </div>
+    </div>
+</section>
+<section>
+    <div id="recentcomment" class="dsq-widget">
+        <h2 class="dsq-widget-title">Recent Comments</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script>
+        </div>
+    </div>
+</section>
+
+
+
+      
+  </div>
+
+</div>
+
+      </div>
+    </div>
+    <footer class="footer"><p>
+  Copyright &copy; 2012 - Lawrence Cheung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p></footer>
+    
+
+<script type="text/javascript">
+      var disqus_shortname = 'pdn';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/google-code-prettify/js/prettify.js"></script>
+<script>
+    (function($){
+        $(function(){
+            $("pre").each(function(){
+            	if ($(this).parents(".gist").size() == 0){
+            		$(this).addClass("prettyprint linenums");
+            	}
+            })
+            prettyPrint()
+        });
+    })(jQuery)
+</script>
+
+
+  </div>
+</body>
+</html>

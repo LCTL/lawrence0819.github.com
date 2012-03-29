@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-26T14:34:17+08:00</updated>
+  <updated>2012-03-29T10:31:37+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,333 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Design Pattern - Strategy]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/03/28/design-pattern-strategy-pattern.html"/>
+    <updated>2012-03-28T22:34:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/03/28/design-pattern-strategy-pattern</id>
+    <content type="html"><![CDATA[<p>近日拿出 Design Pattern 的書重溫，順便和大家分享一下。</p>
+
+<p>Strategy Pattern 主要的目的是將一些有很大機會轉變的行為或演算法封裝起來，並抽出來，
+令到在執行期間也可以替換。這樣做的好處是不用變動核心程式碼，而又做到變更行為等等功能。</p>
+
+<p>以下的例子可能令你更明白這個模式的用途。</p>
+
+<hr />
+
+<p>你的公司要你開發一個遊戲，這個遊戲是一個古代戰爭遊戲，每個人扮演一個特定角色。
+公司希望可以隨時增加角色，你一開始的設計可能會這樣:</p>
+
+<p><img src="downloads/code/design-pattern-strategy/sample1/uml.png"></p>
+
+<figure class='code'><figcaption><span> (Character.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample1/Character.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kt">int</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kt">int</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Character</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">hp</span><span class="o">,</span> <span class="kt">int</span> <span class="n">mp</span><span class="o">){</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">hp</span> <span class="o">=</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">mp</span> <span class="o">=</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">(){</span>
+</span><span class='line'>      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Attack&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getHp</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setHp</span><span class="o">(</span><span class="kt">int</span> <span class="n">hp</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">hp</span> <span class="o">=</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getMp</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setMp</span><span class="o">(</span><span class="kt">int</span> <span class="n">mp</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">mp</span> <span class="o">=</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Human.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample1/Human.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Human</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Dwarve.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample1/Dwarve.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dwarve</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Dwarve</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">150</span><span class="o">,</span> <span class="mi">50</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這樣的設計原本符合公司規格，隨時可以新增角色，亦利用了 OO 的特性。</p>
+
+<hr />
+
+<p>公司高層認為每個角色的攻擊都一樣，太乏味了，建議你改一改程式去令每一個角色都拿不同武器去攻擊。
+你可能會更改程式成為這樣:</p>
+
+<p><img src="downloads/code/design-pattern-strategy/sample2/uml.png"></p>
+
+<figure class='code'><figcaption><span> (Character.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample2/Character.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kt">int</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kt">int</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Character</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">hp</span><span class="o">,</span> <span class="kt">int</span> <span class="n">mp</span><span class="o">){</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">hp</span> <span class="o">=</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">mp</span> <span class="o">=</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getHp</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setHp</span><span class="o">(</span><span class="kt">int</span> <span class="n">hp</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">hp</span> <span class="o">=</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getMp</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setMp</span><span class="o">(</span><span class="kt">int</span> <span class="n">mp</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">mp</span> <span class="o">=</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Human.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample2/Human.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Human</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sword attack&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Dwarve.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample2/Dwarve.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dwarve</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Dwarve</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">150</span><span class="o">,</span> <span class="mi">50</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Axe attack&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Character 內的 attack() 改為 abstract ，每個角色自己實現自己的攻擊模式。
+這樣看好像沒有什麼問題，但如果以後增加角色，而這個角色和現有角色的武器一樣，那不是要將程式碼複製出來？
+同樣的程式碼可能會在不同角色內出現，以後維護起來便加倍困難。複製一次程式碼 = 連 Bug 也一起複製了。</p>
+
+<hr />
+
+<p>公司高層又想改一下遊戲，今次改動是可以令角色選擇不同武器。
+上次的程式是不容許角色更換武器，因為在 attack() 內限制了角色使用的武器。
+今次需要使用 Strategy Pattern 令程式更具彈性:</p>
+
+<p><img src="downloads/code/design-pattern-strategy/sample3/uml.png"></p>
+
+<figure class='code'><figcaption><span> (Character.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample3/Character.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kt">int</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kt">int</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kd">private</span> <span class="n">AttackBehavior</span> <span class="n">attackBehavior</span><span class="o">;</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Character</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">int</span> <span class="n">hp</span><span class="o">,</span> <span class="kt">int</span> <span class="n">mp</span><span class="o">,</span> <span class="n">AttackBehavior</span> <span class="n">attackBehavior</span><span class="o">){</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">hp</span> <span class="o">=</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">mp</span> <span class="o">=</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>      
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">attackBehavior</span> <span class="o">=</span> <span class="n">attackBehavior</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">(){</span>
+</span><span class='line'>      <span class="n">attackBehavior</span><span class="o">.</span><span class="na">attack</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getHp</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setHp</span><span class="o">(</span><span class="kt">int</span> <span class="n">hp</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">hp</span> <span class="o">=</span> <span class="n">hp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getMp</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setMp</span><span class="o">(</span><span class="kt">int</span> <span class="n">mp</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">mp</span> <span class="o">=</span> <span class="n">mp</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">AttackBehavior</span> <span class="nf">getAttackBehavior</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">attackBehavior</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setAttackBehavior</span><span class="o">(</span><span class="n">AttackBehavior</span> <span class="n">attackBehavior</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">attackBehavior</span> <span class="o">=</span> <span class="n">attackBehavior</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Human.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample3/Human.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Human</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">AttackBehavior</span> <span class="n">attackBehavior</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="n">attackBehavior</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Dwarve.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample3/Dwarve.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dwarve</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">Dwarve</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">AttackBehavior</span> <span class="n">attackBehavior</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">150</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="n">attackBehavior</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span> (AttackBehavior.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample3/AttackBehavior.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AttackBehavior</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (SwordAttackBehavior.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample3/SwordAttackBehavior.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SwordAttackBehavior</span> <span class="kd">implements</span> <span class="n">AttackBehavior</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sword attack&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (AxeAttackBehavior.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample3/AxeAttackBehavior.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AxeAttackBehavior</span> <span class="kd">implements</span> <span class="n">AttackBehavior</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Axe attack&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span> (Main.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-strategy/sample3/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Character</span> <span class="n">character1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Human</span><span class="o">(</span><span class="s">&quot;Lawrence&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">AxeAttackBehavior</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">Character</span> <span class="n">character2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Human</span><span class="o">(</span><span class="s">&quot;Tony&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">SwordAttackBehavior</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">character1</span><span class="o">.</span><span class="na">attack</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">character2</span><span class="o">.</span><span class="na">attack</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">character1</span><span class="o">.</span><span class="na">setAttackBehavior</span><span class="o">(</span><span class="k">new</span> <span class="n">SwordAttackBehavior</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">character1</span><span class="o">.</span><span class="na">attack</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>現在只需要在建立角色時將攻擊行為也一起加到角色中就可以了，而且可以隨時更改攻擊行為。</p>
+
+<hr />
+
+<p>以下的圖片是描述 Strategy Pattern 的 Class Diagram。（From Wiki）</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/0/08/StrategyPatternClassDiagram.svg/400px-StrategyPatternClassDiagram.svg.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在 Windows 設定 Octopress]]></title>
@@ -30,7 +357,7 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
 
 <p>我安裝的版本是 Ruby 1.9.3-p125</p>
 
-<p>順便下載 Ruby 的 Development Kit: DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe</p>
+<p>順便下載 Ruby 的 Development Kit: <code>DevKit-tdm-32-4.5.2-20111229-1559-sfx.exe</code></p>
 
 <p>安裝好 Ruby 後解壓 Development Kit，再到 Development Kit 資料夾內執行以下指令:</p>
 
@@ -47,17 +374,24 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
 
 <p>版本是 2.7.2</p>
 
+<p>更新: 我在 64bit 的 Windows 7 上安裝 64bit 的 Python 2.7.2 在執行 <code>rake generate</code> 時會出現找不到 <code>.dll</code> 的問題，轉了 32bit 的 Python 2.7.2 就沒有問題了。(奇怪)</p>
+
+<h3>Install Git</h3>
+
+<p>msysgit: <a href="http://code.google.com/p/msysgit/">http://code.google.com/p/msysgit/</a></p>
+
 <h3>Setup Octopress</h3>
 
 <p>輸入以下指令設定 Octopress:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='sh'><span class='line'>git clone git://github.com/imathis/octopress.git octopress
 </span><span class='line'><span class="nb">cd </span>octopress
+</span><span class='line'>gem install bundle
 </span><span class='line'>bundle install
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>將語言環境設定為台灣，編碼是 UTF-8:</p>
+<p>令 Octopress 支援中文，要將語言環境設定為台灣，編碼是 <code>UTF-8</code>:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='sh'><span class='line'><span class="nb">set </span><span class="nv">LC_ALL</span><span class="o">=</span>zh_TW.UTF-8
 </span><span class='line'><span class="nb">set </span><span class="nv">LANG</span><span class="o">=</span>zh_TW.UTF-8
@@ -72,7 +406,7 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
 
 <ol>
 <li>到 Github 新增一個 Repo</li>
-<li>名稱輸入 &lt;username>.github.com</li>
+<li>名稱輸入 <code>\&lt;username\&gt;.github.com</code></li>
 </ol>
 
 
@@ -300,15 +634,6 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
     <updated>2011-06-13T12:35:00+08:00</updated>
     <id>http://pro.ctlok.com/2011/06/apache-commons-vfs-for-sftp</id>
     <content type="html"><![CDATA[在 <b>Java</b> 使用 <b>FTP</b> 去上載檔案，下載檔案或去做其他操作也是很簡單，因為 <b>Java API</b> 已經包括了對 <b>FTP</b> 的支援。如果不是使用 <b>FTP</b>，而是使用 <b>SFTP: SSH File Transfer Protocol</b>，使用<b>Java API</b> 實作便有點麻煩了。<br /><br />幸好 <b>Apache Commons VFS</b> 替我們實作了 <b>SFTP</b> 的操作，<b>Apache Commons VFS</b> 配合 <a href="http://www.jcraft.com/jsch/">JSch</a> 使我們可以很簡單地使用 <b>SSH</b> 連接 <b>Server</b> 和上載檔案，下載檔案等等操作。<br /><br />廢話不多說，首先要準備 3 個 <b>Library</b>:<br /><ul><li>Apache Commons VFS - <a href="http://commons.apache.org/vfs/download_vfs.cgi">http://commons.apache.org/vfs/download_vfs.cgi</a><br /></li><li>Apache Commons Logging - <a href="http://commons.apache.org/logging/download_logging.cgi">http://commons.apache.org/logging/download_logging.cgi</a></li><li>JSch - <a href="http://www.jcraft.com/jsch/">http://www.jcraft.com/jsch/</a></li></ul><br />下載好後將 <b>.jar</b> 加到 <b>class path</b> 令程式找到這些 <b>Library</b>。<br /><br />再來就是寫程式，為了方便好看，我會將所有程式碼放到 <b>Main class</b> 內。<br /><br />第一步是製作一個 <b>Function</b> 去將 <b>Protocol</b>，<b>Host Name</b>，<b>Username</b>，<b>Password</b> 和 <b>Server</b> 上的檔案位置連接起來 (Factory Method)。令到 <b>Apache Commons VFS</b> 能讀得懂。<br /><pre class="brush: java">public static String createConnectionString(String hostName,<br />        String username, String password, String remoteFilePath) {<br />    // result: &quot;sftp://user:123456@domainname.com/resume.pdf<br />    return &quot;sftp://&quot; + username + &quot;:&quot; + password + &quot;@&quot; + hostName + &quot;/&quot;<br />            + remoteFilePath;<br />}<br /></pre><br />第二步是製作一個 <b>Function</b> 去製造出一個 <b>SFTP</b> 預設的設定 (Factory Method):<br /><pre class="brush: java">public static FileSystemOptions createDefaultOptions()<br />        throws FileSystemException {<br />    // Create SFTP options<br />    FileSystemOptions opts = new FileSystemOptions();<br /><br />    // SSH Key checking<br />    SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(<br />            opts, &quot;no&quot;);<br /><br />    // Root directory set to user home<br />    SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, true);<br /><br />    // Timeout is count by Milliseconds<br />    SftpFileSystemConfigBuilder.getInstance().setTimeout(opts, 10000);<br /><br />    return opts;<br />}<br /></pre><br />第三步是製作一個上載檔案的 <b>Function</b>:<br /><pre class="brush: java">public static void upload(String hostName, String username,<br />        String password, String localFilePath, String remoteFilePath) {<br /><br />    File f = new File(localFilePath);<br />    if (!f.exists())<br />        throw new RuntimeException(&quot;Error. Local file not found&quot;);<br /><br />    StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />    try {<br />        manager.init();<br /><br />        // Create local file object<br />        FileObject localFile = manager.resolveFile(f.getAbsolutePath());<br /><br />        // Create remote file object<br />        FileObject remoteFile = manager.resolveFile(<br />                createConnectionString(hostName, username, password,<br />                        remoteFilePath), createDefaultOptions());<br /><br />        // Copy local file to sftp server<br />        remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);<br /><br />        System.out.println(&quot;File upload success&quot;);<br />    } catch (Exception e) {<br />        throw new RuntimeException(e);<br />    } finally {<br />        manager.close();<br />    }<br />}<br /></pre><br />在這裡可以測試一下上載檔案的 <b>Function</b> 是否沒有問題:<br /><pre class="brush: java">/*<br /> * args[0]: hostName <br /> * args[1]: username <br /> * args[2]: password <br /> * args[3]:localFilePath <br /> * args[4]: remoteFilePath<br /> */<br />public static void main(String[] args) {<br />    if (args.length &lt; 5)<br />        throw new RuntimeException(<br />                &quot;Error. Please enter &quot;<br />                        + &quot;args[0]: hostName, args[1]: username, args[2]: password, &quot;<br />                        + &quot;args[3]: localFilePath, args[4]: remoteFilePath.&quot;);<br /><br />    upload(args[0], args[1], args[2], args[3], args[4]);<br />}<br /></pre><br />成功後 <b>Console</b> 會打印出 <b>File upload success</b>。<br /><br />再來是加下載檔案的 <b>Function</b>:<br /><pre class="brush: java">public static void download(String hostName, String username,<br />        String password, String localFilePath, String remoteFilePath) {<br /><br />    StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />    try {<br />        manager.init();<br /><br />        String downloadFilePath = localFilePath.substring(0,<br />                localFilePath.lastIndexOf(&quot;.&quot;))<br />                + &quot;_downlaod_from_sftp&quot;<br />                + localFilePath.substring(localFilePath.lastIndexOf(&quot;.&quot;),<br />                        localFilePath.length());<br /><br />        // Create local file object<br />        FileObject localFile = manager.resolveFile(downloadFilePath);<br /><br />        // Create remote file object<br />        FileObject remoteFile = manager.resolveFile(<br />                createConnectionString(hostName, username, password,<br />                        remoteFilePath), createDefaultOptions());<br /><br />        // Copy local file to sftp server<br />        localFile.copyFrom(remoteFile, Selectors.SELECT_SELF);<br /><br />        System.out.println(&quot;File download success&quot;);<br />    } catch (Exception e) {<br />        throw new RuntimeException(e);<br />    } finally {<br />        manager.close();<br />    }<br />}<br /></pre><br />測試檔案是否存在的 <b>Function</b>:<br /><pre class="brush: java">public static boolean exist(String hostName, String username,<br />        String password, String remoteFilePath) {<br />    StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />    try {<br />        manager.init();<br /><br />        // Create remote object<br />        FileObject remoteFile = manager.resolveFile(<br />                createConnectionString(hostName, username, password,<br />                        remoteFilePath), createDefaultOptions());<br /><br />        System.out.println(&quot;File exist: &quot; + remoteFile.exists());<br /><br />        return remoteFile.exists();<br />    } catch (Exception e) {<br />        throw new RuntimeException(e);<br />    } finally {<br />        manager.close();<br />    }<br />}<br /></pre><br />刪除 <b>Server</b> 檔案的 <b>Function</b>:<br /><pre class="brush: java">public static void delete(String hostName, String username,<br />        String password, String remoteFilePath) {<br />    StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />    try {<br />        manager.init();<br /><br />        // Create remote object<br />        FileObject remoteFile = manager.resolveFile(<br />                createConnectionString(hostName, username, password,<br />                        remoteFilePath), createDefaultOptions());<br /><br />        if (remoteFile.exists()) {<br />            remoteFile.delete();<br />            System.out.println(&quot;Delete remote file success&quot;);<br />        }<br />    } catch (Exception e) {<br />        throw new RuntimeException(e);<br />    } finally {<br />        manager.close();<br />    }<br />}<br /></pre><br />完整的程式:<br /><pre class="brush: java">package sftp.sample;<br /><br />import java.io.File;<br /><br />import org.apache.commons.vfs.FileObject;<br />import org.apache.commons.vfs.FileSystemException;<br />import org.apache.commons.vfs.FileSystemOptions;<br />import org.apache.commons.vfs.Selectors;<br />import org.apache.commons.vfs.impl.StandardFileSystemManager;<br />import org.apache.commons.vfs.provider.sftp.SftpFileSystemConfigBuilder;<br /><br />public class Main {<br /><br />    /*<br />     * args[0]: hostName <br />     * args[1]: username <br />     * args[2]: password<br />     * args[3]: localFilePath <br />     * args[4]: remoteFilePath<br />     */<br />    public static void main(String[] args) {<br />        if (args.length &lt; 5)<br />            throw new RuntimeException(<br />                    &quot;Error. Please enter &quot;<br />                            + &quot;args[0]: hostName, args[1]: username, args[2]: password, &quot;<br />                            + &quot;args[3]: localFilePath, args[4]: remoteFilePath.&quot;);<br /><br />        upload(args[0], args[1], args[2], args[3], args[4]);<br />        exist(args[0], args[1], args[2], args[4]);<br />        download(args[0], args[1], args[2], args[3], args[4]);<br />        delete(args[0], args[1], args[2], args[4]);<br />    }<br /><br />    public static void upload(String hostName, String username,<br />            String password, String localFilePath, String remoteFilePath) {<br /><br />        File f = new File(localFilePath);<br />        if (!f.exists())<br />            throw new RuntimeException(&quot;Error. Local file not found&quot;);<br /><br />        StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />        try {<br />            manager.init();<br /><br />            // Create local file object<br />            FileObject localFile = manager.resolveFile(f.getAbsolutePath());<br /><br />            // Create remote file object<br />            FileObject remoteFile = manager.resolveFile(<br />                    createConnectionString(hostName, username, password,<br />                            remoteFilePath), createDefaultOptions());<br /><br />            // Copy local file to sftp server<br />            remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);<br /><br />            System.out.println(&quot;File upload success&quot;);<br />        } catch (Exception e) {<br />            throw new RuntimeException(e);<br />        } finally {<br />            manager.close();<br />        }<br />    }<br /><br />    public static void download(String hostName, String username,<br />            String password, String localFilePath, String remoteFilePath) {<br /><br />        StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />        try {<br />            manager.init();<br /><br />            String downloadFilePath = localFilePath.substring(0,<br />                    localFilePath.lastIndexOf(&quot;.&quot;))<br />                    + &quot;_downlaod_from_sftp&quot;<br />                    + localFilePath.substring(localFilePath.lastIndexOf(&quot;.&quot;),<br />                            localFilePath.length());<br /><br />            // Create local file object<br />            FileObject localFile = manager.resolveFile(downloadFilePath);<br /><br />            // Create remote file object<br />            FileObject remoteFile = manager.resolveFile(<br />                    createConnectionString(hostName, username, password,<br />                            remoteFilePath), createDefaultOptions());<br /><br />            // Copy local file to sftp server<br />            localFile.copyFrom(remoteFile, Selectors.SELECT_SELF);<br /><br />            System.out.println(&quot;File download success&quot;);<br />        } catch (Exception e) {<br />            throw new RuntimeException(e);<br />        } finally {<br />            manager.close();<br />        }<br />    }<br /><br />    public static void delete(String hostName, String username,<br />            String password, String remoteFilePath) {<br />        StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />        try {<br />            manager.init();<br /><br />            // Create remote object<br />            FileObject remoteFile = manager.resolveFile(<br />                    createConnectionString(hostName, username, password,<br />                            remoteFilePath), createDefaultOptions());<br /><br />            if (remoteFile.exists()) {<br />                remoteFile.delete();<br />                System.out.println(&quot;Delete remote file success&quot;);<br />            }<br />        } catch (Exception e) {<br />            throw new RuntimeException(e);<br />        } finally {<br />            manager.close();<br />        }<br />    }<br /><br />    public static boolean exist(String hostName, String username,<br />            String password, String remoteFilePath) {<br />        StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />        try {<br />            manager.init();<br /><br />            // Create remote object<br />            FileObject remoteFile = manager.resolveFile(<br />                    createConnectionString(hostName, username, password,<br />                            remoteFilePath), createDefaultOptions());<br /><br />            System.out.println(&quot;File exist: &quot; + remoteFile.exists());<br /><br />            return remoteFile.exists();<br />        } catch (Exception e) {<br />            throw new RuntimeException(e);<br />        } finally {<br />            manager.close();<br />        }<br />    }<br /><br />    public static String createConnectionString(String hostName,<br />            String username, String password, String remoteFilePath) {<br />        // result: &quot;sftp://user:123456@domainname.com/resume.pdf<br />        return &quot;sftp://&quot; + username + &quot;:&quot; + password + &quot;@&quot; + hostName + &quot;/&quot;<br />                + remoteFilePath;<br />    }<br /><br />    public static FileSystemOptions createDefaultOptions()<br />            throws FileSystemException {<br />        // Create SFTP options<br />        FileSystemOptions opts = new FileSystemOptions();<br /><br />        // SSH Key checking<br />        SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(<br />                opts, &quot;no&quot;);<br /><br />        // Root directory set to user home<br />        SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, true);<br /><br />        // Timeout is count by Milliseconds<br />        SftpFileSystemConfigBuilder.getInstance().setTimeout(opts, 10000);<br /><br />        return opts;<br />    }<br /><br />}<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Jakarta-Commons-Cookbook-Timothy-OBrien/dp/059600706X?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Jakarta Commons Cookbook" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=059600706X&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=059600706X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Pro-Jakarta-Commons-Harshad-Oak/dp/1590592832?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Pro Jakarta Commons" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1590592832&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1590592832" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/SSH-Secure-Shell-Definitive-Guide/dp/0596008953?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="SSH, The Secure Shell: The Definitive Guide" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596008953&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596008953" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-7245793115940246788?l=lawpronotes.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Eclipse Web Development Plugin - Aptana Studio]]></title>
-    <link href="http://pro.ctlok.com/2011/03/eclipse-web-development-plugin-aptana.html"/>
-    <updated>2011-03-12T00:10:00+08:00</updated>
-    <id>http://pro.ctlok.com/2011/03/eclipse-web-development-plugin-aptana</id>
-    <content type="html"><![CDATA[介紹一款非常好用的 <b>Web</b> 開發工具 - <b>Aptana Studio</b>。(其實我用了很久，以為已經發過文章介紹&#8230;）<br /><br />這款工具對編寫 <b>HTML</b>，<b>CSS</b> 和 <b>Javascript</b> 都非常有幫助，而且對 <b>Javascript Framework</b> (例如 <b>jQuery</b> 和 <b>Prototype</b> 等等) 有題示功能(需要再安裝 Plugin)，比起 Eclipse 預設的工具好用多了。<br /><br />除了 <b>HTML</b>，<b>CSS</b> 和 <b>Javascript</b> 外。<b>Aptana Studio</b> 亦支援 <b>Ruby</b>，<b>Python</b> 和 <b>PHP</b> 的開發 (<b>PHP</b> 支援已經停止更新)。<br /><br />官方網址: <a href="http://www.aptana.com/">http://www.aptana.com/</a><br /><br />下載頁面: <a href="http://www.aptana.com/products/studio2/download">http://www.aptana.com/products/studio2/download</a><br /><br />進入下載頁面後只需選擇 <b>Eclipse Plugin</b>，然後按 <b>Download</b>，就會出現 <b>Eclipse</b> 的 <b>Update Site URL</b>。<br /><br />如果不喜歡作為 <b>Eclipse Plugin</b> 去使用，亦可以下載安裝版本去使用 (我覺得安裝版沒有那麼方便&#8230;)。 <br /><br />亦可以試用開發版本的 <b>Aptana Studio 3</b>。現在的版本已經很穩定，我用的時候亦沒發現什麼 Bug 了。<br />下載頁面: <a href="http://www.aptana.com/products/studio3/download">http://www.aptana.com/products/studio3/download</a><br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Dynamic-Web-Programming-Beginners-Osborne/dp/0071633448?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Dynamic Web Programming: A Beginner&#39;s Guide (Beginner&#39;s Guide (Osborne Mcgraw Hill))" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0071633448&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0071633448" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Pro-Javascript-RIA-Techniques-Presentation/dp/1430219343?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Pro Javascript RIA Techniques: Best Practices, Performance and Presentation" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1430219343&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1430219343" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Aptana-RadRails-Development-comprehensive-professional/dp/1847193986?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Aptana RadRails: An IDE for Rails Development: A comprehensive guide to using RadRails to develop your Ruby on Rails projects in a professional and productive manner" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1847193986&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1847193986" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-1902012302779561873?l=lawpronotes.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
