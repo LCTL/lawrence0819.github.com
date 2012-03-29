@@ -1,30 +1,30 @@
 public abstract class Character {
 
-	private String name;
-	private int hp;
-	private int mp;
-	
-	private AttackBehavior attackBehavior;
-	
-	public Character(String name, int hp, int mp, AttackBehavior attackBehavior){
-		this.name = name;
-		this.hp = hp;
-		this.mp = mp;
-		
-		this.attackBehavior = attackBehavior;
-	}
+    private String name;
+    private int hp;
+    private int mp;
 
-	public void attack(){
-	    attackBehavior.attack();
-	}
+    private AttackBehavior attackBehavior;
 
-	public String getName() {
-		return name;
-	}
+    public Character(String name, int hp, int mp, AttackBehavior attackBehavior) {
+        this.name = name;
+        this.hp = hp;
+        this.mp = mp;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+        this.attackBehavior = attackBehavior;
+    }
+
+    public void attack() {
+        attackBehavior.attack();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getHp() {
         return hp;

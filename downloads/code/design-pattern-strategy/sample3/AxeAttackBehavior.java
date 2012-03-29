@@ -1,4 +1,3 @@
-
 public class AxeAttackBehavior implements AttackBehavior {
 
     @Override

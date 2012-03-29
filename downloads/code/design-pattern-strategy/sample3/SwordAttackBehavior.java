@@ -1,4 +1,3 @@
-
 public class SwordAttackBehavior implements AttackBehavior {
 
     @Override
@@ -6,5 +5,4 @@ public class SwordAttackBehavior implements AttackBehavior {
         System.out.println("Sword attack");
     }
 
-    
 }
