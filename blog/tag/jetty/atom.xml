@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Jetty | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/jetty/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-30T16:02:20+08:00</updated>
+  <updated>2012-03-30T16:04:35+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Maven Setup Jetty Development Server]]></title>
-    <link href="http://pro.ctlok.com/blog/2012/03/30/maven-setup-jetty-Dev-server.html"/>
+    <link href="http://pro.ctlok.com/blog/2012/03/30/maven-setup-jetty-dev-server.html"/>
     <updated>2012-03-30T14:38:00+08:00</updated>
-    <id>http://pro.ctlok.com/blog/2012/03/30/maven-setup-jetty-Dev-server</id>
+    <id>http://pro.ctlok.com/blog/2012/03/30/maven-setup-jetty-dev-server</id>
     <content type="html"><![CDATA[<p>在 Maven 使用 Jetty 作為 Web Server 是非常簡單，在 <code>pom.xml</code> 加入以下設定:</p>
 
 <p>``` xml
