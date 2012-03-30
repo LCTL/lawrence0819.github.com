@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-29T10:46:38+08:00</updated>
+  <updated>2012-03-30T10:15:51+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,288 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Design Pattern - Observer]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/03/29/design-pattern-observer.html"/>
+    <updated>2012-03-29T22:08:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/03/29/design-pattern-observer</id>
+    <content type="html"><![CDATA[<p>Observer Pattern 有 2 個重要角色「主題」和「觀察者」，觀察者希望主題狀態有變更時會立即被告知。</p>
+
+<p>你可以想像 Blog 上的 Email 訂閱服務（本 Blog 沒有），當你對這個 Blog 有興趣時，
+你會用你的 Email 地址去訂閱服務，當有更新時你會立即收到通知，題示你有更新了，請去看看。
+當你對 Blog 上千篇一律的內容感到無聊時，你亦可以取消這個訂閱，那以後有更新亦不會再通知你。</p>
+
+<p>看看以下例子應該有助你明白這個模式：</p>
+
+<hr />
+
+<p>公司要你開發一個即時新聞平台，用戶只需要打開程式就能夠看到即時新聞。</p>
+
+<p>你一開始可能會用 Pull 的方法，每隔一段時間會主動去向主題拿取新的內容：</p>
+
+<p><img src="http://pro.ctlok.com/downloads/code/design-pattern-observer/sample1/uml.png"></p>
+
+<figure class='code'><figcaption><span> (NewsTopic.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-observer/sample1/NewsTopic.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.UUID</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NewsTopic</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">messages</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">getMessages</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">messages</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// Assign unique ID to each message for determine is it old message.</span>
+</span><span class='line'>        <span class="n">messages</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">UUID</span><span class="o">.</span><span class="na">randomUUID</span><span class="o">().</span><span class="na">toString</span><span class="o">(),</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Client.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-observer/sample1/Client.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map.Entry</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.TimerTask</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="kd">extends</span> <span class="n">TimerTask</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">displayedIds</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">NewsTopic</span> <span class="n">topic</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Client</span><span class="o">(</span><span class="n">NewsTopic</span> <span class="n">topic</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">topic</span> <span class="o">=</span> <span class="n">topic</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">displayNews</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">messages</span> <span class="o">=</span> <span class="n">topic</span><span class="o">.</span><span class="na">getMessages</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">displayedIds</span><span class="o">.</span><span class="na">containsAll</span><span class="o">(</span><span class="n">messages</span><span class="o">.</span><span class="na">keySet</span><span class="o">()))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">messages</span><span class="o">.</span><span class="na">entrySet</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">displayedIds</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">()))</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span>
+</span><span class='line'>                            <span class="s">&quot;Client %s display message: %s at time: %s&quot;</span><span class="o">,</span>
+</span><span class='line'>                            <span class="n">Integer</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">hashCode</span><span class="o">()),</span>
+</span><span class='line'>                            <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">(),</span> <span class="k">new</span> <span class="n">Date</span><span class="o">()));</span>
+</span><span class='line'>                    <span class="n">displayedIds</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">());</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">displayNews</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Main.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-observer/sample1/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Timer</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">NewsTopic</span> <span class="n">topic</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NewsTopic</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Client</span> <span class="n">client1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">(</span><span class="n">topic</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Client</span> <span class="n">client2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">(</span><span class="n">topic</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Client</span> <span class="n">client3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">(</span><span class="n">topic</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Timer</span> <span class="n">timer1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timer</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">timer1</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">client1</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">3000</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Timer</span> <span class="n">timer2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timer</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">timer2</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">client2</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">5000</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Timer</span> <span class="n">timer3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timer</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">timer3</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">client3</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">7000</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">topic</span><span class="o">.</span><span class="na">addMessage</span><span class="o">(</span><span class="s">&quot;News &quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">5000</span><span class="o">));</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">timer1</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">timer2</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">timer3</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>執行結果</span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='text'><span class='line'>Client 109a4c display message: News 0 at time: Fri Mar 30 00:41:23 CST 2012
+</span><span class='line'>Client c40c80 display message: News 0 at time: Fri Mar 30 00:41:25 CST 2012
+</span><span class='line'>Client c40c80 display message: News 1 at time: Fri Mar 30 00:41:25 CST 2012
+</span><span class='line'>Client 109a4c display message: News 2 at time: Fri Mar 30 00:41:26 CST 2012
+</span><span class='line'>Client 109a4c display message: News 1 at time: Fri Mar 30 00:41:26 CST 2012
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>每個 Client 接收到訊息的時間不一。</p>
+
+<hr />
+
+<p>有客戶抱怨，股票新聞不夠實時，害他掉了錢。公司要你改善一下程式，盡量減少延遲。</p>
+
+<p>現在是 Observer Pattern 大派用場的時候，因為一有更新就會主動通知觀察者，大大減低新聞延遲的問題。</p>
+
+<p>你可能會問，使用舊方法但將間隔縮短不就可以了嗎？
+這個方法雖然可以解決延遲的問題，但如果客戶多達 10000 人時，每一個也不停重覆去檢查資料是非常浪費系統資源，
+CPU 長期高工作量，會拖跨了系統的其他程式。</p>
+
+<p><img src="http://pro.ctlok.com/downloads/code/design-pattern-observer/sample2/uml.png"></p>
+
+<figure class='code'><figcaption><span> (Subject.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-observer/sample2/Subject.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Subject</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerObserver</span><span class="o">(</span><span class="n">Observer</span> <span class="n">observer</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unregisterObserver</span><span class="o">(</span><span class="n">Observer</span> <span class="n">observer</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notifyObservers</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Observer.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-observer/sample2/Observer.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Observer</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notify</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (NewsTopic.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-observer/sample2/NewsTopic.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NewsTopic</span> <span class="kd">implements</span> <span class="n">Subject</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;</span> <span class="n">obervers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;();</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pushMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">notifyObservers</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerObserver</span><span class="o">(</span><span class="n">Observer</span> <span class="n">observer</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">obervers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">observer</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unregisterObserver</span><span class="o">(</span><span class="n">Observer</span> <span class="n">observer</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">obervers</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">observer</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notifyObservers</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Observer</span> <span class="nl">observer:</span> <span class="n">obervers</span><span class="o">){</span>
+</span><span class='line'>            <span class="n">observer</span><span class="o">.</span><span class="na">notify</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Client.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-observer/sample2/Client.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="kd">implements</span> <span class="n">Observer</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notify</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span>
+</span><span class='line'>                <span class="s">&quot;Client %s display message: %s at time: %s&quot;</span><span class="o">,</span>
+</span><span class='line'>                <span class="n">Integer</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">hashCode</span><span class="o">()),</span> <span class="n">message</span><span class="o">,</span> <span class="k">new</span> <span class="n">Date</span><span class="o">()));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Main.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-observer/sample2/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">NewsTopic</span> <span class="n">topic</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NewsTopic</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Client</span> <span class="n">client1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">Client</span> <span class="n">client2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">Client</span> <span class="n">client3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">topic</span><span class="o">.</span><span class="na">registerObserver</span><span class="o">(</span><span class="n">client1</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">topic</span><span class="o">.</span><span class="na">registerObserver</span><span class="o">(</span><span class="n">client2</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">topic</span><span class="o">.</span><span class="na">registerObserver</span><span class="o">(</span><span class="n">client3</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">topic</span><span class="o">.</span><span class="na">pushMessage</span><span class="o">(</span><span class="s">&quot;News &quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">5000</span><span class="o">));</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>執行結果</span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='text'><span class='line'>Client 10b30a7 display message: News 0 at time: Fri Mar 30 00:54:03 CST 2012
+</span><span class='line'>Client ca0b6 display message: News 0 at time: Fri Mar 30 00:54:03 CST 2012
+</span><span class='line'>Client 14318bb display message: News 0 at time: Fri Mar 30 00:54:03 CST 2012
+</span><span class='line'>Client 10b30a7 display message: News 1 at time: Fri Mar 30 00:54:07 CST 2012
+</span><span class='line'>Client ca0b6 display message: News 1 at time: Fri Mar 30 00:54:07 CST 2012
+</span><span class='line'>Client 14318bb display message: News 1 at time: Fri Mar 30 00:54:07 CST 2012
+</span><span class='line'>Client 10b30a7 display message: News 2 at time: Fri Mar 30 00:54:09 CST 2012
+</span><span class='line'>Client ca0b6 display message: News 2 at time: Fri Mar 30 00:54:09 CST 2012
+</span><span class='line'>Client 14318bb display message: News 2 at time: Fri Mar 30 00:54:09 CST 2012
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>現在每一次發佈訊息時，每一個客戶都同時收到，大大減低了延遲和系統負荷。</p>
+
+<hr />
+
+<p>以下的圖片是描述 Observer Pattern 的 Class Diagram。（From Wiki）</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Observer.svg/500px-Observer.svg.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Design Pattern - Strategy]]></title>
@@ -624,15 +906,6 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
     <updated>2011-06-13T15:54:00+08:00</updated>
     <id>http://pro.ctlok.com/2011/06/java-xstream-to-deep-clone-object</id>
     <content type="html"><![CDATA[在某些時候，為免改寫原本 <b>Object</b> 的數據，而需要複製一個一模一樣的 <b>Object</b> 出來，例如記下當時的 <b>Object</b> 狀態，然後備份等等。如果使用 <b>Getter</b> 和 <b>Setter</b> 一個一個數據去複製，一定會大大增加程式碼行數，亦只能對已知的 <b>Object</b> 去複製。當這個 <b>Object</b> 新增一項數據時，便要再重寫複製方法，所以這方法是很沒有效率的。<br /><br /><b>Xstream</b> 原本是 <b>Java</b> 操作 <b>XML</b> 的一個 <b>Library</b>，除此之外亦可以使用 <b>Xstream</b> 去複製 <b>Object</b> (將 <b>Java Object</b> 轉換成 <b>XML</b> 再轉換為 <b>Java Object</b>)。<br /><br /><b>Xstream</b> 官方網址: <a href="http://xstream.codehaus.org/">http://xstream.codehaus.org/</a><br /><br />下載後將 <b>.jar</b> 加到 <b>class path</b>。<br /><br />假設現在有 <b>Parent</b> 和 <b>Info</b> 2 個 <b>Object</b>，這 2 個 <b>Object</b> 都是作為傳遞數據的 <b>Object</b>。<br /><br /><b>Parent</b>:<br /><pre class="brush: java">package xstream.sample;<br /><br />public class Parent {<br /><br />    private String firstName;<br />    private String lastName;<br /><br />    public String getFirstName() {<br />        return firstName;<br />    }<br /><br />    public void setFirstName(String firstName) {<br />        this.firstName = firstName;<br />    }<br /><br />    public String getLastName() {<br />        return lastName;<br />    }<br /><br />    public void setLastName(String lastName) {<br />        this.lastName = lastName;<br />    }<br /><br />    @Override<br />    public String toString() {<br />        return &quot;Parent [firstName=&quot; + firstName + &quot;, lastName=&quot; + lastName<br />                + &quot;]&quot;;<br />    }<br /><br />}<br /></pre><br /><b>Info</b>:<br /><pre class="brush: java">package xstream.sample;<br /><br />import java.util.LinkedList;<br />import java.util.List;<br /><br />public class Info {<br /><br />    private String firstName;<br />    private String lastName;<br />    private int age;<br />    private List&lt;String&gt; hobbies;<br />    private Parent parent;<br />    <br />    public String getFirstName() {<br />        return firstName;<br />    }<br /><br />    public void setFirstName(String firstName) {<br />        this.firstName = firstName;<br />    }<br /><br />    public String getLastName() {<br />        return lastName;<br />    }<br /><br />    public void setLastName(String lastName) {<br />        this.lastName = lastName;<br />    }<br /><br />    public int getAge() {<br />        return age;<br />    }<br /><br />    public void setAge(int age) {<br />        this.age = age;<br />    }<br /><br />    public List&lt;String&gt; getHobbies() {<br />        return hobbies;<br />    }<br /><br />    public void setHobbies(List&lt;String&gt; hobbies) {<br />        this.hobbies = hobbies;<br />    }<br /><br />    public void addHobby(String hobby) {<br />        if (hobbies == null)<br />            hobbies = new LinkedList&lt;String&gt;();<br />        hobbies.add(hobby);<br />    }<br />    <br />    public Parent getParent() {<br />        return parent;<br />    }<br /><br />    public void setParent(Parent parent) {<br />        this.parent = parent;<br />    }<br /><br />    @Override<br />    public String toString() {<br />        return &quot;Info [firstName=&quot; + firstName + &quot;, lastName=&quot; + lastName<br />                + &quot;, age=&quot; + age + &quot;, hobbies=&quot; + hobbies + &quot;, parent=&quot;<br />                + parent + &quot;]&quot;;<br />    }<br />    <br />}<br /></pre><br />付責複製的 <b>Function</b>:<br /><br /><pre class="brush: java">package xstream.sample;<br /><br />import com.thoughtworks.xstream.XStream;<br />import com.thoughtworks.xstream.io.xml.DomDriver;<br /><br />public class Main {<br /><br />    private static final XStream XSTREAM = new XStream(new DomDriver());<br />    <br />    @SuppressWarnings(&quot;unchecked&quot;)<br />    public static &lt;T&gt; T cloneObject(T src){<br />        return (T) XSTREAM.fromXML(XSTREAM.toXML(src));<br />    }<br /><br />}<br /></pre><br />測試的程式:<br /><pre class="brush: java">package xstream.sample;<br /><br />import com.thoughtworks.xstream.XStream;<br />import com.thoughtworks.xstream.io.xml.DomDriver;<br /><br />public class Main {<br /><br />    private static final XStream XSTREAM = new XStream(new DomDriver());<br />    <br />    public static void main(String[] args) {<br />        //Create info object<br />        Info info = new Info();<br />        Parent parent = new Parent();<br />        <br />        //Set data<br />        info.setFirstName(&quot;Lawrence&quot;);<br />        info.setFirstName(&quot;Cheung&quot;);<br />        info.setAge(24);<br />        info.addHobby(&quot;Sports&quot;);<br />        info.addHobby(&quot;Reading&quot;);<br />        <br />        parent.setFirstName(&quot;Tom&quot;);<br />        parent.setLastName(&quot;Cheung&quot;);<br />        info.setParent(parent);<br />        <br />        //Print my info<br />        System.out.println(&quot;Original object: &quot; + info);<br />        <br />        System.out.println(&quot;Now, we are going to clone info object&quot;);<br />        System.out.println();<br />        Info clonedInfo = cloneObject(info);<br />        <br />        //Print cloned info<br />        System.out.println(&quot;Cloned object: &quot; + clonedInfo);<br />        System.out.println();<br />        <br />        //Modify original info<br />        System.out.println(&quot;Change original info age to 25 and parent first name set to John.&quot;);<br />        info.setAge(25);<br />        info.getParent().setFirstName(&quot;John&quot;);<br />        <br />        System.out.println();<br />        System.out.println(&quot;Original object: &quot; + info);<br />        System.out.println(&quot;Cloned object: &quot; + clonedInfo);<br />    }<br />    <br />    @SuppressWarnings(&quot;unchecked&quot;)<br />    public static &lt;T&gt; T cloneObject(T src){<br />        return (T) XSTREAM.fromXML(XSTREAM.toXML(src));<br />    }<br /><br />}<br /><br /></pre><br />結果顯示如下:<br /><pre class="brush: text">Original object: Info [firstName=Cheung, lastName=null, age=24, hobbies=[Sports, Reading], parent=Parent [firstName=Tom, lastName=Cheung]]<br />Now, we are going to clone info object<br /><br />Cloned object: Info [firstName=Cheung, lastName=null, age=24, hobbies=[Sports, Reading], parent=Parent [firstName=Tom, lastName=Cheung]]<br /><br />Change original info age to 25 and parent first name set to John.<br /><br />Original object: Info [firstName=Cheung, lastName=null, age=25, hobbies=[Sports, Reading], parent=Parent [firstName=John, lastName=Cheung]]<br />Cloned object: Info [firstName=Cheung, lastName=null, age=24, hobbies=[Sports, Reading], parent=Parent [firstName=Tom, lastName=Cheung]]<br /></pre><br />可以看出連 <b>Parent</b> 在內也一起複製了，就算更改了原本的 <b>Info Object</b> 也不會改動到複製出來的 <b>Object</b>，即是 2 個變數的 <b>Pointer</b> 不是指向同一個位置。<br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Head-First-Java-Kathy-Sierra/dp/0596009208?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Head First Java, 2nd Edition" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596009208&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596009208" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Effective-Java-2nd-Joshua-Bloch/dp/0321356683?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Effective Java (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0321356683&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0321356683" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Sams-Teach-Yourself-Java-Hours/dp/0672330768?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Sams Teach Yourself Java in 24 Hours (5th Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0672330768&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0672330768" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-4708286809936453118?l=lawpronotes.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用 Apache Commons VFS 來操作 SFTP]]></title>
-    <link href="http://pro.ctlok.com/2011/06/apache-commons-vfs-for-sftp.html"/>
-    <updated>2011-06-13T12:35:00+08:00</updated>
-    <id>http://pro.ctlok.com/2011/06/apache-commons-vfs-for-sftp</id>
-    <content type="html"><![CDATA[在 <b>Java</b> 使用 <b>FTP</b> 去上載檔案，下載檔案或去做其他操作也是很簡單，因為 <b>Java API</b> 已經包括了對 <b>FTP</b> 的支援。如果不是使用 <b>FTP</b>，而是使用 <b>SFTP: SSH File Transfer Protocol</b>，使用<b>Java API</b> 實作便有點麻煩了。<br /><br />幸好 <b>Apache Commons VFS</b> 替我們實作了 <b>SFTP</b> 的操作，<b>Apache Commons VFS</b> 配合 <a href="http://www.jcraft.com/jsch/">JSch</a> 使我們可以很簡單地使用 <b>SSH</b> 連接 <b>Server</b> 和上載檔案，下載檔案等等操作。<br /><br />廢話不多說，首先要準備 3 個 <b>Library</b>:<br /><ul><li>Apache Commons VFS - <a href="http://commons.apache.org/vfs/download_vfs.cgi">http://commons.apache.org/vfs/download_vfs.cgi</a><br /></li><li>Apache Commons Logging - <a href="http://commons.apache.org/logging/download_logging.cgi">http://commons.apache.org/logging/download_logging.cgi</a></li><li>JSch - <a href="http://www.jcraft.com/jsch/">http://www.jcraft.com/jsch/</a></li></ul><br />下載好後將 <b>.jar</b> 加到 <b>class path</b> 令程式找到這些 <b>Library</b>。<br /><br />再來就是寫程式，為了方便好看，我會將所有程式碼放到 <b>Main class</b> 內。<br /><br />第一步是製作一個 <b>Function</b> 去將 <b>Protocol</b>，<b>Host Name</b>，<b>Username</b>，<b>Password</b> 和 <b>Server</b> 上的檔案位置連接起來 (Factory Method)。令到 <b>Apache Commons VFS</b> 能讀得懂。<br /><pre class="brush: java">public static String createConnectionString(String hostName,<br />        String username, String password, String remoteFilePath) {<br />    // result: &quot;sftp://user:123456@domainname.com/resume.pdf<br />    return &quot;sftp://&quot; + username + &quot;:&quot; + password + &quot;@&quot; + hostName + &quot;/&quot;<br />            + remoteFilePath;<br />}<br /></pre><br />第二步是製作一個 <b>Function</b> 去製造出一個 <b>SFTP</b> 預設的設定 (Factory Method):<br /><pre class="brush: java">public static FileSystemOptions createDefaultOptions()<br />        throws FileSystemException {<br />    // Create SFTP options<br />    FileSystemOptions opts = new FileSystemOptions();<br /><br />    // SSH Key checking<br />    SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(<br />            opts, &quot;no&quot;);<br /><br />    // Root directory set to user home<br />    SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, true);<br /><br />    // Timeout is count by Milliseconds<br />    SftpFileSystemConfigBuilder.getInstance().setTimeout(opts, 10000);<br /><br />    return opts;<br />}<br /></pre><br />第三步是製作一個上載檔案的 <b>Function</b>:<br /><pre class="brush: java">public static void upload(String hostName, String username,<br />        String password, String localFilePath, String remoteFilePath) {<br /><br />    File f = new File(localFilePath);<br />    if (!f.exists())<br />        throw new RuntimeException(&quot;Error. Local file not found&quot;);<br /><br />    StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />    try {<br />        manager.init();<br /><br />        // Create local file object<br />        FileObject localFile = manager.resolveFile(f.getAbsolutePath());<br /><br />        // Create remote file object<br />        FileObject remoteFile = manager.resolveFile(<br />                createConnectionString(hostName, username, password,<br />                        remoteFilePath), createDefaultOptions());<br /><br />        // Copy local file to sftp server<br />        remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);<br /><br />        System.out.println(&quot;File upload success&quot;);<br />    } catch (Exception e) {<br />        throw new RuntimeException(e);<br />    } finally {<br />        manager.close();<br />    }<br />}<br /></pre><br />在這裡可以測試一下上載檔案的 <b>Function</b> 是否沒有問題:<br /><pre class="brush: java">/*<br /> * args[0]: hostName <br /> * args[1]: username <br /> * args[2]: password <br /> * args[3]:localFilePath <br /> * args[4]: remoteFilePath<br /> */<br />public static void main(String[] args) {<br />    if (args.length &lt; 5)<br />        throw new RuntimeException(<br />                &quot;Error. Please enter &quot;<br />                        + &quot;args[0]: hostName, args[1]: username, args[2]: password, &quot;<br />                        + &quot;args[3]: localFilePath, args[4]: remoteFilePath.&quot;);<br /><br />    upload(args[0], args[1], args[2], args[3], args[4]);<br />}<br /></pre><br />成功後 <b>Console</b> 會打印出 <b>File upload success</b>。<br /><br />再來是加下載檔案的 <b>Function</b>:<br /><pre class="brush: java">public static void download(String hostName, String username,<br />        String password, String localFilePath, String remoteFilePath) {<br /><br />    StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />    try {<br />        manager.init();<br /><br />        String downloadFilePath = localFilePath.substring(0,<br />                localFilePath.lastIndexOf(&quot;.&quot;))<br />                + &quot;_downlaod_from_sftp&quot;<br />                + localFilePath.substring(localFilePath.lastIndexOf(&quot;.&quot;),<br />                        localFilePath.length());<br /><br />        // Create local file object<br />        FileObject localFile = manager.resolveFile(downloadFilePath);<br /><br />        // Create remote file object<br />        FileObject remoteFile = manager.resolveFile(<br />                createConnectionString(hostName, username, password,<br />                        remoteFilePath), createDefaultOptions());<br /><br />        // Copy local file to sftp server<br />        localFile.copyFrom(remoteFile, Selectors.SELECT_SELF);<br /><br />        System.out.println(&quot;File download success&quot;);<br />    } catch (Exception e) {<br />        throw new RuntimeException(e);<br />    } finally {<br />        manager.close();<br />    }<br />}<br /></pre><br />測試檔案是否存在的 <b>Function</b>:<br /><pre class="brush: java">public static boolean exist(String hostName, String username,<br />        String password, String remoteFilePath) {<br />    StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />    try {<br />        manager.init();<br /><br />        // Create remote object<br />        FileObject remoteFile = manager.resolveFile(<br />                createConnectionString(hostName, username, password,<br />                        remoteFilePath), createDefaultOptions());<br /><br />        System.out.println(&quot;File exist: &quot; + remoteFile.exists());<br /><br />        return remoteFile.exists();<br />    } catch (Exception e) {<br />        throw new RuntimeException(e);<br />    } finally {<br />        manager.close();<br />    }<br />}<br /></pre><br />刪除 <b>Server</b> 檔案的 <b>Function</b>:<br /><pre class="brush: java">public static void delete(String hostName, String username,<br />        String password, String remoteFilePath) {<br />    StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />    try {<br />        manager.init();<br /><br />        // Create remote object<br />        FileObject remoteFile = manager.resolveFile(<br />                createConnectionString(hostName, username, password,<br />                        remoteFilePath), createDefaultOptions());<br /><br />        if (remoteFile.exists()) {<br />            remoteFile.delete();<br />            System.out.println(&quot;Delete remote file success&quot;);<br />        }<br />    } catch (Exception e) {<br />        throw new RuntimeException(e);<br />    } finally {<br />        manager.close();<br />    }<br />}<br /></pre><br />完整的程式:<br /><pre class="brush: java">package sftp.sample;<br /><br />import java.io.File;<br /><br />import org.apache.commons.vfs.FileObject;<br />import org.apache.commons.vfs.FileSystemException;<br />import org.apache.commons.vfs.FileSystemOptions;<br />import org.apache.commons.vfs.Selectors;<br />import org.apache.commons.vfs.impl.StandardFileSystemManager;<br />import org.apache.commons.vfs.provider.sftp.SftpFileSystemConfigBuilder;<br /><br />public class Main {<br /><br />    /*<br />     * args[0]: hostName <br />     * args[1]: username <br />     * args[2]: password<br />     * args[3]: localFilePath <br />     * args[4]: remoteFilePath<br />     */<br />    public static void main(String[] args) {<br />        if (args.length &lt; 5)<br />            throw new RuntimeException(<br />                    &quot;Error. Please enter &quot;<br />                            + &quot;args[0]: hostName, args[1]: username, args[2]: password, &quot;<br />                            + &quot;args[3]: localFilePath, args[4]: remoteFilePath.&quot;);<br /><br />        upload(args[0], args[1], args[2], args[3], args[4]);<br />        exist(args[0], args[1], args[2], args[4]);<br />        download(args[0], args[1], args[2], args[3], args[4]);<br />        delete(args[0], args[1], args[2], args[4]);<br />    }<br /><br />    public static void upload(String hostName, String username,<br />            String password, String localFilePath, String remoteFilePath) {<br /><br />        File f = new File(localFilePath);<br />        if (!f.exists())<br />            throw new RuntimeException(&quot;Error. Local file not found&quot;);<br /><br />        StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />        try {<br />            manager.init();<br /><br />            // Create local file object<br />            FileObject localFile = manager.resolveFile(f.getAbsolutePath());<br /><br />            // Create remote file object<br />            FileObject remoteFile = manager.resolveFile(<br />                    createConnectionString(hostName, username, password,<br />                            remoteFilePath), createDefaultOptions());<br /><br />            // Copy local file to sftp server<br />            remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);<br /><br />            System.out.println(&quot;File upload success&quot;);<br />        } catch (Exception e) {<br />            throw new RuntimeException(e);<br />        } finally {<br />            manager.close();<br />        }<br />    }<br /><br />    public static void download(String hostName, String username,<br />            String password, String localFilePath, String remoteFilePath) {<br /><br />        StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />        try {<br />            manager.init();<br /><br />            String downloadFilePath = localFilePath.substring(0,<br />                    localFilePath.lastIndexOf(&quot;.&quot;))<br />                    + &quot;_downlaod_from_sftp&quot;<br />                    + localFilePath.substring(localFilePath.lastIndexOf(&quot;.&quot;),<br />                            localFilePath.length());<br /><br />            // Create local file object<br />            FileObject localFile = manager.resolveFile(downloadFilePath);<br /><br />            // Create remote file object<br />            FileObject remoteFile = manager.resolveFile(<br />                    createConnectionString(hostName, username, password,<br />                            remoteFilePath), createDefaultOptions());<br /><br />            // Copy local file to sftp server<br />            localFile.copyFrom(remoteFile, Selectors.SELECT_SELF);<br /><br />            System.out.println(&quot;File download success&quot;);<br />        } catch (Exception e) {<br />            throw new RuntimeException(e);<br />        } finally {<br />            manager.close();<br />        }<br />    }<br /><br />    public static void delete(String hostName, String username,<br />            String password, String remoteFilePath) {<br />        StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />        try {<br />            manager.init();<br /><br />            // Create remote object<br />            FileObject remoteFile = manager.resolveFile(<br />                    createConnectionString(hostName, username, password,<br />                            remoteFilePath), createDefaultOptions());<br /><br />            if (remoteFile.exists()) {<br />                remoteFile.delete();<br />                System.out.println(&quot;Delete remote file success&quot;);<br />            }<br />        } catch (Exception e) {<br />            throw new RuntimeException(e);<br />        } finally {<br />            manager.close();<br />        }<br />    }<br /><br />    public static boolean exist(String hostName, String username,<br />            String password, String remoteFilePath) {<br />        StandardFileSystemManager manager = new StandardFileSystemManager();<br /><br />        try {<br />            manager.init();<br /><br />            // Create remote object<br />            FileObject remoteFile = manager.resolveFile(<br />                    createConnectionString(hostName, username, password,<br />                            remoteFilePath), createDefaultOptions());<br /><br />            System.out.println(&quot;File exist: &quot; + remoteFile.exists());<br /><br />            return remoteFile.exists();<br />        } catch (Exception e) {<br />            throw new RuntimeException(e);<br />        } finally {<br />            manager.close();<br />        }<br />    }<br /><br />    public static String createConnectionString(String hostName,<br />            String username, String password, String remoteFilePath) {<br />        // result: &quot;sftp://user:123456@domainname.com/resume.pdf<br />        return &quot;sftp://&quot; + username + &quot;:&quot; + password + &quot;@&quot; + hostName + &quot;/&quot;<br />                + remoteFilePath;<br />    }<br /><br />    public static FileSystemOptions createDefaultOptions()<br />            throws FileSystemException {<br />        // Create SFTP options<br />        FileSystemOptions opts = new FileSystemOptions();<br /><br />        // SSH Key checking<br />        SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(<br />                opts, &quot;no&quot;);<br /><br />        // Root directory set to user home<br />        SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, true);<br /><br />        // Timeout is count by Milliseconds<br />        SftpFileSystemConfigBuilder.getInstance().setTimeout(opts, 10000);<br /><br />        return opts;<br />    }<br /><br />}<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Jakarta-Commons-Cookbook-Timothy-OBrien/dp/059600706X?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Jakarta Commons Cookbook" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=059600706X&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=059600706X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Pro-Jakarta-Commons-Harshad-Oak/dp/1590592832?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Pro Jakarta Commons" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1590592832&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1590592832" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/SSH-Secure-Shell-Definitive-Guide/dp/0596008953?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="SSH, The Secure Shell: The Definitive Guide" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596008953&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596008953" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-7245793115940246788?l=lawpronotes.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
