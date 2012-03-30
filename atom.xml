@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-30T10:15:51+08:00</updated>
+  <updated>2012-03-30T15:56:04+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,200 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Maven Setup Jetty Development Server]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/03/30/maven-setup-jetty-Dev-server.html"/>
+    <updated>2012-03-30T14:38:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/03/30/maven-setup-jetty-Dev-server</id>
+    <content type="html"><![CDATA[<p>在 Maven 使用 Jetty 作為 Web Server 是非常簡單，在 <code>pom.xml</code> 加入以下設定:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;groupId&gt;</span>org.mortbay.jetty<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;artifactId&gt;</span>maven-jetty-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;version&gt;</span>6.1.26<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;stopPort&gt;</span>9966<span class="nt">&lt;/stopPort&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;stopKey&gt;</span>stop<span class="nt">&lt;/stopKey&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plugin&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以後只需要輸入 <code>mvn jetty:run</code> 就會啟動 Jetty Web Server，輸入 <code>mvn jetty:stop</code> 則關閉，
+非常方便。</p>
+
+<hr />
+
+<p>如果要在 Unit Test 測試 URL 或版面的 HTML 是否正確，可以參考以下的 <code>pom.xml</code> 設定:</p>
+
+<figure class='code'><figcaption><span> (pom.xml)</span> <a href='http://pro.ctlok.com/downloads/code/maven-setup-jetty-dev-server/pom.xml'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0&quot;</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+</span><span class='line'><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;groupId&gt;</span>pro.ctlok.com<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;artifactId&gt;</span>jetty<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;packaging&gt;</span>war<span class="nt">&lt;/packaging&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;version&gt;</span>1.0.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;name&gt;</span>jetty<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;url&gt;</span>http://maven.apache.org<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependencies&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>javax.servlet<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>servlet-api<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.5<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>javax.servlet.jsp<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>jsp-api<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.1<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>junit<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>junit<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>4.10<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependencies&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;version&gt;</span>2.0.2<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;source&gt;</span>1.5<span class="nt">&lt;/source&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;target&gt;</span>1.5<span class="nt">&lt;/target&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;version&gt;</span>2.12<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;groupId&gt;</span>org.mortbay.jetty<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;artifactId&gt;</span>maven-jetty-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;version&gt;</span>6.1.26<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;stopPort&gt;</span>9966<span class="nt">&lt;/stopPort&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;stopKey&gt;</span>stop<span class="nt">&lt;/stopKey&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>                    <span class="c">&lt;!-- Before test class execute, start Jetty web server first --&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;id&gt;</span>start-jetty<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;phase&gt;</span>test-compile<span class="nt">&lt;/phase&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                            <span class="nt">&lt;goal&gt;</span>run<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>                            <span class="nt">&lt;scanIntervalSeconds&gt;</span>0<span class="nt">&lt;/scanIntervalSeconds&gt;</span>
+</span><span class='line'>                            <span class="nt">&lt;daemon&gt;</span>true<span class="nt">&lt;/daemon&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>                    <span class="c">&lt;!-- After test, stop Jetty web server --&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;id&gt;</span>stop-jetty<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;phase&gt;</span>test<span class="nt">&lt;/phase&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                            <span class="nt">&lt;goal&gt;</span>stop<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                        <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>                    <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/build&gt;</span>
+</span><span class='line'><span class="nt">&lt;/project&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上設定可以在測試前啟動 Jetty Web Server，測試完畢就會自動關閉。</p>
+
+<figure class='code'><figcaption><span> (HelloServlet.java)</span> <a href='http://pro.ctlok.com/downloads/code/maven-setup-jetty-dev-server/HelloServlet.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">pro</span><span class="o">.</span><span class="na">ctlok</span><span class="o">.</span><span class="na">com</span><span class="o">.</span><span class="na">jetty</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.ServletException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServlet</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletRequest</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.servlet.http.HttpServletResponse</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloServlet</span> <span class="kd">extends</span> <span class="n">HttpServlet</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">6496751289098922589L</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nd">@Override</span>
+</span><span class='line'>  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">doGet</span><span class="o">(</span><span class="n">HttpServletRequest</span> <span class="n">req</span><span class="o">,</span> <span class="n">HttpServletResponse</span> <span class="n">resp</span><span class="o">)</span>
+</span><span class='line'>          <span class="kd">throws</span> <span class="n">ServletException</span><span class="o">,</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">resp</span><span class="o">.</span><span class="na">getWriter</span><span class="o">().</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Hello World&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (UrlTest.java)</span> <a href='http://pro.ctlok.com/downloads/code/maven-setup-jetty-dev-server/UrlTest.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">pro</span><span class="o">.</span><span class="na">ctlok</span><span class="o">.</span><span class="na">com</span><span class="o">.</span><span class="na">jetty</span><span class="o">.</span><span class="na">test</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.HttpURLConnection</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UrlTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nd">@Test</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="s">&quot;http://localhost:8080/jetty/index&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">HttpURLConnection</span> <span class="n">conn</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpURLConnection</span><span class="o">)</span> <span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">assert</span> <span class="n">conn</span><span class="o">.</span><span class="na">getResponseCode</span><span class="o">()</span> <span class="o">==</span> <span class="mi">200</span><span class="o">;</span>
+</span><span class='line'>      
+</span><span class='line'>      <span class="n">BufferedReader</span> <span class="n">rd</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">conn</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()));</span>
+</span><span class='line'>      
+</span><span class='line'>      <span class="k">try</span><span class="o">{</span>
+</span><span class='line'>          <span class="k">assert</span> <span class="n">rd</span><span class="o">.</span><span class="na">readLine</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;Hello World&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">rd</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (web.xml)</span> <a href='http://pro.ctlok.com/downloads/code/maven-setup-jetty-dev-server/web.xml'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;web-app</span> <span class="na">version=</span><span class="s">&quot;2.5&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://java.sun.com/xml/ns/javaee&quot;</span>
+</span><span class='line'><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+</span><span class='line'><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;display-name&gt;</span>jetty<span class="nt">&lt;/display-name&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;session-config&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;session-timeout&gt;</span>30<span class="nt">&lt;/session-timeout&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/session-config&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;servlet&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;display-name&gt;</span>IndexServlet<span class="nt">&lt;/display-name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;servlet-name&gt;</span>IndexServlet<span class="nt">&lt;/servlet-name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;servlet-class&gt;</span>pro.ctlok.com.jetty.HelloServlet<span class="nt">&lt;/servlet-class&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/servlet&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;servlet-mapping&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;servlet-name&gt;</span>IndexServlet<span class="nt">&lt;/servlet-name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;url-pattern&gt;</span>/index<span class="nt">&lt;/url-pattern&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/servlet-mapping&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;welcome-file-list&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;welcome-file&gt;</span>index<span class="nt">&lt;/welcome-file&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/welcome-file-list&gt;</span>
+</span><span class='line'><span class="nt">&lt;/web-app&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Design Pattern - Observer]]></title>
@@ -897,15 +1091,6 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
     <updated>2011-06-14T10:44:00+08:00</updated>
     <id>http://pro.ctlok.com/2011/06/seam-2-in-websphere-7-ejb-jndi-setting</id>
     <content type="html"><![CDATA[<b>Seam</b> 在 <b>JBoss Application Server</b> 上將 <b>EJB session bean</b> 設為 <b>Seam Component</b> 根本不需要特地去設定 <b>JNDI</b>，<b>Seam</b> 自然地找到相對應的 <b>Session bean</b>。<br /><br />但在 <b>Websphere 7 Application Server</b> 上就不是這回事了，需要自行設定 <b>JNDI</b> 讓 <b>Seam</b> 找得到 (將 <b>EJB session bean</b> 設為 <b>Seam Component</b> 才需要更改 <b>JNDI</b>，純 <b>EJB session bean</b> 不需要作出任何更改)<br /><br />這篇文章只使用我認為最好的方法。<br /><br />首先到 <b>web.xml</b> 加上以下設定:<br /><br /><pre class="brush: xml">&lt;ejb-local-ref&gt;<br />    &lt;ejb-ref-name&gt;ejblocal:EjbSynchronizations&lt;/ejb-ref-name&gt;<br />    &lt;ejb-ref-type&gt;Session&lt;/ejb-ref-type&gt;<br />    &lt;local-home&gt;&lt;/local-home&gt;<br />    &lt;local&gt;org.jboss.seam.transaction.LocalEjbSynchronizations&lt;/local&gt;<br />&lt;/ejb-local-ref&gt;<br /></pre><br />然後在 <b>WEB-INF/classes</b> 加入一個 <b>seam-jndi.prpperties</b>:<br /><pre class="brush: text">com.ibm.websphere.naming.hostname.normalizer=com.ibm.ws.naming.util.DefaultHostnameNormalizer<br />java.naming.factory.initial=com.ibm.websphere.naming.WsnInitialContextFactory<br />com.ibm.websphere.naming.name.syntax=jndi<br />com.ibm.websphere.naming.namespace.connection=lazy<br />com.ibm.ws.naming.ldap.ldapinitctxfactory=com.sun.jndi.ldap.LdapCtxFactory<br />com.ibm.websphere.naming.jndicache.cacheobject=populated<br />com.ibm.websphere.naming.namespaceroot=defaultroot<br />com.ibm.ws.naming.wsn.factory.initial=com.ibm.ws.naming.util.WsnInitCtxFactory<br />com.ibm.websphere.naming.jndicache.maxcachelife=0<br />com.ibm.websphere.naming.jndicache.maxentrylife=0<br />com.ibm.websphere.naming.jndicache.cachename=providerURL<br />java.naming.provider.url=corbaloc:rir:/NameServiceServerRoot<br />java.naming.factory.url.pkgs=com.ibm.ws.runtime\:com.ibm.ws.naming<br /></pre><br />再將 <b>WEB-INF/components.xml</b> 內的 <b>jndi-pattern</b> 更改為:<br /><pre class="brush: xml">&lt;core:init <br />    jndi-pattern=&quot;ejblocal:#{ejbName}&quot; <br />    debug=&quot;false&quot; /&gt;<br /></pre><br />最後就是設定 <b>Websphere</b> 的 <b>EJB session bean JNDI</b>，在 <b>EJB Project</b> 內的 <b>META-INF</b> 加入 <b>ibm-ejb-jar-bnd.xml</b>:<br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />&lt;ejb-jar-bnd xmlns=&quot;http://websphere.ibm.com/xml/ns/javaee&quot;<br />    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;<br />    xsi:schemaLocation=&quot;http://websphere.ibm.com/xml/ns/javaee <br />                      http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_0.xsd&quot;<br />    version=&quot;1.0&quot;&gt;<br /><br />    &lt;session name=&quot;MyBean&quot; simple-binding-name=&quot;MyBean&quot; /&gt;<br /><br />&lt;/ejb-jar-bnd&gt;<br /></pre><br /><b>simple-binding-name</b> 就是 <b>JNDI</b>，這樣 <b>Seam</b> 會照著 <b>components.xml</b> 內的 <b>jndi-pattern</b> 去使用以下的 <b>JNDI</b> 找到 <b>EJB session bean</b>:<br /><pre class="brush: text">ejblocal:MyBean<br /></pre><br />如果 <b>components.xml</b> 內的 <b>jndi-pattern</b> 改變了，亦要去更改 <b>simple-binding-name</b>。<br />例如:<br /><pre class="brush: xml">&lt;core:init <br />    jndi-pattern=&quot;ejblocal:myModule/#{ejbName}&quot; <br />    debug=&quot;false&quot; /&gt;<br /></pre><br /><b>simple-binding-name</b> 亦要更改為:<br /><pre class="brush: xml">&lt;session name=&quot;MyBean&quot; <br />    simple-binding-name=&quot;MyModule/myBean&quot; /&gt;<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Seam-Action-Dan-Allen/dp/1933988401?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Seam in Action" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1933988401&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1933988401" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Seam-Framework-Experience-Evolution-Java/dp/0137129394?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Seam Framework: Experience the Evolution of Java EE (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0137129394&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0137129394" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/WebSphere-Application-Server-Internals-Professionals/dp/1430219580?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Pro IBM WebSphere Application Server 7 Internals (Books for Professionals by Professionals)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1430219580&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1430219580" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-7344194767850097008?l=lawpronotes.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用 Xstream 程式庫去深層複製 Java 物件]]></title>
-    <link href="http://pro.ctlok.com/2011/06/java-xstream-to-deep-clone-object.html"/>
-    <updated>2011-06-13T15:54:00+08:00</updated>
-    <id>http://pro.ctlok.com/2011/06/java-xstream-to-deep-clone-object</id>
-    <content type="html"><![CDATA[在某些時候，為免改寫原本 <b>Object</b> 的數據，而需要複製一個一模一樣的 <b>Object</b> 出來，例如記下當時的 <b>Object</b> 狀態，然後備份等等。如果使用 <b>Getter</b> 和 <b>Setter</b> 一個一個數據去複製，一定會大大增加程式碼行數，亦只能對已知的 <b>Object</b> 去複製。當這個 <b>Object</b> 新增一項數據時，便要再重寫複製方法，所以這方法是很沒有效率的。<br /><br /><b>Xstream</b> 原本是 <b>Java</b> 操作 <b>XML</b> 的一個 <b>Library</b>，除此之外亦可以使用 <b>Xstream</b> 去複製 <b>Object</b> (將 <b>Java Object</b> 轉換成 <b>XML</b> 再轉換為 <b>Java Object</b>)。<br /><br /><b>Xstream</b> 官方網址: <a href="http://xstream.codehaus.org/">http://xstream.codehaus.org/</a><br /><br />下載後將 <b>.jar</b> 加到 <b>class path</b>。<br /><br />假設現在有 <b>Parent</b> 和 <b>Info</b> 2 個 <b>Object</b>，這 2 個 <b>Object</b> 都是作為傳遞數據的 <b>Object</b>。<br /><br /><b>Parent</b>:<br /><pre class="brush: java">package xstream.sample;<br /><br />public class Parent {<br /><br />    private String firstName;<br />    private String lastName;<br /><br />    public String getFirstName() {<br />        return firstName;<br />    }<br /><br />    public void setFirstName(String firstName) {<br />        this.firstName = firstName;<br />    }<br /><br />    public String getLastName() {<br />        return lastName;<br />    }<br /><br />    public void setLastName(String lastName) {<br />        this.lastName = lastName;<br />    }<br /><br />    @Override<br />    public String toString() {<br />        return &quot;Parent [firstName=&quot; + firstName + &quot;, lastName=&quot; + lastName<br />                + &quot;]&quot;;<br />    }<br /><br />}<br /></pre><br /><b>Info</b>:<br /><pre class="brush: java">package xstream.sample;<br /><br />import java.util.LinkedList;<br />import java.util.List;<br /><br />public class Info {<br /><br />    private String firstName;<br />    private String lastName;<br />    private int age;<br />    private List&lt;String&gt; hobbies;<br />    private Parent parent;<br />    <br />    public String getFirstName() {<br />        return firstName;<br />    }<br /><br />    public void setFirstName(String firstName) {<br />        this.firstName = firstName;<br />    }<br /><br />    public String getLastName() {<br />        return lastName;<br />    }<br /><br />    public void setLastName(String lastName) {<br />        this.lastName = lastName;<br />    }<br /><br />    public int getAge() {<br />        return age;<br />    }<br /><br />    public void setAge(int age) {<br />        this.age = age;<br />    }<br /><br />    public List&lt;String&gt; getHobbies() {<br />        return hobbies;<br />    }<br /><br />    public void setHobbies(List&lt;String&gt; hobbies) {<br />        this.hobbies = hobbies;<br />    }<br /><br />    public void addHobby(String hobby) {<br />        if (hobbies == null)<br />            hobbies = new LinkedList&lt;String&gt;();<br />        hobbies.add(hobby);<br />    }<br />    <br />    public Parent getParent() {<br />        return parent;<br />    }<br /><br />    public void setParent(Parent parent) {<br />        this.parent = parent;<br />    }<br /><br />    @Override<br />    public String toString() {<br />        return &quot;Info [firstName=&quot; + firstName + &quot;, lastName=&quot; + lastName<br />                + &quot;, age=&quot; + age + &quot;, hobbies=&quot; + hobbies + &quot;, parent=&quot;<br />                + parent + &quot;]&quot;;<br />    }<br />    <br />}<br /></pre><br />付責複製的 <b>Function</b>:<br /><br /><pre class="brush: java">package xstream.sample;<br /><br />import com.thoughtworks.xstream.XStream;<br />import com.thoughtworks.xstream.io.xml.DomDriver;<br /><br />public class Main {<br /><br />    private static final XStream XSTREAM = new XStream(new DomDriver());<br />    <br />    @SuppressWarnings(&quot;unchecked&quot;)<br />    public static &lt;T&gt; T cloneObject(T src){<br />        return (T) XSTREAM.fromXML(XSTREAM.toXML(src));<br />    }<br /><br />}<br /></pre><br />測試的程式:<br /><pre class="brush: java">package xstream.sample;<br /><br />import com.thoughtworks.xstream.XStream;<br />import com.thoughtworks.xstream.io.xml.DomDriver;<br /><br />public class Main {<br /><br />    private static final XStream XSTREAM = new XStream(new DomDriver());<br />    <br />    public static void main(String[] args) {<br />        //Create info object<br />        Info info = new Info();<br />        Parent parent = new Parent();<br />        <br />        //Set data<br />        info.setFirstName(&quot;Lawrence&quot;);<br />        info.setFirstName(&quot;Cheung&quot;);<br />        info.setAge(24);<br />        info.addHobby(&quot;Sports&quot;);<br />        info.addHobby(&quot;Reading&quot;);<br />        <br />        parent.setFirstName(&quot;Tom&quot;);<br />        parent.setLastName(&quot;Cheung&quot;);<br />        info.setParent(parent);<br />        <br />        //Print my info<br />        System.out.println(&quot;Original object: &quot; + info);<br />        <br />        System.out.println(&quot;Now, we are going to clone info object&quot;);<br />        System.out.println();<br />        Info clonedInfo = cloneObject(info);<br />        <br />        //Print cloned info<br />        System.out.println(&quot;Cloned object: &quot; + clonedInfo);<br />        System.out.println();<br />        <br />        //Modify original info<br />        System.out.println(&quot;Change original info age to 25 and parent first name set to John.&quot;);<br />        info.setAge(25);<br />        info.getParent().setFirstName(&quot;John&quot;);<br />        <br />        System.out.println();<br />        System.out.println(&quot;Original object: &quot; + info);<br />        System.out.println(&quot;Cloned object: &quot; + clonedInfo);<br />    }<br />    <br />    @SuppressWarnings(&quot;unchecked&quot;)<br />    public static &lt;T&gt; T cloneObject(T src){<br />        return (T) XSTREAM.fromXML(XSTREAM.toXML(src));<br />    }<br /><br />}<br /><br /></pre><br />結果顯示如下:<br /><pre class="brush: text">Original object: Info [firstName=Cheung, lastName=null, age=24, hobbies=[Sports, Reading], parent=Parent [firstName=Tom, lastName=Cheung]]<br />Now, we are going to clone info object<br /><br />Cloned object: Info [firstName=Cheung, lastName=null, age=24, hobbies=[Sports, Reading], parent=Parent [firstName=Tom, lastName=Cheung]]<br /><br />Change original info age to 25 and parent first name set to John.<br /><br />Original object: Info [firstName=Cheung, lastName=null, age=25, hobbies=[Sports, Reading], parent=Parent [firstName=John, lastName=Cheung]]<br />Cloned object: Info [firstName=Cheung, lastName=null, age=24, hobbies=[Sports, Reading], parent=Parent [firstName=Tom, lastName=Cheung]]<br /></pre><br />可以看出連 <b>Parent</b> 在內也一起複製了，就算更改了原本的 <b>Info Object</b> 也不會改動到複製出來的 <b>Object</b>，即是 2 個變數的 <b>Pointer</b> 不是指向同一個位置。<br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Head-First-Java-Kathy-Sierra/dp/0596009208?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Head First Java, 2nd Edition" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596009208&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596009208" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Effective-Java-2nd-Joshua-Bloch/dp/0321356683?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Effective Java (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0321356683&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0321356683" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Sams-Teach-Yourself-Java-Hours/dp/0672330768?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Sams Teach Yourself Java in 24 Hours (5th Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0672330768&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0672330768" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-4708286809936453118?l=lawpronotes.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
