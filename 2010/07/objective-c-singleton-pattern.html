@@ -1,1 +1,326 @@
-<!DOCTYPE html> <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]--> <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]--> <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]--> <head> <meta charset="utf-8"> <title>Objective-C 的 Singleton 模式 - Programming Design Notes</title> <meta name="author" content="Lawrence Cheung"> <meta name="description" content="有些時候為了不重覆去做某樣事情而降低了效率，例如: 打開資料庫的連接，如果每次用的時候打開，用完立即關閉，下次再用時又要打開連接，這樣的效率不會高，這時候可以使用 Design Pattern 裡的 Singleton 模式去減少資料庫的連接次數。Singleton &hellip;"> <meta name="HandheldFriendly" content="True"> <meta name="MobileOptimized" content="320"> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="canonical" href="http://pro.ctlok.com/2010/07/objective-c-singleton-pattern.html"> <link href="/favicon.ico" rel="icon"> <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css"> <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"> <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css"> <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml"> <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-16811171-1"]);_gaq.push(["_trackPageview"]);(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)})();</script> </head> <body data-spy="scroll"> <div class="container"> <header class="jumbotron subhead" id="overview"> <div class="subscribe"> <table> <tr> <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png"/></td> <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png"/></a></td> <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png"/></a></td> </tr> </table> </div> <h1 class="title">Programming Design Notes</h1> <div class="navbar"> <div class="navbar-inner"> <div class="container" style="width: auto;"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <div class="nav-collapse"> <ul class="nav"> <li> <a href="/"><i class="icon icon-home"></i>Home</a> </li> <li> <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a> </li> </ul> <form action="http://google.com/search" method="get" class="navbar-search pull-right"> <fieldset role="search"> <input type="hidden" name="q" value="site:pro.ctlok.com"/> <input type="text" name="q" results="0" placeholder="Search" class="span3"/> </fieldset> </form> </div> </div> </div> </div> </header> <div id="main"> <div id="content"> <div class="row"> <div class="span8"> <header> <h2 class="entry-title">Objective-C 的 Singleton 模式</h2> <p class="meta"> <time datetime="2010-07-15T18:01:00+08:00" pubdate data-updated="true">Jul 15<span>th</span>, 2010</time> | <a href="#disqus_thread">Comments</a> </p> </header> <div class="entry-content">有些時候為了不重覆去做某樣事情而降低了效率，例如: 打開資料庫的連接，如果每次用的時候打開，用完立即關閉，下次再用時又要打開連接，這樣的效率不會高，這時候可以使用 <b>Design Pattern</b> 裡的 <b>Singleton</b> 模式去減少資料庫的連接次數。<br/><br/><b>Singleton</b> 模式確保了不同的類別也使用相同的實例，並不會同時擁有 2 個或以上的實例，這種模式是非常常用的，例如 <b>Java EE</b> 的 <b>Spring Framework</b> 預設創造的 <b>Spring Bean</b> 也是使用 <b>Singleton</b> 模式的，但 <b>Singleton</b> 模式亦有一個壞處，就是應用程式使用了 <b>Thread</b> 時，同時有 2 個類別也更改 <b>Singleton</b> 的類別內容可能會出問題，你需要在 <b>Objective-C</b> 內使用 <b>@synchronized</b> 來令到程式不能同時更改某些內容，強迫一個執行完成完才到下一個，但使用這方法效率也會下降的。<br/><br/>下面的例子是保持資料庫的連接。<br/><br/>假如我有一個叫作 <b>DBHelper</b> 的類別:<br/><br/>DBHelper.h<br/><pre class="brush: obj-c">#import &lt;Foundation/Foundation.h&gt;<br />#import &lt;sqlite3.h&gt;<br /><br />@interface DBHelper : NSObject {<br />    sqlite3 *database;<br />}<br /><br />@property(retain, nonatomic) sqlite3 *database;<br /><br />+ (DBHelper *)newInstance;<br />- (void)openDatabase;<br />- (void)closeDatabase;<br /><br />@end<br /></pre><br/>DBHelper.m<br/><pre class="brush: obj-c">#import &quot;DBHelper.h&quot;<br /><br />@implementation DBHelper<br /><br />static DBHelper *instance = nil;<br /><br />@synthesize database;<br /><br />+ (DBHelper *)newInstance{<br />    @synchronized(self) {<br />        if (instance == nil){<br />            instance = [[DBHelper alloc]init];<br />            [instance openDatabase];<br />        }<br />    }<br />    <br />    return instance;<br /><br />}<br /><br />+ (id)allocWithZone:(NSZone *)zone {<br />    @synchronized(self) {<br />        if (instance == nil) {<br />            instance = [super allocWithZone:zone];<br />            return instance;  // assignment and return on first allocation<br />        }<br />    }<br />    return nil; // on subsequent allocation attempts return nil<br />}<br /><br />- (id)copyWithZone:(NSZone *)zone<br />{<br />    return self;<br />}<br /><br />- (id)retain {<br />    return self;<br />}<br /><br />- (unsigned)retainCount {<br />    return UINT_MAX;  // denotes an object that cannot be released<br />}<br /><br />- (void)release {<br />    //do nothing<br />}<br /><br />- (id)autorelease {<br />    return self;<br />}<br /><br />- (void)openDatabase{<br />    if (!database){<br />        int result = sqlite3_open(&quot;ctlok.sqlite&quot;, &amp;database);<br />        if (result != SQLITE_OK){<br />            NSLog(@&quot;Open Database Failure&quot;);<br />        }<br />    }<br />}<br /><br />- (void)closeDatabase{<br />    if(database){<br />        sqlite3_close(database);<br />    }<br />}<br /><br />@end<br /></pre><br/><b>newInstance</b> 的 <b>Method</b> 要使用 <b>@synchronized</b> 來防止 2 個不同類別同時製作 <b>DBHelper</b> 的實例。<br/><br/>使用方法:<br/><pre class="brush: obj-c">DBHelper *dbHelper = [DBHelper newInstance];<br />sqlite3 *database = dbHelper.database;<br /></pre><br/>以上程式碼即可以取得資料庫的連接。<br/><br/>整個應用程式關閉時使用以下程式碼關閉連接就可以了:<br/><pre class="brush: obj-c">DBHelper *dbHelper = [DBHelper newInstance];<br />[dbHelper closeDatabase];<br /></pre><br/>相關書籍: <a imageanchor="1" target="_blank" href="http://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Design Patterns: Elements of Reusable Object-Oriented Software" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0201633612&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0201633612" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/First-Design-Patterns-Elisabeth-Freeman/dp/0596007124?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Head First Design Patterns" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596007124&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596007124" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><a imageanchor="1" target="_blank" href="http://www.amazon.com/Design-Patterns-Explained-Perspective-Object-Oriented/dp/0321247140?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Design Patterns Explained: A New Perspective on Object-Oriented Design (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0321247140&tag=program06-20"/></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0321247140" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important"/><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-2922222887139622255?l=lawpronotes.blogspot.com' alt=''/></div> </div> <footer> <p class="meta"> <span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span> <time datetime="2010-07-15T18:01:00+08:00" pubdate data-updated="true">Jul 15<span>th</span>, 2010</time> <span class="categories"> <a class='category' href='/blog/tag/objective-c/'>Objective-C</a> </span> </p> <div class="sharing"> <br/> <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div> </div> <p class="meta"> <a class="basic-alignment" href="/2010/07/uitableviewcontroller-tutorial.html" title="Previous Post: UITableViewController 的簡單應用">&laquo; UITableViewController 的簡單應用</a> <a class="basic-alignment pull-right" href="/2010/07/map-kit-framework-tutorial.html" title="Next Post: Map Kit Framework 的簡單應用">Map Kit Framework 的簡單應用 &raquo;</a> </p> </footer> <section> <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript> </div> </section> </div> <div class="span4 sidebar"> <section> <h2>About Me</h2> <div class="well"> <p>Lawrence Cheung</p> <a href="mailto:lawrence0819@gmail.com" target="_blank"><img src="/images/mail.png"/></a> </div> </section> <section> <h2>Recent Posts</h2> <div class="well" style="padding: 8px 0;"> <ul id="recent_posts" class="nav nav-list"> <li class="post"> <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a> </li> <li class="post"> <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a> </li> <li class="post"> <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a> </li> <li class="post"> <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a> </li> <li class="post"> <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a> </li> <li class="post"> <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a> </li> <li class="post"> <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a> </li> <li class="post"> <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a> </li> <li class="post"> <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a> </li> <li class="post"> <a href="/2011/12/speed-up-develop-web-site-twitter.html">助你快速開發網站的 Twitter Bootstrap</a> </li> </ul> </div> </section><section> <div id="popularthreads" class="dsq-widget"> <h2 class="dsq-widget-title">Popular Posts</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script> </div> </div> </section> <section> <div id="recentcomment" class="dsq-widget"> <h2 class="dsq-widget-title">Recent Comments</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script> </div> </div> </section> </div> </div> </div> </div> <footer class="footer"><p> Copyright &copy; 2012 - Lawrence Cheung - <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> </p></footer> <script type="text/javascript">var disqus_shortname="pdn",disqus_identifier="http://pro.ctlok.com/2010/07/objective-c-singleton-pattern.html",disqus_url="http://pro.ctlok.com/2010/07/objective-c-singleton-pattern.html",disqus_script="embed.js";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src="http://"+disqus_shortname+".disqus.com/"+disqus_script;(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();</script> <div id="fb-root"></div> <script>(function(a,b,c){var d=a.getElementsByTagName(b)[0];if(!a.getElementById(c))a=a.createElement(b),a.id=c,a.src="//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1",d.parentNode.insertBefore(a,d)})(document,"script","facebook-jssdk");</script> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> <script src="/assets/bootstrap/js/bootstrap.min.js"></script> <script src="/assets/google-code-prettify/js/prettify.js"></script> <script>(function(a){a(function(){a("pre").each(function(){a(this).parents(".gist").size()==0&&a(this).addClass("prettyprint linenums")});prettyPrint()})})(jQuery);</script> </div> </body> </html>
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Objective-C 的 Singleton 模式 - Programming Design Notes</title>
+  <meta name="author" content="Lawrence Cheung">
+
+  
+  <meta name="description" content="有些時候為了不重覆去做某樣事情而降低了效率，例如: 打開資料庫的連接，如果每次用的時候打開，用完立即關閉，下次再用時又要打開連接，這樣的效率不會高，這時候可以使用 Design Pattern 裡的 Singleton 模式去減少資料庫的連接次數。Singleton &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pro.ctlok.com/2010/07/objective-c-singleton-pattern.html">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css">
+  
+  <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml">
+  
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-16811171-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    data-spy="scroll">
+
+  <div class="container">
+    <header class="jumbotron subhead" id="overview">
+      <div class="subscribe">
+    <table>
+        <tr>
+            <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png" /></td>
+            <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png" /></a></td>
+            <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png" /></a></td>
+        </tr>
+    </table>
+</div>
+<h1 class="title">Programming Design Notes</h1>
+
+      <div class="navbar">
+    <div class="navbar-inner">
+        <div class="container" style="width: auto;">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="/"><i class="icon icon-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a>
+                    </li>
+                </ul>
+                
+                <form action="http://google.com/search" method="get" class="navbar-search pull-right">
+                    <fieldset role="search">
+                        <input type="hidden" name="q" value="site:pro.ctlok.com" />
+                        <input type="text" name="q" results="0" placeholder="Search" class="span3" />
+                    </fieldset>
+                </form>
+                
+            </div><!-- /.nav-collapse -->
+        </div>
+    </div><!-- /navbar-inner -->
+</div>
+
+    </header>
+    <div id="main">
+      <div id="content">
+        <div class="row">
+  <div class="span8">
+    
+  <header>
+    
+      <h2 class="entry-title">Objective-C 的 Singleton 模式</h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-15T18:01:00+08:00" pubdate data-updated="true">Jul 15<span>th</span>, 2010</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">有些時候為了不重覆去做某樣事情而降低了效率，例如: 打開資料庫的連接，如果每次用的時候打開，用完立即關閉，下次再用時又要打開連接，這樣的效率不會高，這時候可以使用 <b>Design Pattern</b> 裡的 <b>Singleton</b> 模式去減少資料庫的連接次數。<br /><br /><b>Singleton</b> 模式確保了不同的類別也使用相同的實例，並不會同時擁有 2 個或以上的實例，這種模式是非常常用的，例如 <b>Java EE</b> 的 <b>Spring Framework</b> 預設創造的 <b>Spring Bean</b> 也是使用 <b>Singleton</b> 模式的，但 <b>Singleton</b> 模式亦有一個壞處，就是應用程式使用了 <b>Thread</b> 時，同時有 2 個類別也更改 <b>Singleton</b> 的類別內容可能會出問題，你需要在 <b>Objective-C</b> 內使用 <b>@synchronized</b> 來令到程式不能同時更改某些內容，強迫一個執行完成完才到下一個，但使用這方法效率也會下降的。<br /><br />下面的例子是保持資料庫的連接。<br /><br />假如我有一個叫作 <b>DBHelper</b> 的類別:<br /><br />DBHelper.h<br /><pre class="brush: obj-c">#import &lt;Foundation/Foundation.h&gt;<br />#import &lt;sqlite3.h&gt;<br /><br />@interface DBHelper : NSObject {<br />    sqlite3 *database;<br />}<br /><br />@property(retain, nonatomic) sqlite3 *database;<br /><br />+ (DBHelper *)newInstance;<br />- (void)openDatabase;<br />- (void)closeDatabase;<br /><br />@end<br /></pre><br />DBHelper.m<br /><pre class="brush: obj-c">#import &quot;DBHelper.h&quot;<br /><br />@implementation DBHelper<br /><br />static DBHelper *instance = nil;<br /><br />@synthesize database;<br /><br />+ (DBHelper *)newInstance{<br />    @synchronized(self) {<br />        if (instance == nil){<br />            instance = [[DBHelper alloc]init];<br />            [instance openDatabase];<br />        }<br />    }<br />    <br />    return instance;<br /><br />}<br /><br />+ (id)allocWithZone:(NSZone *)zone {<br />    @synchronized(self) {<br />        if (instance == nil) {<br />            instance = [super allocWithZone:zone];<br />            return instance;  // assignment and return on first allocation<br />        }<br />    }<br />    return nil; // on subsequent allocation attempts return nil<br />}<br /><br />- (id)copyWithZone:(NSZone *)zone<br />{<br />    return self;<br />}<br /><br />- (id)retain {<br />    return self;<br />}<br /><br />- (unsigned)retainCount {<br />    return UINT_MAX;  // denotes an object that cannot be released<br />}<br /><br />- (void)release {<br />    //do nothing<br />}<br /><br />- (id)autorelease {<br />    return self;<br />}<br /><br />- (void)openDatabase{<br />    if (!database){<br />        int result = sqlite3_open(&quot;ctlok.sqlite&quot;, &amp;database);<br />        if (result != SQLITE_OK){<br />            NSLog(@&quot;Open Database Failure&quot;);<br />        }<br />    }<br />}<br /><br />- (void)closeDatabase{<br />    if(database){<br />        sqlite3_close(database);<br />    }<br />}<br /><br />@end<br /></pre><br /><b>newInstance</b> 的 <b>Method</b> 要使用 <b>@synchronized</b> 來防止 2 個不同類別同時製作 <b>DBHelper</b> 的實例。<br /><br />使用方法:<br /><pre class="brush: obj-c">DBHelper *dbHelper = [DBHelper newInstance];<br />sqlite3 *database = dbHelper.database;<br /></pre><br />以上程式碼即可以取得資料庫的連接。<br /><br />整個應用程式關閉時使用以下程式碼關閉連接就可以了:<br /><pre class="brush: obj-c">DBHelper *dbHelper = [DBHelper newInstance];<br />[dbHelper closeDatabase];<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Design Patterns: Elements of Reusable Object-Oriented Software" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0201633612&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0201633612" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/First-Design-Patterns-Elisabeth-Freeman/dp/0596007124?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Head First Design Patterns" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596007124&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596007124" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Design-Patterns-Explained-Perspective-Object-Oriented/dp/0321247140?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Design Patterns Explained: A New Perspective on Object-Oriented Design (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0321247140&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0321247140" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-2922222887139622255?l=lawpronotes.blogspot.com' alt='' /></div>
+</div>
+
+
+    <footer>
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-15T18:01:00+08:00" pubdate data-updated="true">Jul 15<span>th</span>, 2010</time>
+        
+
+<span class="categories">
+  
+    <a class='category' href='/blog/tag/objective-c/'>Objective-C</a>
+  
+</span>
+
+
+      </p>
+      
+        <div class="sharing">
+  <br/>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+      
+      <p class="meta">
+        
+          <a class="basic-alignment" href="/2010/07/uitableviewcontroller-tutorial.html" title="Previous Post: UITableViewController 的簡單應用">&laquo; UITableViewController 的簡單應用</a>
+        
+        
+          <a class="basic-alignment pull-right" href="/2010/07/map-kit-framework-tutorial.html" title="Next Post: Map Kit Framework 的簡單應用">Map Kit Framework 的簡單應用 &raquo;</a>
+        
+      </p>
+    </footer>
+    
+    
+      <section>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <div class="span4 sidebar">
+      
+        <section>
+    <h2>About Me</h2>
+    <div class="well">
+        <p>Lawrence Cheung</p>
+        <a href="mailto:lawrence0819@gmail.com" target="_blank"><img src="/images/mail.png" /></a>
+    </div>
+</section>
+<section>
+    <h2>Recent Posts</h2>
+    <div class="well" style="padding: 8px 0;">
+        <ul id="recent_posts" class="nav nav-list">
+            
+            <li class="post">
+                <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2011/12/speed-up-develop-web-site-twitter.html">助你快速開發網站的 Twitter Bootstrap</a>
+            </li>
+            
+        </ul>
+    </div>
+</section><section>
+    <div id="popularthreads" class="dsq-widget">
+        <h2 class="dsq-widget-title">Popular Posts</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script>
+        </div>
+    </div>
+</section>
+<section>
+    <div id="recentcomment" class="dsq-widget">
+        <h2 class="dsq-widget-title">Recent Comments</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script>
+        </div>
+    </div>
+</section>
+
+
+
+      
+  </div>
+
+</div>
+
+
+      </div>
+    </div>
+    <footer class="footer"><p>
+  Copyright &copy; 2012 - Lawrence Cheung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p></footer>
+    
+
+<script type="text/javascript">
+      var disqus_shortname = 'pdn';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://pro.ctlok.com/2010/07/objective-c-singleton-pattern.html';
+        var disqus_url = 'http://pro.ctlok.com/2010/07/objective-c-singleton-pattern.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/google-code-prettify/js/prettify.js"></script>
+<script>
+    (function($){
+        $(function(){
+            $("pre").each(function(){
+            	if ($(this).parents(".gist").size() == 0){
+            		$(this).addClass("prettyprint linenums");
+            	}
+            })
+            prettyPrint()
+        });
+    })(jQuery)
+</script>
+
+
+  </div>
+</body>
+</html>

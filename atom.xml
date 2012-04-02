@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-04-02T14:13:25+08:00</updated>
+  <updated>2012-04-02T14:46:53+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -26,6 +26,8 @@
 <hr />
 
 <p>公司要你開發一個 Logger (記錄器)，用於記錄程式內的變化，你一開始可能會設計成以下這樣:</p>
+
+<p><img src="http://pro.ctlok.com/downloads/code/design-pattern-factory/sample1/uml.png"></p>
 
 <figure class='code'><figcaption><span> (Logger.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample1/Logger.java'>download</a></figcaption>
  <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
@@ -119,6 +121,8 @@
 <hr />
 
 <p>我們可以使用 Factory Pattern 來解決這個問題:</p>
+
+<p><img src="http://pro.ctlok.com/downloads/code/design-pattern-factory/sample2/uml.png"></p>
 
 <figure class='code'><figcaption><span> (Logger.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample2/Logger.java'>download</a></figcaption>
  <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
@@ -278,7 +282,7 @@
 
 <p>以後要使用 Logger 時不必知道實際是使用 ConsoleLogger 或 FileLogger，只要物件實現了 Logger 這個介面就可以了。
 這個 Factory Pattern 解決了一些問題，但仍然差一點，例如: 在測試環境中我想使用 ConsoleLogger，
-但在正常環境中是使用 FileLogger。以上的方法並不能解決這個問題。</p>
+但在正常環境中是使用 FileLogger，但以上的方法並不能解決這個問題。</p>
 
 <hr />
 
@@ -377,6 +381,14 @@
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>這樣就可以在不同環境替換 LoggerFactory 來建立不同的 Logger。</p>
+
+<hr />
+
+<p>以下的圖片是描述 Factory Pattern 的 Class Diagram。（From Wiki）</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/FactoryMethod.svg/349px-FactoryMethod.svg.png"></p>
 ]]></content>
   </entry>
   

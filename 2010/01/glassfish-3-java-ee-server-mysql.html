@@ -1,1 +1,326 @@
-<!DOCTYPE html> <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]--> <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]--> <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]--> <head> <meta charset="utf-8"> <title>GlassFish 3 Java EE Server + MySQL Database - Programming Design Notes</title> <meta name="author" content="Lawrence Cheung"> <meta name="description" content="Eclipse 整合 GlassFish v3 可參考這篇:&nbsp;http://lawpronotes.blogspot.com/2010/01/eclipse-glassfish-3.html#links首先到以下網址下載 MySQL 和 JDBC Driver for &hellip;"> <meta name="HandheldFriendly" content="True"> <meta name="MobileOptimized" content="320"> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="canonical" href="http://pro.ctlok.com/2010/01/glassfish-3-java-ee-server-mysql.html"> <link href="/favicon.ico" rel="icon"> <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css"> <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"> <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css"> <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml"> <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-16811171-1"]);_gaq.push(["_trackPageview"]);(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)})();</script> </head> <body data-spy="scroll"> <div class="container"> <header class="jumbotron subhead" id="overview"> <div class="subscribe"> <table> <tr> <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png"/></td> <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png"/></a></td> <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png"/></a></td> </tr> </table> </div> <h1 class="title">Programming Design Notes</h1> <div class="navbar"> <div class="navbar-inner"> <div class="container" style="width: auto;"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <div class="nav-collapse"> <ul class="nav"> <li> <a href="/"><i class="icon icon-home"></i>Home</a> </li> <li> <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a> </li> </ul> <form action="http://google.com/search" method="get" class="navbar-search pull-right"> <fieldset role="search"> <input type="hidden" name="q" value="site:pro.ctlok.com"/> <input type="text" name="q" results="0" placeholder="Search" class="span3"/> </fieldset> </form> </div> </div> </div> </div> </header> <div id="main"> <div id="content"> <div class="row"> <div class="span8"> <header> <h2 class="entry-title">GlassFish 3 Java EE Server + MySQL Database</h2> <p class="meta"> <time datetime="2010-01-29T23:52:00+08:00" pubdate data-updated="true">Jan 29<span>th</span>, 2010</time> | <a href="#disqus_thread">Comments</a> </p> </header> <div class="entry-content">Eclipse 整合 GlassFish v3 可參考這篇:&nbsp;<a href="http://lawpronotes.blogspot.com/2010/01/eclipse-glassfish-3.html#links">http://lawpronotes.blogspot.com/2010/01/eclipse-glassfish-3.html#links</a><br/><br/>首先到以下網址下載 MySQL 和 JDBC Driver for MySQL<br/><ul><li>MySQL Community Server:&nbsp;<a href="http://dev.mysql.com/downloads/mysql/">http://dev.mysql.com/downloads/mysql/</a></li><li>JDBC Driver for MySQL:&nbsp;<a href="http://dev.mysql.com/downloads/connector/j/">http://dev.mysql.com/downloads/connector/j/</a></li></ul>安裝 MySQL<br/>解壓縮 JDBC Driver 後<br/>將&nbsp;mysql-connector-java-5.1.11-bin.jar 放到 GlassFish 安裝目錄下的 lib 資料夾內<br/><br/><div class="separator" style="clear: both; text-align: left;"><a href="http://3.bp.blogspot.com/_fDN8R2Wgbcs/S2PjZRyUL_I/AAAAAAAAAV8/XVSzXY6e4sE/s1600-h/glassfish_mysql_1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/_fDN8R2Wgbcs/S2PjZRyUL_I/AAAAAAAAAV8/XVSzXY6e4sE/s320/glassfish_mysql_1.png"/></a></div><br/><br/>完成後請重新開啟動 GlassFish<br/><br/>在瀏覽器輸入網址:&nbsp;<a href="http://localhost:4848/">http://localhost:4848</a><br/>進入 GlassFish 管理員介面<br/><br/><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2Pjf_XTIwI/AAAAAAAAAWE/RbqIREyn14g/s1600-h/glassfish_mysql_2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2Pjf_XTIwI/AAAAAAAAAWE/RbqIREyn14g/s320/glassfish_mysql_2.png"/></a></div><br/><br/>到 Resource -&gt; JDBC -&gt; Connection Pool<br/>新增一個連接池<br/><br/><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2Pj2-7vtoI/AAAAAAAAAWM/ExL0UnT4E9c/s1600-h/glassfish_mysql_3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2Pj2-7vtoI/AAAAAAAAAWM/ExL0UnT4E9c/s320/glassfish_mysql_3.png"/></a><br/><ul><li>Name: 任意取一個</li><li>Resource Type: javax.sql.DataSource</li><li>Database Vendor: MySQL</li></ul><div class="separator" style="clear: both; text-align: left;"><br/></div><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PkJ3NbMeI/AAAAAAAAAWU/3cNTuIzKlYQ/s1600-h/glassfish_mysql_4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PkJ3NbMeI/AAAAAAAAAWU/3cNTuIzKlYQ/s320/glassfish_mysql_4.png"/></a><br/><br/>按下 Next<br/>到&nbsp;Additional Properties 找尋 User 和 Password<br/>User: root<br/><br/><div class="separator" style="clear: both; text-align: left;"><a href="http://1.bp.blogspot.com/_fDN8R2Wgbcs/S2Pk8AS3JbI/AAAAAAAAAWc/97xZf2suII0/s1600-h/glassfish_mysql_5.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/_fDN8R2Wgbcs/S2Pk8AS3JbI/AAAAAAAAAWc/97xZf2suII0/s320/glassfish_mysql_5.png"/></a></div><br/>Password: 安裝 MySQL 時輸入的密碼<br/><br/><div class="separator" style="clear: both; text-align: left;"><a href="http://2.bp.blogspot.com/_fDN8R2Wgbcs/S2Pk_6Q9wnI/AAAAAAAAAWk/u_clnJRNRTA/s1600-h/glassfish_mysql_6.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/_fDN8R2Wgbcs/S2Pk_6Q9wnI/AAAAAAAAAWk/u_clnJRNRTA/s320/glassfish_mysql_6.png"/></a></div><br/><br/>最後在 URL 輸入:&nbsp;jdbc:mysql://:3306/#database_name#<database_name></database_name><br/><database_name>#database_name#&nbsp;是 MySQL 內的 database 名稱</database_name><br/>例如:&nbsp;jdbc:mysql://:3306/test (test 這個 database 在安裝時會自動加入)<br/><br/><div class="separator" style="clear: both; text-align: left;"><a href="http://2.bp.blogspot.com/_fDN8R2Wgbcs/S2PlDtPeuhI/AAAAAAAAAWs/08gwgfGUjKs/s1600-h/glassfish_mysql_7.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/_fDN8R2Wgbcs/S2PlDtPeuhI/AAAAAAAAAWs/08gwgfGUjKs/s320/glassfish_mysql_7.png"/></a></div><br/>按下 Finash 完成<br/><br/>進入剛才新增的連接池<br/>按下 Ping 測試一下<br/>連接成功會看見以下晝面<br/><br/><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PlfJnSF2I/AAAAAAAAAW0/nDxzOBhPDm8/s1600-h/glassfish_mysql_8.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PlfJnSF2I/AAAAAAAAAW0/nDxzOBhPDm8/s320/glassfish_mysql_8.png"/></a></div><br/><br/>再來在 JDBC Resource 加入 JNDI<br/>按下 New<br/>JNDI:&nbsp;任意取一個 (通常是 jdbc 開頭, 比較好識別. 例如:&nbsp;jdbc/mysql_test)<br/>Pool Name: 選取剛才加入的連接池<br/>按下 OK 完成<br/><br/><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PmGF9qtgI/AAAAAAAAAW8/feGE8iYJYpc/s1600-h/glassfish_mysql_9.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PmGF9qtgI/AAAAAAAAAW8/feGE8iYJYpc/s320/glassfish_mysql_9.png"/></a></div><br/><br/>加入 JNDI 是將來使用&nbsp;Java Persistence API 時用<br/><br/>相關書籍:&nbsp;<a href="http://www.amazon.com/JNDI-API-Tutorial-Reference-Directory-Enabled/dp/0201705028?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="JNDI API Tutorial and Reference: Building Directory-Enabled Java(TM) Applications" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0201705028&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0201705028" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><a href="http://www.amazon.com/Java-Data-Access-JDBC-JNDI/dp/0764548468?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Java Data Access: JDBC, JNDI, and JAXP" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0764548468&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0764548468" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><a href="http://www.amazon.com/MySQL-4th-Paul-DuBois/dp/0672329387?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="MySQL (4th Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0672329387&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0672329387" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-7523496142779045307?l=lawpronotes.blogspot.com' alt=''/></div> </div> <footer> <p class="meta"> <span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span> <time datetime="2010-01-29T23:52:00+08:00" pubdate data-updated="true">Jan 29<span>th</span>, 2010</time> <span class="categories"> <a class='category' href='/blog/tag/glassfish/'>GlassFish</a>, <a class='category' href='/blog/tag/java/'>Java</a>, <a class='category' href='/blog/tag/java-ee/'>Java EE</a>, <a class='category' href='/blog/tag/mysql/'>MySQL</a>, <a class='category' href='/blog/tag/web-server/'>Web Server</a> </span> </p> <div class="sharing"> <br/> <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div> </div> <p class="meta"> <a class="basic-alignment" href="/2010/01/eclipse-glassfish-3.html" title="Previous Post: Eclipse 整合 GlassFish 3 開發環境">&laquo; Eclipse 整合 GlassFish 3 開發環境</a> <a class="basic-alignment pull-right" href="/2010/01/java-ee-6-servlet-30-annotations.html" title="Next Post: Java EE 6 - Servlet 3.0 新功能 - 注解 (Annotations)">Java EE 6 - Servlet 3.0 新功能 - 注解 (Annotations) &raquo;</a> </p> </footer> <section> <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript> </div> </section> </div> <div class="span4 sidebar"> <section> <h2>About Me</h2> <div class="well"> <p>Lawrence Cheung</p> <a href="mailto:lawrence0819@gmail.com" target="_blank"><img src="/images/mail.png"/></a> </div> </section> <section> <h2>Recent Posts</h2> <div class="well" style="padding: 8px 0;"> <ul id="recent_posts" class="nav nav-list"> <li class="post"> <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a> </li> <li class="post"> <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a> </li> <li class="post"> <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a> </li> <li class="post"> <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a> </li> <li class="post"> <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a> </li> <li class="post"> <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a> </li> <li class="post"> <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a> </li> <li class="post"> <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a> </li> <li class="post"> <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a> </li> <li class="post"> <a href="/2011/12/speed-up-develop-web-site-twitter.html">助你快速開發網站的 Twitter Bootstrap</a> </li> </ul> </div> </section><section> <div id="popularthreads" class="dsq-widget"> <h2 class="dsq-widget-title">Popular Posts</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script> </div> </div> </section> <section> <div id="recentcomment" class="dsq-widget"> <h2 class="dsq-widget-title">Recent Comments</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script> </div> </div> </section> </div> </div> </div> </div> <footer class="footer"><p> Copyright &copy; 2012 - Lawrence Cheung - <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> </p></footer> <script type="text/javascript">var disqus_shortname="pdn",disqus_identifier="http://pro.ctlok.com/2010/01/glassfish-3-java-ee-server-mysql.html",disqus_url="http://pro.ctlok.com/2010/01/glassfish-3-java-ee-server-mysql.html",disqus_script="embed.js";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src="http://"+disqus_shortname+".disqus.com/"+disqus_script;(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();</script> <div id="fb-root"></div> <script>(function(a,b,c){var d=a.getElementsByTagName(b)[0];if(!a.getElementById(c))a=a.createElement(b),a.id=c,a.src="//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1",d.parentNode.insertBefore(a,d)})(document,"script","facebook-jssdk");</script> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> <script src="/assets/bootstrap/js/bootstrap.min.js"></script> <script src="/assets/google-code-prettify/js/prettify.js"></script> <script>(function(a){a(function(){a("pre").each(function(){a(this).parents(".gist").size()==0&&a(this).addClass("prettyprint linenums")});prettyPrint()})})(jQuery);</script> </div> </body> </html>
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>GlassFish 3 Java EE Server + MySQL Database - Programming Design Notes</title>
+  <meta name="author" content="Lawrence Cheung">
+
+  
+  <meta name="description" content="Eclipse 整合 GlassFish v3 可參考這篇:&nbsp;http://lawpronotes.blogspot.com/2010/01/eclipse-glassfish-3.html#links首先到以下網址下載 MySQL 和 JDBC Driver for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pro.ctlok.com/2010/01/glassfish-3-java-ee-server-mysql.html">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css">
+  
+  <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml">
+  
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-16811171-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    data-spy="scroll">
+
+  <div class="container">
+    <header class="jumbotron subhead" id="overview">
+      <div class="subscribe">
+    <table>
+        <tr>
+            <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png" /></td>
+            <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png" /></a></td>
+            <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png" /></a></td>
+        </tr>
+    </table>
+</div>
+<h1 class="title">Programming Design Notes</h1>
+
+      <div class="navbar">
+    <div class="navbar-inner">
+        <div class="container" style="width: auto;">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="/"><i class="icon icon-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a>
+                    </li>
+                </ul>
+                
+                <form action="http://google.com/search" method="get" class="navbar-search pull-right">
+                    <fieldset role="search">
+                        <input type="hidden" name="q" value="site:pro.ctlok.com" />
+                        <input type="text" name="q" results="0" placeholder="Search" class="span3" />
+                    </fieldset>
+                </form>
+                
+            </div><!-- /.nav-collapse -->
+        </div>
+    </div><!-- /navbar-inner -->
+</div>
+
+    </header>
+    <div id="main">
+      <div id="content">
+        <div class="row">
+  <div class="span8">
+    
+  <header>
+    
+      <h2 class="entry-title">GlassFish 3 Java EE Server + MySQL Database</h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-29T23:52:00+08:00" pubdate data-updated="true">Jan 29<span>th</span>, 2010</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">Eclipse 整合 GlassFish v3 可參考這篇:&nbsp;<a href="http://lawpronotes.blogspot.com/2010/01/eclipse-glassfish-3.html#links">http://lawpronotes.blogspot.com/2010/01/eclipse-glassfish-3.html#links</a><br /><br />首先到以下網址下載 MySQL 和 JDBC Driver for MySQL<br /><ul><li>MySQL Community Server:&nbsp;<a href="http://dev.mysql.com/downloads/mysql/">http://dev.mysql.com/downloads/mysql/</a></li><li>JDBC Driver for MySQL:&nbsp;<a href="http://dev.mysql.com/downloads/connector/j/">http://dev.mysql.com/downloads/connector/j/</a></li></ul>安裝 MySQL<br />解壓縮 JDBC Driver 後<br />將&nbsp;mysql-connector-java-5.1.11-bin.jar 放到 GlassFish 安裝目錄下的 lib 資料夾內<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://3.bp.blogspot.com/_fDN8R2Wgbcs/S2PjZRyUL_I/AAAAAAAAAV8/XVSzXY6e4sE/s1600-h/glassfish_mysql_1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/_fDN8R2Wgbcs/S2PjZRyUL_I/AAAAAAAAAV8/XVSzXY6e4sE/s320/glassfish_mysql_1.png" /></a></div><br /><br />完成後請重新開啟動 GlassFish<br /><br />在瀏覽器輸入網址:&nbsp;<a href="http://localhost:4848/">http://localhost:4848</a><br />進入 GlassFish 管理員介面<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2Pjf_XTIwI/AAAAAAAAAWE/RbqIREyn14g/s1600-h/glassfish_mysql_2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2Pjf_XTIwI/AAAAAAAAAWE/RbqIREyn14g/s320/glassfish_mysql_2.png" /></a></div><br /><br />到 Resource -&gt; JDBC -&gt; Connection Pool<br />新增一個連接池<br /><br /><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2Pj2-7vtoI/AAAAAAAAAWM/ExL0UnT4E9c/s1600-h/glassfish_mysql_3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2Pj2-7vtoI/AAAAAAAAAWM/ExL0UnT4E9c/s320/glassfish_mysql_3.png" /></a><br /><ul><li>Name: 任意取一個</li><li>Resource Type: javax.sql.DataSource</li><li>Database Vendor: MySQL</li></ul><div class="separator" style="clear: both; text-align: left;"><br /></div><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PkJ3NbMeI/AAAAAAAAAWU/3cNTuIzKlYQ/s1600-h/glassfish_mysql_4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PkJ3NbMeI/AAAAAAAAAWU/3cNTuIzKlYQ/s320/glassfish_mysql_4.png" /></a><br /><br />按下 Next<br />到&nbsp;Additional Properties 找尋 User 和 Password<br />User: root<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://1.bp.blogspot.com/_fDN8R2Wgbcs/S2Pk8AS3JbI/AAAAAAAAAWc/97xZf2suII0/s1600-h/glassfish_mysql_5.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/_fDN8R2Wgbcs/S2Pk8AS3JbI/AAAAAAAAAWc/97xZf2suII0/s320/glassfish_mysql_5.png" /></a></div><br />Password: 安裝 MySQL 時輸入的密碼<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://2.bp.blogspot.com/_fDN8R2Wgbcs/S2Pk_6Q9wnI/AAAAAAAAAWk/u_clnJRNRTA/s1600-h/glassfish_mysql_6.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/_fDN8R2Wgbcs/S2Pk_6Q9wnI/AAAAAAAAAWk/u_clnJRNRTA/s320/glassfish_mysql_6.png" /></a></div><br /><br />最後在 URL 輸入:&nbsp;jdbc:mysql://:3306/#database_name#<database_name></database_name><br /><database_name>#database_name#&nbsp;是 MySQL 內的 database 名稱</database_name><br />例如:&nbsp;jdbc:mysql://:3306/test (test 這個 database 在安裝時會自動加入)<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://2.bp.blogspot.com/_fDN8R2Wgbcs/S2PlDtPeuhI/AAAAAAAAAWs/08gwgfGUjKs/s1600-h/glassfish_mysql_7.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/_fDN8R2Wgbcs/S2PlDtPeuhI/AAAAAAAAAWs/08gwgfGUjKs/s320/glassfish_mysql_7.png" /></a></div><br />按下 Finash 完成<br /><br />進入剛才新增的連接池<br />按下 Ping 測試一下<br />連接成功會看見以下晝面<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PlfJnSF2I/AAAAAAAAAW0/nDxzOBhPDm8/s1600-h/glassfish_mysql_8.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PlfJnSF2I/AAAAAAAAAW0/nDxzOBhPDm8/s320/glassfish_mysql_8.png" /></a></div><br /><br />再來在 JDBC Resource 加入 JNDI<br />按下 New<br />JNDI:&nbsp;任意取一個 (通常是 jdbc 開頭, 比較好識別. 例如:&nbsp;jdbc/mysql_test)<br />Pool Name: 選取剛才加入的連接池<br />按下 OK 完成<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PmGF9qtgI/AAAAAAAAAW8/feGE8iYJYpc/s1600-h/glassfish_mysql_9.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/S2PmGF9qtgI/AAAAAAAAAW8/feGE8iYJYpc/s320/glassfish_mysql_9.png" /></a></div><br /><br />加入 JNDI 是將來使用&nbsp;Java Persistence API 時用<br /><br />相關書籍:&nbsp;<a href="http://www.amazon.com/JNDI-API-Tutorial-Reference-Directory-Enabled/dp/0201705028?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="JNDI API Tutorial and Reference: Building Directory-Enabled Java(TM) Applications" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0201705028&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0201705028" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Java-Data-Access-JDBC-JNDI/dp/0764548468?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Java Data Access: JDBC, JNDI, and JAXP" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0764548468&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0764548468" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/MySQL-4th-Paul-DuBois/dp/0672329387?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="MySQL (4th Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0672329387&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0672329387" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-7523496142779045307?l=lawpronotes.blogspot.com' alt='' /></div>
+</div>
+
+
+    <footer>
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-29T23:52:00+08:00" pubdate data-updated="true">Jan 29<span>th</span>, 2010</time>
+        
+
+<span class="categories">
+  
+    <a class='category' href='/blog/tag/glassfish/'>GlassFish</a>, <a class='category' href='/blog/tag/java/'>Java</a>, <a class='category' href='/blog/tag/java-ee/'>Java EE</a>, <a class='category' href='/blog/tag/mysql/'>MySQL</a>, <a class='category' href='/blog/tag/web-server/'>Web Server</a>
+  
+</span>
+
+
+      </p>
+      
+        <div class="sharing">
+  <br/>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+      
+      <p class="meta">
+        
+          <a class="basic-alignment" href="/2010/01/eclipse-glassfish-3.html" title="Previous Post: Eclipse 整合 GlassFish 3 開發環境">&laquo; Eclipse 整合 GlassFish 3 開發環境</a>
+        
+        
+          <a class="basic-alignment pull-right" href="/2010/01/java-ee-6-servlet-30-annotations.html" title="Next Post: Java EE 6 - Servlet 3.0 新功能 - 注解 (Annotations)">Java EE 6 - Servlet 3.0 新功能 - 注解 (Annotations) &raquo;</a>
+        
+      </p>
+    </footer>
+    
+    
+      <section>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <div class="span4 sidebar">
+      
+        <section>
+    <h2>About Me</h2>
+    <div class="well">
+        <p>Lawrence Cheung</p>
+        <a href="mailto:lawrence0819@gmail.com" target="_blank"><img src="/images/mail.png" /></a>
+    </div>
+</section>
+<section>
+    <h2>Recent Posts</h2>
+    <div class="well" style="padding: 8px 0;">
+        <ul id="recent_posts" class="nav nav-list">
+            
+            <li class="post">
+                <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2011/12/speed-up-develop-web-site-twitter.html">助你快速開發網站的 Twitter Bootstrap</a>
+            </li>
+            
+        </ul>
+    </div>
+</section><section>
+    <div id="popularthreads" class="dsq-widget">
+        <h2 class="dsq-widget-title">Popular Posts</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script>
+        </div>
+    </div>
+</section>
+<section>
+    <div id="recentcomment" class="dsq-widget">
+        <h2 class="dsq-widget-title">Recent Comments</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script>
+        </div>
+    </div>
+</section>
+
+
+
+      
+  </div>
+
+</div>
+
+
+      </div>
+    </div>
+    <footer class="footer"><p>
+  Copyright &copy; 2012 - Lawrence Cheung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p></footer>
+    
+
+<script type="text/javascript">
+      var disqus_shortname = 'pdn';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://pro.ctlok.com/2010/01/glassfish-3-java-ee-server-mysql.html';
+        var disqus_url = 'http://pro.ctlok.com/2010/01/glassfish-3-java-ee-server-mysql.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/google-code-prettify/js/prettify.js"></script>
+<script>
+    (function($){
+        $(function(){
+            $("pre").each(function(){
+            	if ($(this).parents(".gist").size() == 0){
+            		$(this).addClass("prettyprint linenums");
+            	}
+            })
+            prettyPrint()
+        });
+    })(jQuery)
+</script>
+
+
+  </div>
+</body>
+</html>

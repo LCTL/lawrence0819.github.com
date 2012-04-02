@@ -1,1 +1,326 @@
-<!DOCTYPE html> <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]--> <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]--> <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]--> <head> <meta charset="utf-8"> <title>Javascript 效能最佳化 - Programming Design Notes</title> <meta name="author" content="Lawrence Cheung"> <meta name="description" content="Javascript 使用不同的寫法效能也可能有很大的出入不使用 eval因為 Javascript engine 要將字串轉成可執行程式碼轉換過程一定會有效能損耗以下的例子可以做出相同的目的但效能則不一樣較慢:function getProperty(oString){ var &hellip;"> <meta name="HandheldFriendly" content="True"> <meta name="MobileOptimized" content="320"> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="canonical" href="http://pro.ctlok.com/2010/01/javascript.html"> <link href="/favicon.ico" rel="icon"> <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css"> <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"> <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css"> <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml"> <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-16811171-1"]);_gaq.push(["_trackPageview"]);(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)})();</script> </head> <body data-spy="scroll"> <div class="container"> <header class="jumbotron subhead" id="overview"> <div class="subscribe"> <table> <tr> <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png"/></td> <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png"/></a></td> <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png"/></a></td> </tr> </table> </div> <h1 class="title">Programming Design Notes</h1> <div class="navbar"> <div class="navbar-inner"> <div class="container" style="width: auto;"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <div class="nav-collapse"> <ul class="nav"> <li> <a href="/"><i class="icon icon-home"></i>Home</a> </li> <li> <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a> </li> </ul> <form action="http://google.com/search" method="get" class="navbar-search pull-right"> <fieldset role="search"> <input type="hidden" name="q" value="site:pro.ctlok.com"/> <input type="text" name="q" results="0" placeholder="Search" class="span3"/> </fieldset> </form> </div> </div> </div> </div> </header> <div id="main"> <div id="content"> <div class="row"> <div class="span8"> <header> <h2 class="entry-title">Javascript 效能最佳化</h2> <p class="meta"> <time datetime="2010-01-15T00:01:00+08:00" pubdate data-updated="true">Jan 15<span>th</span>, 2010</time> | <a href="#disqus_thread">Comments</a> </p> </header> <div class="entry-content"><span style="font-size: small;">Javascript 使用不同的寫法效能也可能有很大的出入</span><br/><span style="font-size: small;"><br/></span><br/><span style="font-size: small;"><span style="color: red;">不使用 eval</span></span><br/><span style="font-size: small;">因為 Javascript engine 要將字串轉成可執行程式碼</span><br/><span style="font-size: small;">轉換過程一定會有效能損耗</span><br/>以下的例子可以做出相同的目的<br/>但效能則不一樣<br/><span style="font-size: small;"><br/></span><br/><span style="font-size: small;">較慢:</span><br/><pre class="brush: js">function getProperty(oString){<br />    var oReference;<br />    eval('oReference = test.prop.' + oString);<br />    return oReference;<br />}<br /></pre><span style="font-size: small;">較快:</span><br/><pre class="brush: js">function getProperty(oString){<br />    return test.prop[oString];<br />}<br /></pre><br/><span style="font-size: small;"><span style="color: red;">不使用 with</span></span><br/><span style="font-size: small;">因為 Javascript engine 要找尋變數的參考位置</span><br/><br/><span style="font-size: small;">較慢:</span><br/><pre class="brush: js">with (test.object) {<br />    foo = 'Value of foo property of object';<br />    bar = 'Value of bar property of object';<br />}<br /></pre><br/><span style="font-size: small;">較快:</span><br/><pre class="brush: js">var myObj = test.object;<br />myObj.foo = 'Value of foo property of object';<br />myObj.bar = 'Value of bar property of object';<br /></pre><br/><span style="color: red;"><span style="font-size: small;">不要在迴圈內使用 try-catch-finally</span></span><br/><span style="font-size: small;">如果情況許可</span><br/><span style="font-size: small;">應該不用 try-catch-finally 會更好</span><br/><span style="font-size: small;">因為使用 try-catch-finally 時</span><br/><span style="font-size: small;">Javascript engine 會創造出一個變數去處理例外事件 (Exception)</span><br/><span style="font-size: small;">如果在迴圈內使用</span><br/><span style="font-size: small;">Javascript engine 在每一個迴圈也要重新創造出新的變數</span><br/><br/><span style="font-size: small;">較慢:</span><br/><pre class="brush: js">var object = ['foo', 'bar'], i;<br />for (i = 0; i &lt; object.length; i++) {<br />    try {<br />        // do something that throws an exception<br />    } <br />    catch (e) {<br />        // handle exception<br />    }<br />}<br /></pre><span style="font-size: small;">較快: </span><br/><pre class="brush: js">var object = ['foo', 'bar'], i;<br />try {<br />    for (i = 0; i &lt; object.length; i++) {<br />        // do something<br />    }<br />} <br />catch (e) {<br />    // handle exception<br />}<br /></pre><br/><span style="color: red;"><span style="font-size: small;">盡量不使用全域變數</span></span><span style="font-size: small;"><br/></span> <br/><span style="font-size: small;">如果全域變數在其他區域內</span><br/><span style="font-size: small;">Javascript engine 需要到變數所在的區域去查找變數</span><br/><span style="font-size: small;">會令效能下降</span><br/><span style="font-size: small;"><br/></span><br/><span style="font-size: small;">較慢:</span><br/><pre class="brush: js">var i, str = '';<br />function globalScope(){<br />    for (i = 0; i &lt; 100; i++) {<br />        str += i; // here we reference i and str in global scope which is slow<br />    }<br />}<br /><br />globalScope();<br /></pre><span style="font-size: small;">較快: </span><br/><pre class="brush: js">function localScope(){<br />    var i, str = '';<br />    for (i = 0; i &lt; 100; i++) {<br />        str += i; // i and str in local scope which is faster<br />    }<br />}<br /><br />localScope();<br /></pre><br/><span style="color: red;"><span style="font-size: small;">在 for 內盡量不使用 in</span></span><br/><span style="font-size: small;">因為 Javascript engine 需要先創造出一個列舉</span><br/><span style="font-size: small;">會做成效能損耗</span><br/><br/><span style="font-size: small;">較慢:</span><br/><pre class="brush: js">var sum = 0;<br />for (var i in arr) {<br />    sum += arr[i];<br />}<br /></pre><span style="font-size: small;">較快:</span><br/><pre class="brush: js">var sum = 0;<br />for (var i = 0, len = arr.length; i &lt; len; i++) {<br />    sum += arr[i];<br />}<br /></pre><br/><span style="color: red;"><span style="font-size: small;">盡量不使用 + 去連接字串 (String)</span></span><br/><span style="font-size: small;">使用 + 會先將 String 在記憶體內連接完成才放到變數的記憶位於內</span><br/><br/>較慢:<br/><pre class="brush: js">a += 'x' + 'y';<br /></pre><br/>較快:<br/><pre class="brush: js">a += 'x'; <br />a += 'y';<br /></pre><br/><span style="color: red;"><span style="font-size: small;">使用 setTimeout 和 setInterval 時不要使用字串 (String)</span></span><br/><span style="font-size: small;">和 eval 的理由相同</span><br/><div style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px;"><span style="font-size: small;">因為 Javascript engine 要將字串轉成可執行程式碼</span><br/></div><div style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px;"><span style="font-size: small;">轉換過程一定會有效能損耗</span><br/></div><div style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px;"><span style="font-size: small;"><br/></span><br/></div><br/><span style="font-size: small;">較慢:</span><br/><pre class="brush: js">setInterval('doSomethingPeriodically()', 1000);<br />setTimeOut('doSomethingAfterFiveSeconds()', 5000);<br /></pre><br/><span style="font-size: small;">較快:</span><br/><pre class="brush: js">setInterval(doSomethingPeriodically, 1000);<br />setTimeOut(doSomethingAfterFiveSeconds, 5000);<br /></pre><br/><span style="color: red;"><span style="font-size: small;">變數名稱要盡量簡短</span></span><br/><br/><span style="font-size: small;">較慢:</span><br/><pre class="brush: js">function someFunction(){<br />    var person_full_name = "somename"; /* stores the full name*/<br />}<br /></pre><span style="font-size: small;">較快:</span><br/><pre class="brush: js">function someFunction(){<br />    var name = "somename";<br />}<br /></pre><br/><span style="color: red;"><span style="font-size: small;">將全域變數儲存到區域變數內使用</span></span><br/><span style="font-size: small;">以上已經提過</span><br/><span style="font-size: small;">查找全域變數一定會比區域變數慢</span><br/><span style="font-size: small;">如果在 function 內需要使用同一個全域變數 2 次或以上</span><br/><span style="font-size: small;">更加要在 function 的開始就將全域變數放到區域變數上</span><br/><br/><span style="font-size: small;">較慢:</span><br/><pre class="brush :js">function doSomethingElseFaster(){<br />    for (var i = 0; i &lt; 100000; i++) {<br />        document.getElementsByTagName('head');<br />    }<br />}<br /></pre><span style="font-size: small;">較快:</span><br/><pre class="brush: js">function doSomethingElseFaster(){<br />    var get = document.getElementsByTagName;<br />    for (var i = 0; i &lt; 100000; i++) {<br />        get('head');<br />    }<br />}<br /></pre><br/>相關書籍:&nbsp;<a href="http://www.amazon.com/High-Performance-JavaScript-Zakas-Nicholas/dp/059680279X?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="High Performance JavaScript" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=059680279X&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=059680279X" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><a href="http://www.amazon.com/Pro-Javascript-RIA-Techniques-Presentation/dp/1430219343?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Pro Javascript RIA Techniques: Best Practices, Performance and Presentation" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1430219343&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1430219343" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><a href="http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Even Faster Web Sites: Performance Best Practices for Web Developers" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0596522304&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0596522304" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-8791729918972967972?l=lawpronotes.blogspot.com' alt=''/></div> </div> <footer> <p class="meta"> <span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span> <time datetime="2010-01-15T00:01:00+08:00" pubdate data-updated="true">Jan 15<span>th</span>, 2010</time> <span class="categories"> <a class='category' href='/blog/tag/javascript/'>Javascript</a> </span> </p> <div class="sharing"> <br/> <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div> </div> <p class="meta"> <a class="basic-alignment" href="/2010/01/syntaxhighlighter.html" title="Previous Post: Blogger Install Syntax Highlighter">&laquo; Blogger Install Syntax Highlighter</a> <a class="basic-alignment pull-right" href="/2010/01/actionscript-2.html" title="Next Post: Actionscript 2 動態加入元件">Actionscript 2 動態加入元件 &raquo;</a> </p> </footer> <section> <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript> </div> </section> </div> <div class="span4 sidebar"> <section> <h2>About Me</h2> <div class="well"> <p>Lawrence Cheung</p> <a href="mailto:lawrence0819@gmail.com" target="_blank"><img src="/images/mail.png"/></a> </div> </section> <section> <h2>Recent Posts</h2> <div class="well" style="padding: 8px 0;"> <ul id="recent_posts" class="nav nav-list"> <li class="post"> <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a> </li> <li class="post"> <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a> </li> <li class="post"> <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a> </li> <li class="post"> <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a> </li> <li class="post"> <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a> </li> <li class="post"> <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a> </li> <li class="post"> <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a> </li> <li class="post"> <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a> </li> <li class="post"> <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a> </li> <li class="post"> <a href="/2011/12/speed-up-develop-web-site-twitter.html">助你快速開發網站的 Twitter Bootstrap</a> </li> </ul> </div> </section><section> <div id="popularthreads" class="dsq-widget"> <h2 class="dsq-widget-title">Popular Posts</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script> </div> </div> </section> <section> <div id="recentcomment" class="dsq-widget"> <h2 class="dsq-widget-title">Recent Comments</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script> </div> </div> </section> </div> </div> </div> </div> <footer class="footer"><p> Copyright &copy; 2012 - Lawrence Cheung - <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> </p></footer> <script type="text/javascript">var disqus_shortname="pdn",disqus_identifier="http://pro.ctlok.com/2010/01/javascript.html",disqus_url="http://pro.ctlok.com/2010/01/javascript.html",disqus_script="embed.js";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src="http://"+disqus_shortname+".disqus.com/"+disqus_script;(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();</script> <div id="fb-root"></div> <script>(function(a,b,c){var d=a.getElementsByTagName(b)[0];if(!a.getElementById(c))a=a.createElement(b),a.id=c,a.src="//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1",d.parentNode.insertBefore(a,d)})(document,"script","facebook-jssdk");</script> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> <script src="/assets/bootstrap/js/bootstrap.min.js"></script> <script src="/assets/google-code-prettify/js/prettify.js"></script> <script>(function(a){a(function(){a("pre").each(function(){a(this).parents(".gist").size()==0&&a(this).addClass("prettyprint linenums")});prettyPrint()})})(jQuery);</script> </div> </body> </html>
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Javascript 效能最佳化 - Programming Design Notes</title>
+  <meta name="author" content="Lawrence Cheung">
+
+  
+  <meta name="description" content="Javascript 使用不同的寫法效能也可能有很大的出入不使用 eval因為 Javascript engine 要將字串轉成可執行程式碼轉換過程一定會有效能損耗以下的例子可以做出相同的目的但效能則不一樣較慢:function getProperty(oString){ var &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pro.ctlok.com/2010/01/javascript.html">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css">
+  
+  <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml">
+  
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-16811171-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    data-spy="scroll">
+
+  <div class="container">
+    <header class="jumbotron subhead" id="overview">
+      <div class="subscribe">
+    <table>
+        <tr>
+            <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png" /></td>
+            <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png" /></a></td>
+            <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png" /></a></td>
+        </tr>
+    </table>
+</div>
+<h1 class="title">Programming Design Notes</h1>
+
+      <div class="navbar">
+    <div class="navbar-inner">
+        <div class="container" style="width: auto;">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="/"><i class="icon icon-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a>
+                    </li>
+                </ul>
+                
+                <form action="http://google.com/search" method="get" class="navbar-search pull-right">
+                    <fieldset role="search">
+                        <input type="hidden" name="q" value="site:pro.ctlok.com" />
+                        <input type="text" name="q" results="0" placeholder="Search" class="span3" />
+                    </fieldset>
+                </form>
+                
+            </div><!-- /.nav-collapse -->
+        </div>
+    </div><!-- /navbar-inner -->
+</div>
+
+    </header>
+    <div id="main">
+      <div id="content">
+        <div class="row">
+  <div class="span8">
+    
+  <header>
+    
+      <h2 class="entry-title">Javascript 效能最佳化</h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-15T00:01:00+08:00" pubdate data-updated="true">Jan 15<span>th</span>, 2010</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><span style="font-size: small;">Javascript 使用不同的寫法效能也可能有很大的出入</span><br /><span style="font-size: small;"><br /></span><br /><span style="font-size: small;"><span style="color: red;">不使用 eval</span></span><br /><span style="font-size: small;">因為 Javascript engine 要將字串轉成可執行程式碼</span><br /><span style="font-size: small;">轉換過程一定會有效能損耗</span><br />以下的例子可以做出相同的目的<br />但效能則不一樣<br /><span style="font-size: small;"><br /></span><br /><span style="font-size: small;">較慢:</span><br /><pre class="brush: js">function getProperty(oString){<br />    var oReference;<br />    eval('oReference = test.prop.' + oString);<br />    return oReference;<br />}<br /></pre><span style="font-size: small;">較快:</span><br /><pre class="brush: js">function getProperty(oString){<br />    return test.prop[oString];<br />}<br /></pre><br /><span style="font-size: small;"><span style="color: red;">不使用 with</span></span><br /><span style="font-size: small;">因為 Javascript engine 要找尋變數的參考位置</span><br /><br /><span style="font-size: small;">較慢:</span><br /><pre class="brush: js">with (test.object) {<br />    foo = 'Value of foo property of object';<br />    bar = 'Value of bar property of object';<br />}<br /></pre><br /><span style="font-size: small;">較快:</span><br /><pre class="brush: js">var myObj = test.object;<br />myObj.foo = 'Value of foo property of object';<br />myObj.bar = 'Value of bar property of object';<br /></pre><br /><span style="color: red;"><span style="font-size: small;">不要在迴圈內使用 try-catch-finally</span></span><br /><span style="font-size: small;">如果情況許可</span><br /><span style="font-size: small;">應該不用 try-catch-finally 會更好</span><br /><span style="font-size: small;">因為使用 try-catch-finally 時</span><br /><span style="font-size: small;">Javascript engine 會創造出一個變數去處理例外事件 (Exception)</span><br /><span style="font-size: small;">如果在迴圈內使用</span><br /><span style="font-size: small;">Javascript engine 在每一個迴圈也要重新創造出新的變數</span><br /><br /><span style="font-size: small;">較慢:</span><br /><pre class="brush: js">var object = ['foo', 'bar'], i;<br />for (i = 0; i &lt; object.length; i++) {<br />    try {<br />        // do something that throws an exception<br />    } <br />    catch (e) {<br />        // handle exception<br />    }<br />}<br /></pre><span style="font-size: small;">較快: </span><br /><pre class="brush: js">var object = ['foo', 'bar'], i;<br />try {<br />    for (i = 0; i &lt; object.length; i++) {<br />        // do something<br />    }<br />} <br />catch (e) {<br />    // handle exception<br />}<br /></pre><br /><span style="color: red;"><span style="font-size: small;">盡量不使用全域變數</span></span><span style="font-size: small;"><br /></span> <br /><span style="font-size: small;">如果全域變數在其他區域內</span><br /><span style="font-size: small;">Javascript engine 需要到變數所在的區域去查找變數</span><br /><span style="font-size: small;">會令效能下降</span><br /><span style="font-size: small;"><br /></span><br /><span style="font-size: small;">較慢:</span><br /><pre class="brush: js">var i, str = '';<br />function globalScope(){<br />    for (i = 0; i &lt; 100; i++) {<br />        str += i; // here we reference i and str in global scope which is slow<br />    }<br />}<br /><br />globalScope();<br /></pre><span style="font-size: small;">較快: </span><br /><pre class="brush: js">function localScope(){<br />    var i, str = '';<br />    for (i = 0; i &lt; 100; i++) {<br />        str += i; // i and str in local scope which is faster<br />    }<br />}<br /><br />localScope();<br /></pre><br /><span style="color: red;"><span style="font-size: small;">在 for 內盡量不使用 in</span></span><br /><span style="font-size: small;">因為 Javascript engine 需要先創造出一個列舉</span><br /><span style="font-size: small;">會做成效能損耗</span><br /><br /><span style="font-size: small;">較慢:</span><br /><pre class="brush: js">var sum = 0;<br />for (var i in arr) {<br />    sum += arr[i];<br />}<br /></pre><span style="font-size: small;">較快:</span><br /><pre class="brush: js">var sum = 0;<br />for (var i = 0, len = arr.length; i &lt; len; i++) {<br />    sum += arr[i];<br />}<br /></pre><br /><span style="color: red;"><span style="font-size: small;">盡量不使用 + 去連接字串 (String)</span></span><br /><span style="font-size: small;">使用 + 會先將 String 在記憶體內連接完成才放到變數的記憶位於內</span><br /><br />較慢:<br /><pre class="brush: js">a += 'x' + 'y';<br /></pre><br />較快:<br /><pre class="brush: js">a += 'x'; <br />a += 'y';<br /></pre><br /><span style="color: red;"><span style="font-size: small;">使用 setTimeout 和 setInterval 時不要使用字串 (String)</span></span><br /><span style="font-size: small;">和 eval 的理由相同</span><br /><div style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px;"><span style="font-size: small;">因為 Javascript engine 要將字串轉成可執行程式碼</span><br /></div><div style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px;"><span style="font-size: small;">轉換過程一定會有效能損耗</span><br /></div><div style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px;"><span style="font-size: small;"><br /></span><br /></div><br /><span style="font-size: small;">較慢:</span><br /><pre class="brush: js">setInterval('doSomethingPeriodically()', 1000);<br />setTimeOut('doSomethingAfterFiveSeconds()', 5000);<br /></pre><br /><span style="font-size: small;">較快:</span><br /><pre class="brush: js">setInterval(doSomethingPeriodically, 1000);<br />setTimeOut(doSomethingAfterFiveSeconds, 5000);<br /></pre><br /><span style="color: red;"><span style="font-size: small;">變數名稱要盡量簡短</span></span><br /><br /><span style="font-size: small;">較慢:</span><br /><pre class="brush: js">function someFunction(){<br />    var person_full_name = "somename"; /* stores the full name*/<br />}<br /></pre><span style="font-size: small;">較快:</span><br /><pre class="brush: js">function someFunction(){<br />    var name = "somename";<br />}<br /></pre><br /><span style="color: red;"><span style="font-size: small;">將全域變數儲存到區域變數內使用</span></span><br /><span style="font-size: small;">以上已經提過</span><br /><span style="font-size: small;">查找全域變數一定會比區域變數慢</span><br /><span style="font-size: small;">如果在 function 內需要使用同一個全域變數 2 次或以上</span><br /><span style="font-size: small;">更加要在 function 的開始就將全域變數放到區域變數上</span><br /><br /><span style="font-size: small;">較慢:</span><br /><pre class="brush :js">function doSomethingElseFaster(){<br />    for (var i = 0; i &lt; 100000; i++) {<br />        document.getElementsByTagName('head');<br />    }<br />}<br /></pre><span style="font-size: small;">較快:</span><br /><pre class="brush: js">function doSomethingElseFaster(){<br />    var get = document.getElementsByTagName;<br />    for (var i = 0; i &lt; 100000; i++) {<br />        get('head');<br />    }<br />}<br /></pre><br />相關書籍:&nbsp;<a href="http://www.amazon.com/High-Performance-JavaScript-Zakas-Nicholas/dp/059680279X?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="High Performance JavaScript" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=059680279X&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=059680279X" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Pro-Javascript-RIA-Techniques-Presentation/dp/1430219343?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Pro Javascript RIA Techniques: Best Practices, Performance and Presentation" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1430219343&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1430219343" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Even-Faster-Web-Sites-Performance/dp/0596522304?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Even Faster Web Sites: Performance Best Practices for Web Developers" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0596522304&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0596522304" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-8791729918972967972?l=lawpronotes.blogspot.com' alt='' /></div>
+</div>
+
+
+    <footer>
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-15T00:01:00+08:00" pubdate data-updated="true">Jan 15<span>th</span>, 2010</time>
+        
+
+<span class="categories">
+  
+    <a class='category' href='/blog/tag/javascript/'>Javascript</a>
+  
+</span>
+
+
+      </p>
+      
+        <div class="sharing">
+  <br/>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+      
+      <p class="meta">
+        
+          <a class="basic-alignment" href="/2010/01/syntaxhighlighter.html" title="Previous Post: Blogger Install Syntax Highlighter">&laquo; Blogger Install Syntax Highlighter</a>
+        
+        
+          <a class="basic-alignment pull-right" href="/2010/01/actionscript-2.html" title="Next Post: Actionscript 2 動態加入元件">Actionscript 2 動態加入元件 &raquo;</a>
+        
+      </p>
+    </footer>
+    
+    
+      <section>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <div class="span4 sidebar">
+      
+        <section>
+    <h2>About Me</h2>
+    <div class="well">
+        <p>Lawrence Cheung</p>
+        <a href="mailto:lawrence0819@gmail.com" target="_blank"><img src="/images/mail.png" /></a>
+    </div>
+</section>
+<section>
+    <h2>Recent Posts</h2>
+    <div class="well" style="padding: 8px 0;">
+        <ul id="recent_posts" class="nav nav-list">
+            
+            <li class="post">
+                <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a>
+            </li>
+            
+            <li class="post">
+                <a href="/2011/12/speed-up-develop-web-site-twitter.html">助你快速開發網站的 Twitter Bootstrap</a>
+            </li>
+            
+        </ul>
+    </div>
+</section><section>
+    <div id="popularthreads" class="dsq-widget">
+        <h2 class="dsq-widget-title">Popular Posts</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script>
+        </div>
+    </div>
+</section>
+<section>
+    <div id="recentcomment" class="dsq-widget">
+        <h2 class="dsq-widget-title">Recent Comments</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script>
+        </div>
+    </div>
+</section>
+
+
+
+      
+  </div>
+
+</div>
+
+
+      </div>
+    </div>
+    <footer class="footer"><p>
+  Copyright &copy; 2012 - Lawrence Cheung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p></footer>
+    
+
+<script type="text/javascript">
+      var disqus_shortname = 'pdn';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://pro.ctlok.com/2010/01/javascript.html';
+        var disqus_url = 'http://pro.ctlok.com/2010/01/javascript.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/google-code-prettify/js/prettify.js"></script>
+<script>
+    (function($){
+        $(function(){
+            $("pre").each(function(){
+            	if ($(this).parents(".gist").size() == 0){
+            		$(this).addClass("prettyprint linenums");
+            	}
+            })
+            prettyPrint()
+        });
+    })(jQuery)
+</script>
+
+
+  </div>
+</body>
+</html>
