@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Design Pattern | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/design-pattern/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-30T16:04:35+08:00</updated>
+  <updated>2012-04-02T14:13:25+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,345 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Design Pattern - Factory]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory.html"/>
+    <updated>2012-04-02T10:32:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory</id>
+    <content type="html"><![CDATA[<p>Factory Pattern 可以將創造實例的程式碼分離，令原本核心的程式碼不必太過依賴於某一個物件，
+並可以令其他要用到同一物件的地方使用同一套程式碼，方便集中管理。</p>
+
+<p>看看以下例子應該有助你明白這個模式：</p>
+
+<hr />
+
+<p>公司要你開發一個 Logger (記錄器)，用於記錄程式內的變化，你一開始可能會設計成以下這樣:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Logger.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/Logger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (ConsoleLogger.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/ConsoleLogger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsoleLogger</span> <span class="kd">implements</span> <span class="n">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">ConsoleLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">clazz</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;DEBUG&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;INFO&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;WARN&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;ERROR&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">log</span><span class="o">(</span><span class="n">String</span> <span class="n">level</span><span class="o">,</span> <span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; [&quot;</span> <span class="o">+</span> <span class="n">level</span> <span class="o">+</span> <span class="s">&quot;] &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>其他程式要使用時會直接使用 <code>new ConsoleLogger()</code> 來取得 ConsoleLogger 的 Instance (實例)。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (AService.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/AService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConsoleLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (BService.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/BService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConsoleLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>有沒有發現什麼問題? 如果使用 Logger 的物件超過 100 個，要轉換 ConsoleLogger 為其他 Logger 就要更改 100 次程式碼。</p>
+
+<hr />
+
+<p>我們可以使用 Factory Pattern 來解決這個問題:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Logger.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/Logger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (ConsoleLogger.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/ConsoleLogger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsoleLogger</span> <span class="kd">implements</span> <span class="n">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">ConsoleLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">clazz</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;DEBUG&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;INFO&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;WARN&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;ERROR&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">log</span><span class="o">(</span><span class="n">String</span> <span class="n">level</span><span class="o">,</span> <span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; [&quot;</span> <span class="o">+</span> <span class="n">level</span> <span class="o">+</span> <span class="s">&quot;] &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (FileLogger.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/FileLogger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.io.BufferedWriter</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.FileWriter</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FileLogger</span> <span class="kd">implements</span> <span class="n">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">FileLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">clazz</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;DEBUG&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;INFO&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;WARN&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;ERROR&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">log</span><span class="o">(</span><span class="n">String</span> <span class="n">level</span><span class="o">,</span> <span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">log</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Date</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; [&quot;</span> <span class="o">+</span> <span class="n">level</span> <span class="o">+</span> <span class="s">&quot;] &quot;</span> <span class="o">+</span> <span class="n">message</span> <span class="o">+</span> <span class="s">&quot;\n&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">BufferedWriter</span> <span class="n">bw</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">bw</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedWriter</span><span class="o">(</span><span class="k">new</span> <span class="n">FileWriter</span><span class="o">(</span><span class="s">&quot;application.log&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">));</span>
+</span><span class='line'>            <span class="n">bw</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">log</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">bw</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">bw</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (LoggerFactory.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/LoggerFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoggerFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="nf">createLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">FileLogger</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>新增一個 LoggerFactory，用來建立 Logger 。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (AService.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/AService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (BService.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/BService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>以後要使用 Logger 時不必知道實際是使用 ConsoleLogger 或 FileLogger，只要物件實現了 Logger 這個介面就可以了。
+這個 Factory Pattern 解決了一些問題，但仍然差一點，例如: 在測試環境中我想使用 ConsoleLogger，
+但在正常環境中是使用 FileLogger。以上的方法並不能解決這個問題。</p>
+
+<hr />
+
+<p>將 LoggerFactory 的 createLogger 變更為 Non-Static:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (LoggerFactory.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/LoggerFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoggerFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Logger</span> <span class="nf">createLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">FileLogger</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>新増一個 MockLoggerFactory 在測試環境:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (MockLoggerFactory.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/MockLoggerFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MockLoggerFactory</span> <span class="kd">extends</span> <span class="n">LoggerFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Logger</span> <span class="nf">createLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">ConsoleLogger</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (AService.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/AService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">AService</span><span class="o">(</span><span class="n">LoggerFactory</span> <span class="n">loggerFactory</span><span class="o">){</span>
+</span><span class='line'>        <span class="n">logger</span> <span class="o">=</span> <span class="n">loggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (BService.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/BService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">BService</span><span class="o">(</span><span class="n">LoggerFactory</span> <span class="n">loggerFactory</span><span class="o">){</span>
+</span><span class='line'>        <span class="n">logger</span> <span class="o">=</span> <span class="n">loggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">LoggerFactory</span> <span class="n">loggerFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LoggerFactory</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">AService</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AService</span><span class="o">(</span><span class="n">loggerFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">BService</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BService</span><span class="o">(</span><span class="n">loggerFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">a</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">b</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">//Unit Test</span>
+</span><span class='line'>        <span class="n">loggerFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MockLoggerFactory</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AService</span><span class="o">(</span><span class="n">loggerFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BService</span><span class="o">(</span><span class="n">loggerFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">a</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">b</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Design Pattern - Observer]]></title>

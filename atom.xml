@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-03-30T16:04:35+08:00</updated>
+  <updated>2012-04-02T14:13:25+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,373 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Design Pattern - Factory]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory.html"/>
+    <updated>2012-04-02T10:32:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory</id>
+    <content type="html"><![CDATA[<p>Factory Pattern 可以將創造實例的程式碼分離，令原本核心的程式碼不必太過依賴於某一個物件，
+並可以令其他要用到同一物件的地方使用同一套程式碼，方便集中管理。</p>
+
+<p>看看以下例子應該有助你明白這個模式：</p>
+
+<hr />
+
+<p>公司要你開發一個 Logger (記錄器)，用於記錄程式內的變化，你一開始可能會設計成以下這樣:</p>
+
+<figure class='code'><figcaption><span> (Logger.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample1/Logger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (ConsoleLogger.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample1/ConsoleLogger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsoleLogger</span> <span class="kd">implements</span> <span class="n">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">ConsoleLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">clazz</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;DEBUG&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;INFO&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;WARN&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;ERROR&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">log</span><span class="o">(</span><span class="n">String</span> <span class="n">level</span><span class="o">,</span> <span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; [&quot;</span> <span class="o">+</span> <span class="n">level</span> <span class="o">+</span> <span class="s">&quot;] &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其他程式要使用時會直接使用 <code>new ConsoleLogger()</code> 來取得 ConsoleLogger 的 Instance (實例)。</p>
+
+<figure class='code'><figcaption><span> (AService.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample1/AService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConsoleLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (BService.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample1/BService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConsoleLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>有沒有發現什麼問題? 如果使用 Logger 的物件超過 100 個，要轉換 ConsoleLogger 為其他 Logger 就要更改 100 次程式碼。</p>
+
+<hr />
+
+<p>我們可以使用 Factory Pattern 來解決這個問題:</p>
+
+<figure class='code'><figcaption><span> (Logger.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample2/Logger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (ConsoleLogger.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample2/ConsoleLogger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsoleLogger</span> <span class="kd">implements</span> <span class="n">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">ConsoleLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">clazz</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;DEBUG&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;INFO&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;WARN&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;ERROR&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">log</span><span class="o">(</span><span class="n">String</span> <span class="n">level</span><span class="o">,</span> <span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; [&quot;</span> <span class="o">+</span> <span class="n">level</span> <span class="o">+</span> <span class="s">&quot;] &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (FileLogger.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample2/FileLogger.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.io.BufferedWriter</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.FileWriter</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FileLogger</span> <span class="kd">implements</span> <span class="n">Logger</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">FileLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">clazz</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;DEBUG&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;INFO&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">warn</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;WARN&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;ERROR&quot;</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">log</span><span class="o">(</span><span class="n">String</span> <span class="n">level</span><span class="o">,</span> <span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">log</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Date</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; [&quot;</span> <span class="o">+</span> <span class="n">level</span> <span class="o">+</span> <span class="s">&quot;] &quot;</span> <span class="o">+</span> <span class="n">message</span> <span class="o">+</span> <span class="s">&quot;\n&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">BufferedWriter</span> <span class="n">bw</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">bw</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedWriter</span><span class="o">(</span><span class="k">new</span> <span class="n">FileWriter</span><span class="o">(</span><span class="s">&quot;application.log&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">));</span>
+</span><span class='line'>            <span class="n">bw</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">log</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">bw</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">bw</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (LoggerFactory.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample2/LoggerFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoggerFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="nf">createLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">FileLogger</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>新增一個 LoggerFactory，用來建立 Logger 。</p>
+
+<figure class='code'><figcaption><span> (AService.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample2/AService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (BService.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample2/BService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以後要使用 Logger 時不必知道實際是使用 ConsoleLogger 或 FileLogger，只要物件實現了 Logger 這個介面就可以了。
+這個 Factory Pattern 解決了一些問題，但仍然差一點，例如: 在測試環境中我想使用 ConsoleLogger，
+但在正常環境中是使用 FileLogger。以上的方法並不能解決這個問題。</p>
+
+<hr />
+
+<p>將 LoggerFactory 的 createLogger 變更為 Non-Static:</p>
+
+<figure class='code'><figcaption><span> (LoggerFactory.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample3/LoggerFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoggerFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Logger</span> <span class="nf">createLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">FileLogger</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>新増一個 MockLoggerFactory 在測試環境:</p>
+
+<figure class='code'><figcaption><span> (MockLoggerFactory.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample3/MockLoggerFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MockLoggerFactory</span> <span class="kd">extends</span> <span class="n">LoggerFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Logger</span> <span class="nf">createLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">ConsoleLogger</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span> (AService.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample3/AService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">AService</span><span class="o">(</span><span class="n">LoggerFactory</span> <span class="n">loggerFactory</span><span class="o">){</span>
+</span><span class='line'>        <span class="n">logger</span> <span class="o">=</span> <span class="n">loggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (BService.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample3/BService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">BService</span><span class="o">(</span><span class="n">LoggerFactory</span> <span class="n">loggerFactory</span><span class="o">){</span>
+</span><span class='line'>        <span class="n">logger</span> <span class="o">=</span> <span class="n">loggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doSomething</span><span class="o">(){</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething start&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// code...</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;doSomething end&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span> (Main.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-factory/sample3/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">LoggerFactory</span> <span class="n">loggerFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LoggerFactory</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">AService</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AService</span><span class="o">(</span><span class="n">loggerFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">BService</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BService</span><span class="o">(</span><span class="n">loggerFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">a</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">b</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">//Unit Test</span>
+</span><span class='line'>        <span class="n">loggerFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MockLoggerFactory</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AService</span><span class="o">(</span><span class="n">loggerFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BService</span><span class="o">(</span><span class="n">loggerFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">a</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">b</span><span class="o">.</span><span class="na">doSomething</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Maven Setup Jetty Development Server]]></title>
@@ -1082,15 +1449,6 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
     <updated>2011-06-17T17:52:00+08:00</updated>
     <id>http://pro.ctlok.com/2011/06/java-bottom-up-jax-ws-web-service</id>
     <content type="html"><![CDATA[網路上關於 <b>Web Service</b> 的資訊不是很多，中文的 <b>Web Service</b> 資源更是少之有少，可能是因為部署 <b>Web Service</b> 是一件麻煩的事，而且性能又不是太好，但 <b>Web Service</b> 也有很多好處。不用同一種程式語言也可以互相交換數據，執行程序，有標準的格式，大多數語言都提供了 <b>Library</b> 去操作。<b>Web Service</b> 大多數用於對外的對像，例如: 銀行和銀行之間的數據交換亦可以通過 <b>Web Service</b> 做到。<br /><br />有 2 種主要的方式去設計一個 <b>Web Service</b>，就是 <b>Top Down</b> 和 <b>Bottom Up</b>，究竟有什麼分別呢?<br /><br /><b>Top Down</b> 是由定義 <b>Object</b> (物件) 和 <b>Interface</b> (介面) 做起的，<b>Object</b> (物件) 你可以想像為傳遞數據的一個容器，而這個物件是由 <b>XML Schema</b> <b>(XSD)</b> 去描述的。<b>Interface</b> (介面) 則是描述這個 <b>Web Service</b> 提供什麼服務，服務需要傳入一個什麼 <b>Object</b> (物件) 和 返回一個什麼 <b>Object</b> (物件)等等描述，這些都是由 <b>Web Services Description Language</b> <b>(WSDL)</b> 去描述的。做好這 2 項工作後就需要製作和 <b>XML Schema</b> 描述一樣的 <b>Object Class</b>，亦要製作和 <b>Web Services Description Language</b> 描述一樣的 <b>Functional Class</b>。最後當然要寫程式式碼和放上 <b>Application Server</b>。<br /><br /><b>Bottom Up</b> 就比較簡單了，是由 <b>Object Class</b> 和 <b>Functional Class</b> 先做起，做起後放上 <b>Application Server</b> 由 <b>Application Server</b> 自動產生出 <b>XML Schema</b> <b>(XSD)</b> 和 <b>Web Services Description Language</b> <b>(WSDL)</b>。不懂得 <b>XML Schema</b> 和 <b>Web Services Description Language</b> 也一樣可以製作出一個 <b>Web Service</b>。<br /><br />最好當然是對 <b>XML Schema</b> 和 <b>Web Services Description Language</b> 有一點認識。<br /><b>XML Schema</b>: <a href="http://www.w3schools.com/schema/default.asp">http://www.w3schools.com/schema/default.asp</a><br /><b>Web Services Description Language</b>: <br /><a href="http://www.w3schools.com/WSDL/default.asp">http://www.w3schools.com/WSDL/default.asp</a><br /><br />首先當然講解一下最簡單的 <b>Bottom Up</b> 方法，首先要在 <b>IDE</b> 建立一個 <b>WAR project</b>，加入一個 <b>Java Class</b>:<br /><pre class="brush: java">package sample.ws;<br /><br />import javax.jws.WebMethod;<br />import javax.jws.WebService;<br /><br />@WebService(<br />        name = &quot;CalculaterService&quot;, <br />        serviceName = &quot;CalculaterService&quot;, <br />        portName = &quot;CalculaterServicePort&quot;, <br />        targetNamespace = &quot;http://pro.ctlok.com/CalculaterService/&quot;)<br />public class CalculaterService {<br /><br />    @WebMethod<br />    public int add(int i, int k) {<br />        return i + k;<br />    }<br /><br />    @WebMethod<br />    public int subtract(int i, int k) {<br />        return i - k;<br />    }<br /><br />}<br /></pre><br />就這樣完成了一個最簡單的 <b>Web Service</b>。<br /><br /><pre class="brush: java">@WebService(<br />        name = &quot;CalculaterService&quot;, <br />        serviceName = &quot;CalculaterService&quot;, <br />        portName = &quot;CalculaterServicePort&quot;, <br />        targetNamespace = &quot;http://pro.ctlok.com/CalculaterService/&quot;)<br /></pre><br />用於通知 <b>Java EE</b> 容器識別這個 <b>Class</b> 是一個 <b>Web Service</b>。<br /><br /><ul><li><b>name</b>: 是在 <b>Application Server</b> 上的名稱</li><li><b>serviceName</b>: 是在 <b>URL</b> 和 <b>WSDL</b> 上顯示的名稱</li><li><b>portName</b>: 是在 <b>WSDL</b> 上顯示的名稱</li><li><b>targetNamespace </b>: 是在 <b>WSDL</b> 上顯示的命名空間，令 <b>XML</b> 內的名稱不會相同</li></ul><br /><pre class="brush: java">@WebMethod<br /></pre><br />是指定這個 <b>Method</b> 是 <b>Web Service</b> 的其中一個 <b>Function</b>。<br /><br /><b>CalculaterService</b> 亦可以是一個 <b>EJB Session Bean</b>:<br /><br /><pre class="brush: java">package sample.ws;<br /><br />@Local<br />public interface CalculaterService{<br /><br />    public int add(int i, int k);<br />    public int subtract(int i, int k);<br /><br />}<br /></pre><br /><pre class="brush: java">package sample.ws;<br /><br />import javax.jws.WebMethod;<br />import javax.jws.WebService;<br /><br />@Stateless<br />@WebService(<br />        name = &quot;CalculaterService&quot;, <br />        serviceName = &quot;CalculaterService&quot;, <br />        portName = &quot;CalculaterServicePort&quot;, <br />        targetNamespace = &quot;http://pro.ctlok.com/CalculaterService/&quot;)<br />public class CalculaterServiceBean implements CalculaterService{<br /><br />    @WebMethod<br />    public int add(int i, int k) {<br />        return i + k;<br />    }<br /><br />    @WebMethod<br />    public int subtract(int i, int k) {<br />        return i - k;<br />    }<br /><br />}<br /></pre><br />放上 Application Server 後使用瀏覽器開啟: <b>http://localhost/CalculaterService?wsdl</b> 會顯示出以下的 <b>WSDL</b><br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />&lt;definitions name=&quot;CalculaterService&quot; targetNamespace=&quot;http://pro.ctlok.com/CalculaterService/&quot;<br />    xmlns=&quot;http://schemas.xmlsoap.org/wsdl/&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;<br />    xmlns:tns=&quot;http://pro.ctlok.com/CalculaterService/&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;&gt;<br /><br />    &lt;types&gt;<br />        &lt;xsd:schema&gt;<br />            &lt;xsd:import namespace=&quot;http://pro.ctlok.com/CalculaterService/&quot;<br />                schemaLocation=&quot;CalculaterService_schema1.xsd&quot; /&gt;<br />        &lt;/xsd:schema&gt;<br />    &lt;/types&gt;<br /><br />    &lt;message name=&quot;addResponse&quot;&gt;<br />        &lt;part name=&quot;parameters&quot; element=&quot;tns:addResponse&quot;&gt;<br />        &lt;/part&gt;<br />    &lt;/message&gt;<br /><br />    &lt;message name=&quot;add&quot;&gt;<br />        &lt;part name=&quot;parameters&quot; element=&quot;tns:add&quot;&gt;<br />        &lt;/part&gt;<br />    &lt;/message&gt;<br /><br />    &lt;message name=&quot;subtractResponse&quot;&gt;<br />        &lt;part name=&quot;parameters&quot; element=&quot;tns:subtractResponse&quot;&gt;<br />        &lt;/part&gt;<br />    &lt;/message&gt;<br /><br />    &lt;message name=&quot;subtract&quot;&gt;<br />        &lt;part name=&quot;parameters&quot; element=&quot;tns:subtract&quot;&gt;<br />        &lt;/part&gt;<br />    &lt;/message&gt;<br /><br />    &lt;portType name=&quot;CalculaterService&quot;&gt;<br />        &lt;operation name=&quot;add&quot;&gt;<br />            &lt;input message=&quot;tns:add&quot;&gt;<br />            &lt;/input&gt;<br />            &lt;output message=&quot;tns:addResponse&quot;&gt;<br />            &lt;/output&gt;<br />        &lt;/operation&gt;<br /><br />        &lt;operation name=&quot;subtract&quot;&gt;<br />            &lt;input message=&quot;tns:subtract&quot;&gt;<br />            &lt;/input&gt;<br />            &lt;output message=&quot;tns:subtractResponse&quot;&gt;<br />            &lt;/output&gt;<br />        &lt;/operation&gt;<br />    &lt;/portType&gt;<br /><br />    &lt;binding name=&quot;CalculaterServicePortBinding&quot; type=&quot;tns:CalculaterService&quot;&gt;<br />        &lt;soap:binding style=&quot;document&quot;<br />            transport=&quot;http://schemas.xmlsoap.org/soap/http&quot; /&gt;<br />        &lt;operation name=&quot;add&quot;&gt;<br />            &lt;soap:operation soapAction=&quot;&quot; /&gt;<br />            &lt;input&gt;<br />                &lt;soap:body use=&quot;literal&quot; /&gt;<br />            &lt;/input&gt;<br />            &lt;output&gt;<br />                &lt;soap:body use=&quot;literal&quot; /&gt;<br />            &lt;/output&gt;<br />        &lt;/operation&gt;<br />        &lt;operation name=&quot;subtract&quot;&gt;<br />            &lt;soap:operation soapAction=&quot;&quot; /&gt;<br />            &lt;input&gt;<br />                &lt;soap:body use=&quot;literal&quot; /&gt;<br />            &lt;/input&gt;<br />            &lt;output&gt;<br />                &lt;soap:body use=&quot;literal&quot; /&gt;<br />            &lt;/output&gt;<br />        &lt;/operation&gt;<br />    &lt;/binding&gt;<br /><br />    &lt;service name=&quot;CalculaterService&quot;&gt;<br />        &lt;port name=&quot;CalculaterServicePort&quot; binding=&quot;tns:CalculaterServicePortBinding&quot;&gt;<br />            &lt;soap:address<br />                location=&quot;http://localhost/CalculaterService&quot; /&gt;<br />        &lt;/port&gt;<br />    &lt;/service&gt;<br />&lt;/definitions&gt;<br /></pre><br /><b>Application Server</b> 除了自動產生出 <b>WSDL</b> 外，亦會產生出 <b>XML Schema</b>。<br /><br />使用瀏覽器開啟: <b>http://localhost/CalculaterService/CalculaterService_schema1.xsd</b> 會顯示出以下的 <b>XML Schema</b>:<br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;<br />&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;<br />    xmlns:tns=&quot;http://pro.ctlok.com/CalculaterService/&quot; version=&quot;1.0&quot;<br />    targetNamespace=&quot;http://pro.ctlok.com/CalculaterService/&quot;&gt;<br /><br />    &lt;xs:element name=&quot;add&quot; type=&quot;tns:add&quot;&gt;&lt;/xs:element&gt;<br />    &lt;xs:element name=&quot;addResponse&quot; type=&quot;tns:addResponse&quot;&gt;&lt;/xs:element&gt;<br />    &lt;xs:element name=&quot;subtract&quot; type=&quot;tns:subtract&quot;&gt;&lt;/xs:element&gt;<br />    &lt;xs:element name=&quot;subtractResponse&quot; type=&quot;tns:subtractResponse&quot;&gt;&lt;/xs:element&gt;<br /><br />    &lt;xs:complexType name=&quot;add&quot;&gt;<br />        &lt;xs:sequence&gt;<br />            &lt;xs:element name=&quot;arg0&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />            &lt;xs:element name=&quot;arg1&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />        &lt;/xs:sequence&gt;<br />    &lt;/xs:complexType&gt;<br /><br />    &lt;xs:complexType name=&quot;addResponse&quot;&gt;<br />        &lt;xs:sequence&gt;<br />            &lt;xs:element name=&quot;return&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />        &lt;/xs:sequence&gt;<br />    &lt;/xs:complexType&gt;<br /><br />    &lt;xs:complexType name=&quot;subtract&quot;&gt;<br />        &lt;xs:sequence&gt;<br />            &lt;xs:element name=&quot;arg0&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />            &lt;xs:element name=&quot;arg1&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />        &lt;/xs:sequence&gt;<br />    &lt;/xs:complexType&gt;<br /><br />    &lt;xs:complexType name=&quot;subtractResponse&quot;&gt;<br />        &lt;xs:sequence&gt;<br />            &lt;xs:element name=&quot;return&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />        &lt;/xs:sequence&gt;<br />    &lt;/xs:complexType&gt;<br />&lt;/xs:schema&gt;<br /></pre><br />看到這是資料即是成功部署到 <b>Web Service</b>，接下來使用 <a href="http://www.soapui.org/">soapUI</a> 來模擬 <b>Web Service Client</b>。<br /><br /><b>soapUI</b> 下載地址: <a href="http://sourceforge.net/projects/soapui/files/">http://sourceforge.net/projects/soapui/files/</a><br /><br />請選擇安裝程式去下載，完成安裝後打開 <b>soapUI</b>:<br /><ol><li><b>File</b> -> <b>New soapUI Project</b></li><li>在 <b>Project name</b> 輸入 <b>localhost</b> 後按 <b>OK</b></li><li>在 <b>Project</b> 上按滑鼠加鍵 -> <b>Add WSDL</b></li><li>在 <b>WSDL Location</b> 輸入 <b>http://localhost/CalculaterService/CalculaterService.wsdl</b></li></ol><br />現在應該看得到 2 個 Method 名稱，分別為 <b>add</b> 和 <b>subtract</b>。<br />打開 <b>add</b> 的 <b>Request 1</b> 左邊顯示以下資料:<br /><pre class="brush: xml">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;<br />    xmlns:ws=&quot;http://pro.ctlok.com/CalculaterService/&quot;&gt;<br />    &lt;soapenv:Header /&gt;<br />    &lt;soapenv:Body&gt;<br />        &lt;ws:add&gt;<br />            &lt;arg0&gt;?&lt;/arg0&gt;<br />            &lt;arg1&gt;?&lt;/arg1&gt;<br />        &lt;/ws:add&gt;<br />    &lt;/soapenv:Body&gt;<br />&lt;/soapenv:Envelope&gt;<br /></pre><br />改為:<br /><pre class="brush: xml">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;<br />    xmlns:ws=&quot;http://pro.ctlok.com/CalculaterService/&quot;&gt;<br />    &lt;soapenv:Header /&gt;<br />    &lt;soapenv:Body&gt;<br />        &lt;ws:add&gt;<br />            &lt;arg0&gt;1&lt;/arg0&gt;<br />            &lt;arg1&gt;2&lt;/arg1&gt;<br />        &lt;/ws:add&gt;<br />    &lt;/soapenv:Body&gt;<br />&lt;/soapenv:Envelope&gt;<br /></pre><br />然後傳送出去，右邊會顯示出以下 <b>XML</b> 即代表成功:<br /><pre class="brush: xml">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;<br />    &lt;soapenv:Body&gt;<br />        &lt;dlwmin:addResponse xmlns:dlwmin=&quot;http://pro.ctlok.com/CalculaterService/&quot;&gt;<br />            &lt;return&gt;3&lt;/return&gt;<br />        &lt;/dlwmin:addResponse&gt;<br />    &lt;/soapenv:Body&gt;<br />&lt;/soapenv:Envelope&gt;<br /></pre><br />其實在 <b>Web Service</b> 的 <b>Function</b> 不一定要傳入或返回基本型態 (short, int, long, float, double, char, byte, boolean)，可以傳入或返回 <b>Object</b> (物件)，例如:<br /><br /><b>Object Class</b>:<br /><pre class="brush: java">package sample.ws;<br /><br />public class Info{<br /><br />    private String firstName;<br />    private String lastName;<br /><br />    public String getFirstName(){<br />        return firstName;<br />    }<br /><br />    public String getLastName(){<br />        return lastName;<br />    }<br /><br />    public void setFirstName(String firstName){<br />        this.firstName = firstName;<br />    }<br /><br />    public void setLastName(String lastName){<br />        this.lastName = lastName;<br />    }<br /><br />}<br /></pre><br /><b>Web Service</b>:<br /><pre class="brush: java">@WebMethod<br />public String sayHello(Info info) {<br />    return &quot;Hello! &quot; + info.getFirstName() <br />            + &quot; &quot; + info.getLastName();<br />}<br /><br />@WebMethod<br />public Info getInfo(int id){<br />    return findInfo(id);<br />}<br /></pre><br />有時間會再講解 <b>Top Down</b> 的做法。<br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Java-Web-Services-Up-Running/dp/059652112X?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Java Web Services: Up and Running" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=059652112X&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=059652112X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Java-Soa-Cookbook-Eben-Hewitt/dp/0596520727?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Java Soa Cookbook" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596520727&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596520727" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Building-Web-Services-Java-Making/dp/0672326418?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Building Web Services with Java: Making Sense of XML, SOAP, WSDL, and UDDI (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0672326418&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0672326418" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-3470714314351219743?l=lawpronotes.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Seam 2 in Websphere 7 EJB JNDI Setting]]></title>
-    <link href="http://pro.ctlok.com/2011/06/seam-2-in-websphere-7-ejb-jndi-setting.html"/>
-    <updated>2011-06-14T10:44:00+08:00</updated>
-    <id>http://pro.ctlok.com/2011/06/seam-2-in-websphere-7-ejb-jndi-setting</id>
-    <content type="html"><![CDATA[<b>Seam</b> 在 <b>JBoss Application Server</b> 上將 <b>EJB session bean</b> 設為 <b>Seam Component</b> 根本不需要特地去設定 <b>JNDI</b>，<b>Seam</b> 自然地找到相對應的 <b>Session bean</b>。<br /><br />但在 <b>Websphere 7 Application Server</b> 上就不是這回事了，需要自行設定 <b>JNDI</b> 讓 <b>Seam</b> 找得到 (將 <b>EJB session bean</b> 設為 <b>Seam Component</b> 才需要更改 <b>JNDI</b>，純 <b>EJB session bean</b> 不需要作出任何更改)<br /><br />這篇文章只使用我認為最好的方法。<br /><br />首先到 <b>web.xml</b> 加上以下設定:<br /><br /><pre class="brush: xml">&lt;ejb-local-ref&gt;<br />    &lt;ejb-ref-name&gt;ejblocal:EjbSynchronizations&lt;/ejb-ref-name&gt;<br />    &lt;ejb-ref-type&gt;Session&lt;/ejb-ref-type&gt;<br />    &lt;local-home&gt;&lt;/local-home&gt;<br />    &lt;local&gt;org.jboss.seam.transaction.LocalEjbSynchronizations&lt;/local&gt;<br />&lt;/ejb-local-ref&gt;<br /></pre><br />然後在 <b>WEB-INF/classes</b> 加入一個 <b>seam-jndi.prpperties</b>:<br /><pre class="brush: text">com.ibm.websphere.naming.hostname.normalizer=com.ibm.ws.naming.util.DefaultHostnameNormalizer<br />java.naming.factory.initial=com.ibm.websphere.naming.WsnInitialContextFactory<br />com.ibm.websphere.naming.name.syntax=jndi<br />com.ibm.websphere.naming.namespace.connection=lazy<br />com.ibm.ws.naming.ldap.ldapinitctxfactory=com.sun.jndi.ldap.LdapCtxFactory<br />com.ibm.websphere.naming.jndicache.cacheobject=populated<br />com.ibm.websphere.naming.namespaceroot=defaultroot<br />com.ibm.ws.naming.wsn.factory.initial=com.ibm.ws.naming.util.WsnInitCtxFactory<br />com.ibm.websphere.naming.jndicache.maxcachelife=0<br />com.ibm.websphere.naming.jndicache.maxentrylife=0<br />com.ibm.websphere.naming.jndicache.cachename=providerURL<br />java.naming.provider.url=corbaloc:rir:/NameServiceServerRoot<br />java.naming.factory.url.pkgs=com.ibm.ws.runtime\:com.ibm.ws.naming<br /></pre><br />再將 <b>WEB-INF/components.xml</b> 內的 <b>jndi-pattern</b> 更改為:<br /><pre class="brush: xml">&lt;core:init <br />    jndi-pattern=&quot;ejblocal:#{ejbName}&quot; <br />    debug=&quot;false&quot; /&gt;<br /></pre><br />最後就是設定 <b>Websphere</b> 的 <b>EJB session bean JNDI</b>，在 <b>EJB Project</b> 內的 <b>META-INF</b> 加入 <b>ibm-ejb-jar-bnd.xml</b>:<br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />&lt;ejb-jar-bnd xmlns=&quot;http://websphere.ibm.com/xml/ns/javaee&quot;<br />    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;<br />    xsi:schemaLocation=&quot;http://websphere.ibm.com/xml/ns/javaee <br />                      http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_0.xsd&quot;<br />    version=&quot;1.0&quot;&gt;<br /><br />    &lt;session name=&quot;MyBean&quot; simple-binding-name=&quot;MyBean&quot; /&gt;<br /><br />&lt;/ejb-jar-bnd&gt;<br /></pre><br /><b>simple-binding-name</b> 就是 <b>JNDI</b>，這樣 <b>Seam</b> 會照著 <b>components.xml</b> 內的 <b>jndi-pattern</b> 去使用以下的 <b>JNDI</b> 找到 <b>EJB session bean</b>:<br /><pre class="brush: text">ejblocal:MyBean<br /></pre><br />如果 <b>components.xml</b> 內的 <b>jndi-pattern</b> 改變了，亦要去更改 <b>simple-binding-name</b>。<br />例如:<br /><pre class="brush: xml">&lt;core:init <br />    jndi-pattern=&quot;ejblocal:myModule/#{ejbName}&quot; <br />    debug=&quot;false&quot; /&gt;<br /></pre><br /><b>simple-binding-name</b> 亦要更改為:<br /><pre class="brush: xml">&lt;session name=&quot;MyBean&quot; <br />    simple-binding-name=&quot;MyModule/myBean&quot; /&gt;<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Seam-Action-Dan-Allen/dp/1933988401?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Seam in Action" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1933988401&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1933988401" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Seam-Framework-Experience-Evolution-Java/dp/0137129394?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Seam Framework: Experience the Evolution of Java EE (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0137129394&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0137129394" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/WebSphere-Application-Server-Internals-Professionals/dp/1430219580?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Pro IBM WebSphere Application Server 7 Internals (Books for Professionals by Professionals)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1430219580&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1430219580" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-7344194767850097008?l=lawpronotes.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
