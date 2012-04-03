@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JSF | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/jsf/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-04-03T10:20:27+08:00</updated>
+  <updated>2012-04-03T14:45:19+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,18 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Maven Jetty JSF 2]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/04/03/maven-jetty-jsf-2.html"/>
+    <updated>2012-04-03T14:37:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/04/03/maven-jetty-jsf-2</id>
+    <content type="html"><![CDATA[<p>剛剛使用 Maven + Jetty 的組合去測試一 JSF 2.0，但很奇怪，所有的 <code>Java Bean</code> 都找不到。
+原來要 JSF 自動搜索 <code>Java Bean</code> 是要包裝成 <code>WAR</code> 才可以。</p>
+
+<p>原本運行 Jetty 使用 <code>mvn jetty:run</code> ，只要改成 <code>mvn jetty:run-war</code> 就可以了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JSF + RichFaces 做成 Session Memory Leak]]></title>
