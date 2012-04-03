@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-04-02T14:46:53+08:00</updated>
+  <updated>2012-04-03T10:20:27+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,367 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Design Pattern - Abstract Factory]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/04/02/design-pattern-abstract-factory.html"/>
+    <updated>2012-04-02T21:30:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/04/02/design-pattern-abstract-factory</id>
+    <content type="html"><![CDATA[<p>上一篇已經介紹過的 Factory Pattern 可以將建立實例的程式碼抽取出來，
+並可以提供絡不同的物件使用。Abstract Factory Pattern 其實和
+Factory Pattern 很相似，但 Abstract Factory 比較偏向建立同一系統的物件。</p>
+
+<p>同一系列的意思是彼此的物件有一定的關連，例如: 輪子、引擎、車架、方向盤、儀標板等等。
+這些都是組成車子的組件，這些組件亦由可以由不同廠商去開發，Abstract Factory 扮演角色就是廠商。
+更改廠商，就可以建立不同樣式的車子。</p>
+
+<p>看看以下例子應該有助你明白這個模式：</p>
+
+<hr />
+
+<p>公司要開發一款迷宮遊戲，建立迷宮的組件有：『牆壁』、『門』和『道路』。
+遊戲在不同的關卡會顯示不同風格的迷宮，首先要將做出組件的介面和建立一個工廠介面。</p>
+
+<p><img src="http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/uml.png"></p>
+
+<p>組件介面:</p>
+
+<figure class='code'><figcaption><span> (Component.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/Component.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Door.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/Door.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Door</span> <span class="kd">extends</span> <span class="n">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Wall.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/Wall.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Wall</span> <span class="kd">extends</span> <span class="n">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Road.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/Road.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Road</span> <span class="kd">extends</span> <span class="n">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Labyrinth.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/Labyrinth.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">factory.LabyrinthComponentFactory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Labyrinth</span> <span class="kd">implements</span> <span class="n">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">LabyrinthComponentFactory</span> <span class="n">labyrinthFactory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Labyrinth</span><span class="o">(</span><span class="n">LabyrinthComponentFactory</span> <span class="n">labyrinthFactory</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">labyrinthFactory</span> <span class="o">=</span> <span class="n">labyrinthFactory</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">switch</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">15</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+</span><span class='line'>                <span class="n">labyrinthFactory</span><span class="o">.</span><span class="na">createDoor</span><span class="o">().</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">5</span><span class="o">:</span>
+</span><span class='line'>                <span class="n">labyrinthFactory</span><span class="o">.</span><span class="na">createRoad</span><span class="o">().</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">default</span><span class="o">:</span>
+</span><span class='line'>                <span class="n">labyrinthFactory</span><span class="o">.</span><span class="na">createWall</span><span class="o">().</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>藍色風格的組件:</p>
+
+<figure class='code'><figcaption><span> (BlueDoor.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/blue/BlueDoor.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">blue</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlueDoor</span> <span class="kd">implements</span> <span class="n">Door</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Blue Door&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (BlueWall.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/blue/BlueWall.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">blue</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlueWall</span> <span class="kd">implements</span> <span class="n">Wall</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Blue Wall&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (BlueRoad.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/blue/BlueRoad.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">blue</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlueRoad</span> <span class="kd">implements</span> <span class="n">Road</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Blue Road&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>綠色風格的組件:</p>
+
+<figure class='code'><figcaption><span> (GreenDoor.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/green/GreenDoor.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">green</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreenDoor</span> <span class="kd">implements</span> <span class="n">Door</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Green Door&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (GreenWall.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/green/GreenWall.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">green</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreenWall</span> <span class="kd">implements</span> <span class="n">Wall</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Green Wall&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (GreenRoad.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/component/green/GreenRoad.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">green</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreenRoad</span> <span class="kd">implements</span> <span class="n">Road</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Green Road&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>工廠介面:</p>
+
+<figure class='code'><figcaption><span> (LabyrinthComponentFactory.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/factory/LabyrinthComponentFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">factory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">LabyrinthComponentFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Wall</span> <span class="nf">createWall</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Door</span> <span class="nf">createDoor</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Road</span> <span class="nf">createRoad</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (BlueStyleLabyrinthComponentFactory.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/factory/BlueStyleLabyrinthComponentFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">factory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.blue.BlueDoor</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.blue.BlueRoad</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.blue.BlueWall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlueStyleLabyrinthComponentFactory</span> <span class="kd">implements</span>
+</span><span class='line'>        <span class="n">LabyrinthComponentFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Wall</span> <span class="nf">createWall</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">BlueWall</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Door</span> <span class="nf">createDoor</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">BlueDoor</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Road</span> <span class="nf">createRoad</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">BlueRoad</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (GreenStyleLabyrinthComponentFactory.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/factory/GreenStyleLabyrinthComponentFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">factory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.green.GreenDoor</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.green.GreenRoad</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.green.GreenWall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreenStyleLabyrinthComponentFactory</span> <span class="kd">implements</span>
+</span><span class='line'>        <span class="n">LabyrinthComponentFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Wall</span> <span class="nf">createWall</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">GreenWall</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Door</span> <span class="nf">createDoor</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">GreenDoor</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Road</span> <span class="nf">createRoad</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">GreenRoad</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span> (Main.java)</span> <a href='http://pro.ctlok.com/downloads/code/design-pattern-abstract-factory/sample1/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">component.Labyrinth</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">factory.BlueStyleLabyrinthComponentFactory</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">factory.GreenStyleLabyrinthComponentFactory</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">factory.LabyrinthComponentFactory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">LabyrinthComponentFactory</span> <span class="n">blueStyleLabyrinthComponentFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BlueStyleLabyrinthComponentFactory</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">LabyrinthComponentFactory</span> <span class="n">greenStyleLabyrinthComponentFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GreenStyleLabyrinthComponentFactory</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Labyrinth</span> <span class="n">blueStyleLabyrinth</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Labyrinth</span><span class="o">(</span><span class="n">blueStyleLabyrinthComponentFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Labyrinth</span> <span class="n">greenStyleLabyrinth</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Labyrinth</span><span class="o">(</span><span class="n">greenStyleLabyrinthComponentFactory</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">blueStyleLabyrinth</span><span class="o">.</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;------------------&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">greenStyleLabyrinth</span><span class="o">.</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>執行結果</span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='text'><span class='line'>Blue Road
+</span><span class='line'>Blue Road
+</span><span class='line'>Blue Road
+</span><span class='line'>Blue Wall
+</span><span class='line'>Blue Road
+</span><span class='line'>Blue Door
+</span><span class='line'>Blue Wall
+</span><span class='line'>Blue Road
+</span><span class='line'>Blue Road
+</span><span class='line'>Blue Road
+</span><span class='line'>------------------
+</span><span class='line'>Green Wall
+</span><span class='line'>Green Wall
+</span><span class='line'>Green Wall
+</span><span class='line'>Green Road
+</span><span class='line'>Green Wall
+</span><span class='line'>Green Wall
+</span><span class='line'>Green Wall
+</span><span class='line'>Green Road
+</span><span class='line'>Green Wall
+</span><span class='line'>Green Road
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在建立 <code>Labyrinth</code> 時，只需將工廠交給 <code>Labyrinth</code> 就可以建立不同風格的迷宮。</p>
+
+<p>要新增更多風格的組件，只需要建立相對應的工廠就可以了，完全不需要改動 <code>Labyrinth.draw</code> 的程式碼。</p>
+
+<p>不過 Abstract Factory 有一個缺點，如果你要新増一個原先不存在的組件，例如加一個『陷阱』，
+你便需要更改 <code>LabyrinthFactory</code> 這個介面。</p>
+
+<hr />
+
+<p>以下的圖片是描述 Abstract Factory Pattern 的 Class Diagram。（From Wiki）</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Abstract_factory.svg/517px-Abstract_factory.svg.png"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Design Pattern - Factory]]></title>
@@ -1452,15 +1813,6 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
     <updated>2011-06-22T15:14:00+08:00</updated>
     <id>http://pro.ctlok.com/2011/06/update-blogger-template</id>
     <content type="html"><![CDATA[舊模板加了太多東西，令頁面載入的時間比較長。今次換了一個比較簡潔的模板，看上去的感覺比較舒服一點，再加上停用一些載入時間較長的 <b>Fancy box</b>，<b>Sexy Bookmark</b> 等等，並使用新的方法去載入 <b>Syntax Highlighter</b>， 希望令載入時間更加快。<br /><br /><div style="clear:both"></div><br />更新 Log:<br /><br /><ol><li>Add popular posts widget</li><li>Update jQuery to 1.6.1</li><li>Update Syntax Highlighter</li><li>Update Facebook javascript API</li><li>Update Facebook Like box (iframe -&gt; XFBML)</li><li>Update Facebook Like box style</li><li>Update Facebook Like (iframe -&gt; XFBML)</li><li>Update Google Adsense style</li><li>Update Google Adsense custom search</li><li>Remove Fancy Box</li><li>Remove BloggerAds banner</li></ol><br />相關書籍: <a href="http://www.amazon.com/Beginning-Google-Blogger-Heather-Wright-Porto/dp/1430230126?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Beginning Google Blogger" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=1430230126&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=1430230126" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Publishing-Blog-Blogger-Visual-QuickProject/dp/0321637526?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Publishing a Blog with Blogger: Visual QuickProject Guide (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0321637526&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0321637526" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Blogger-Customize-templates-advertising-Technologies/dp/184719317X?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Blogger: Beyond the Basics: Customize and promote your blog with original templates, analytics, advertising, and SEO (From Technologies to Solutions)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=184719317X&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=184719317X" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-2348991239226884774?l=lawpronotes.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java 使用 Bottom Up 和 JAX-WS 來部署 Web Service Provider]]></title>
-    <link href="http://pro.ctlok.com/2011/06/java-bottom-up-jax-ws-web-service.html"/>
-    <updated>2011-06-17T17:52:00+08:00</updated>
-    <id>http://pro.ctlok.com/2011/06/java-bottom-up-jax-ws-web-service</id>
-    <content type="html"><![CDATA[網路上關於 <b>Web Service</b> 的資訊不是很多，中文的 <b>Web Service</b> 資源更是少之有少，可能是因為部署 <b>Web Service</b> 是一件麻煩的事，而且性能又不是太好，但 <b>Web Service</b> 也有很多好處。不用同一種程式語言也可以互相交換數據，執行程序，有標準的格式，大多數語言都提供了 <b>Library</b> 去操作。<b>Web Service</b> 大多數用於對外的對像，例如: 銀行和銀行之間的數據交換亦可以通過 <b>Web Service</b> 做到。<br /><br />有 2 種主要的方式去設計一個 <b>Web Service</b>，就是 <b>Top Down</b> 和 <b>Bottom Up</b>，究竟有什麼分別呢?<br /><br /><b>Top Down</b> 是由定義 <b>Object</b> (物件) 和 <b>Interface</b> (介面) 做起的，<b>Object</b> (物件) 你可以想像為傳遞數據的一個容器，而這個物件是由 <b>XML Schema</b> <b>(XSD)</b> 去描述的。<b>Interface</b> (介面) 則是描述這個 <b>Web Service</b> 提供什麼服務，服務需要傳入一個什麼 <b>Object</b> (物件) 和 返回一個什麼 <b>Object</b> (物件)等等描述，這些都是由 <b>Web Services Description Language</b> <b>(WSDL)</b> 去描述的。做好這 2 項工作後就需要製作和 <b>XML Schema</b> 描述一樣的 <b>Object Class</b>，亦要製作和 <b>Web Services Description Language</b> 描述一樣的 <b>Functional Class</b>。最後當然要寫程式式碼和放上 <b>Application Server</b>。<br /><br /><b>Bottom Up</b> 就比較簡單了，是由 <b>Object Class</b> 和 <b>Functional Class</b> 先做起，做起後放上 <b>Application Server</b> 由 <b>Application Server</b> 自動產生出 <b>XML Schema</b> <b>(XSD)</b> 和 <b>Web Services Description Language</b> <b>(WSDL)</b>。不懂得 <b>XML Schema</b> 和 <b>Web Services Description Language</b> 也一樣可以製作出一個 <b>Web Service</b>。<br /><br />最好當然是對 <b>XML Schema</b> 和 <b>Web Services Description Language</b> 有一點認識。<br /><b>XML Schema</b>: <a href="http://www.w3schools.com/schema/default.asp">http://www.w3schools.com/schema/default.asp</a><br /><b>Web Services Description Language</b>: <br /><a href="http://www.w3schools.com/WSDL/default.asp">http://www.w3schools.com/WSDL/default.asp</a><br /><br />首先當然講解一下最簡單的 <b>Bottom Up</b> 方法，首先要在 <b>IDE</b> 建立一個 <b>WAR project</b>，加入一個 <b>Java Class</b>:<br /><pre class="brush: java">package sample.ws;<br /><br />import javax.jws.WebMethod;<br />import javax.jws.WebService;<br /><br />@WebService(<br />        name = &quot;CalculaterService&quot;, <br />        serviceName = &quot;CalculaterService&quot;, <br />        portName = &quot;CalculaterServicePort&quot;, <br />        targetNamespace = &quot;http://pro.ctlok.com/CalculaterService/&quot;)<br />public class CalculaterService {<br /><br />    @WebMethod<br />    public int add(int i, int k) {<br />        return i + k;<br />    }<br /><br />    @WebMethod<br />    public int subtract(int i, int k) {<br />        return i - k;<br />    }<br /><br />}<br /></pre><br />就這樣完成了一個最簡單的 <b>Web Service</b>。<br /><br /><pre class="brush: java">@WebService(<br />        name = &quot;CalculaterService&quot;, <br />        serviceName = &quot;CalculaterService&quot;, <br />        portName = &quot;CalculaterServicePort&quot;, <br />        targetNamespace = &quot;http://pro.ctlok.com/CalculaterService/&quot;)<br /></pre><br />用於通知 <b>Java EE</b> 容器識別這個 <b>Class</b> 是一個 <b>Web Service</b>。<br /><br /><ul><li><b>name</b>: 是在 <b>Application Server</b> 上的名稱</li><li><b>serviceName</b>: 是在 <b>URL</b> 和 <b>WSDL</b> 上顯示的名稱</li><li><b>portName</b>: 是在 <b>WSDL</b> 上顯示的名稱</li><li><b>targetNamespace </b>: 是在 <b>WSDL</b> 上顯示的命名空間，令 <b>XML</b> 內的名稱不會相同</li></ul><br /><pre class="brush: java">@WebMethod<br /></pre><br />是指定這個 <b>Method</b> 是 <b>Web Service</b> 的其中一個 <b>Function</b>。<br /><br /><b>CalculaterService</b> 亦可以是一個 <b>EJB Session Bean</b>:<br /><br /><pre class="brush: java">package sample.ws;<br /><br />@Local<br />public interface CalculaterService{<br /><br />    public int add(int i, int k);<br />    public int subtract(int i, int k);<br /><br />}<br /></pre><br /><pre class="brush: java">package sample.ws;<br /><br />import javax.jws.WebMethod;<br />import javax.jws.WebService;<br /><br />@Stateless<br />@WebService(<br />        name = &quot;CalculaterService&quot;, <br />        serviceName = &quot;CalculaterService&quot;, <br />        portName = &quot;CalculaterServicePort&quot;, <br />        targetNamespace = &quot;http://pro.ctlok.com/CalculaterService/&quot;)<br />public class CalculaterServiceBean implements CalculaterService{<br /><br />    @WebMethod<br />    public int add(int i, int k) {<br />        return i + k;<br />    }<br /><br />    @WebMethod<br />    public int subtract(int i, int k) {<br />        return i - k;<br />    }<br /><br />}<br /></pre><br />放上 Application Server 後使用瀏覽器開啟: <b>http://localhost/CalculaterService?wsdl</b> 會顯示出以下的 <b>WSDL</b><br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />&lt;definitions name=&quot;CalculaterService&quot; targetNamespace=&quot;http://pro.ctlok.com/CalculaterService/&quot;<br />    xmlns=&quot;http://schemas.xmlsoap.org/wsdl/&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;<br />    xmlns:tns=&quot;http://pro.ctlok.com/CalculaterService/&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;&gt;<br /><br />    &lt;types&gt;<br />        &lt;xsd:schema&gt;<br />            &lt;xsd:import namespace=&quot;http://pro.ctlok.com/CalculaterService/&quot;<br />                schemaLocation=&quot;CalculaterService_schema1.xsd&quot; /&gt;<br />        &lt;/xsd:schema&gt;<br />    &lt;/types&gt;<br /><br />    &lt;message name=&quot;addResponse&quot;&gt;<br />        &lt;part name=&quot;parameters&quot; element=&quot;tns:addResponse&quot;&gt;<br />        &lt;/part&gt;<br />    &lt;/message&gt;<br /><br />    &lt;message name=&quot;add&quot;&gt;<br />        &lt;part name=&quot;parameters&quot; element=&quot;tns:add&quot;&gt;<br />        &lt;/part&gt;<br />    &lt;/message&gt;<br /><br />    &lt;message name=&quot;subtractResponse&quot;&gt;<br />        &lt;part name=&quot;parameters&quot; element=&quot;tns:subtractResponse&quot;&gt;<br />        &lt;/part&gt;<br />    &lt;/message&gt;<br /><br />    &lt;message name=&quot;subtract&quot;&gt;<br />        &lt;part name=&quot;parameters&quot; element=&quot;tns:subtract&quot;&gt;<br />        &lt;/part&gt;<br />    &lt;/message&gt;<br /><br />    &lt;portType name=&quot;CalculaterService&quot;&gt;<br />        &lt;operation name=&quot;add&quot;&gt;<br />            &lt;input message=&quot;tns:add&quot;&gt;<br />            &lt;/input&gt;<br />            &lt;output message=&quot;tns:addResponse&quot;&gt;<br />            &lt;/output&gt;<br />        &lt;/operation&gt;<br /><br />        &lt;operation name=&quot;subtract&quot;&gt;<br />            &lt;input message=&quot;tns:subtract&quot;&gt;<br />            &lt;/input&gt;<br />            &lt;output message=&quot;tns:subtractResponse&quot;&gt;<br />            &lt;/output&gt;<br />        &lt;/operation&gt;<br />    &lt;/portType&gt;<br /><br />    &lt;binding name=&quot;CalculaterServicePortBinding&quot; type=&quot;tns:CalculaterService&quot;&gt;<br />        &lt;soap:binding style=&quot;document&quot;<br />            transport=&quot;http://schemas.xmlsoap.org/soap/http&quot; /&gt;<br />        &lt;operation name=&quot;add&quot;&gt;<br />            &lt;soap:operation soapAction=&quot;&quot; /&gt;<br />            &lt;input&gt;<br />                &lt;soap:body use=&quot;literal&quot; /&gt;<br />            &lt;/input&gt;<br />            &lt;output&gt;<br />                &lt;soap:body use=&quot;literal&quot; /&gt;<br />            &lt;/output&gt;<br />        &lt;/operation&gt;<br />        &lt;operation name=&quot;subtract&quot;&gt;<br />            &lt;soap:operation soapAction=&quot;&quot; /&gt;<br />            &lt;input&gt;<br />                &lt;soap:body use=&quot;literal&quot; /&gt;<br />            &lt;/input&gt;<br />            &lt;output&gt;<br />                &lt;soap:body use=&quot;literal&quot; /&gt;<br />            &lt;/output&gt;<br />        &lt;/operation&gt;<br />    &lt;/binding&gt;<br /><br />    &lt;service name=&quot;CalculaterService&quot;&gt;<br />        &lt;port name=&quot;CalculaterServicePort&quot; binding=&quot;tns:CalculaterServicePortBinding&quot;&gt;<br />            &lt;soap:address<br />                location=&quot;http://localhost/CalculaterService&quot; /&gt;<br />        &lt;/port&gt;<br />    &lt;/service&gt;<br />&lt;/definitions&gt;<br /></pre><br /><b>Application Server</b> 除了自動產生出 <b>WSDL</b> 外，亦會產生出 <b>XML Schema</b>。<br /><br />使用瀏覽器開啟: <b>http://localhost/CalculaterService/CalculaterService_schema1.xsd</b> 會顯示出以下的 <b>XML Schema</b>:<br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;<br />&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;<br />    xmlns:tns=&quot;http://pro.ctlok.com/CalculaterService/&quot; version=&quot;1.0&quot;<br />    targetNamespace=&quot;http://pro.ctlok.com/CalculaterService/&quot;&gt;<br /><br />    &lt;xs:element name=&quot;add&quot; type=&quot;tns:add&quot;&gt;&lt;/xs:element&gt;<br />    &lt;xs:element name=&quot;addResponse&quot; type=&quot;tns:addResponse&quot;&gt;&lt;/xs:element&gt;<br />    &lt;xs:element name=&quot;subtract&quot; type=&quot;tns:subtract&quot;&gt;&lt;/xs:element&gt;<br />    &lt;xs:element name=&quot;subtractResponse&quot; type=&quot;tns:subtractResponse&quot;&gt;&lt;/xs:element&gt;<br /><br />    &lt;xs:complexType name=&quot;add&quot;&gt;<br />        &lt;xs:sequence&gt;<br />            &lt;xs:element name=&quot;arg0&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />            &lt;xs:element name=&quot;arg1&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />        &lt;/xs:sequence&gt;<br />    &lt;/xs:complexType&gt;<br /><br />    &lt;xs:complexType name=&quot;addResponse&quot;&gt;<br />        &lt;xs:sequence&gt;<br />            &lt;xs:element name=&quot;return&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />        &lt;/xs:sequence&gt;<br />    &lt;/xs:complexType&gt;<br /><br />    &lt;xs:complexType name=&quot;subtract&quot;&gt;<br />        &lt;xs:sequence&gt;<br />            &lt;xs:element name=&quot;arg0&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />            &lt;xs:element name=&quot;arg1&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />        &lt;/xs:sequence&gt;<br />    &lt;/xs:complexType&gt;<br /><br />    &lt;xs:complexType name=&quot;subtractResponse&quot;&gt;<br />        &lt;xs:sequence&gt;<br />            &lt;xs:element name=&quot;return&quot; type=&quot;xs:int&quot;&gt;&lt;/xs:element&gt;<br />        &lt;/xs:sequence&gt;<br />    &lt;/xs:complexType&gt;<br />&lt;/xs:schema&gt;<br /></pre><br />看到這是資料即是成功部署到 <b>Web Service</b>，接下來使用 <a href="http://www.soapui.org/">soapUI</a> 來模擬 <b>Web Service Client</b>。<br /><br /><b>soapUI</b> 下載地址: <a href="http://sourceforge.net/projects/soapui/files/">http://sourceforge.net/projects/soapui/files/</a><br /><br />請選擇安裝程式去下載，完成安裝後打開 <b>soapUI</b>:<br /><ol><li><b>File</b> -> <b>New soapUI Project</b></li><li>在 <b>Project name</b> 輸入 <b>localhost</b> 後按 <b>OK</b></li><li>在 <b>Project</b> 上按滑鼠加鍵 -> <b>Add WSDL</b></li><li>在 <b>WSDL Location</b> 輸入 <b>http://localhost/CalculaterService/CalculaterService.wsdl</b></li></ol><br />現在應該看得到 2 個 Method 名稱，分別為 <b>add</b> 和 <b>subtract</b>。<br />打開 <b>add</b> 的 <b>Request 1</b> 左邊顯示以下資料:<br /><pre class="brush: xml">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;<br />    xmlns:ws=&quot;http://pro.ctlok.com/CalculaterService/&quot;&gt;<br />    &lt;soapenv:Header /&gt;<br />    &lt;soapenv:Body&gt;<br />        &lt;ws:add&gt;<br />            &lt;arg0&gt;?&lt;/arg0&gt;<br />            &lt;arg1&gt;?&lt;/arg1&gt;<br />        &lt;/ws:add&gt;<br />    &lt;/soapenv:Body&gt;<br />&lt;/soapenv:Envelope&gt;<br /></pre><br />改為:<br /><pre class="brush: xml">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;<br />    xmlns:ws=&quot;http://pro.ctlok.com/CalculaterService/&quot;&gt;<br />    &lt;soapenv:Header /&gt;<br />    &lt;soapenv:Body&gt;<br />        &lt;ws:add&gt;<br />            &lt;arg0&gt;1&lt;/arg0&gt;<br />            &lt;arg1&gt;2&lt;/arg1&gt;<br />        &lt;/ws:add&gt;<br />    &lt;/soapenv:Body&gt;<br />&lt;/soapenv:Envelope&gt;<br /></pre><br />然後傳送出去，右邊會顯示出以下 <b>XML</b> 即代表成功:<br /><pre class="brush: xml">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;<br />    &lt;soapenv:Body&gt;<br />        &lt;dlwmin:addResponse xmlns:dlwmin=&quot;http://pro.ctlok.com/CalculaterService/&quot;&gt;<br />            &lt;return&gt;3&lt;/return&gt;<br />        &lt;/dlwmin:addResponse&gt;<br />    &lt;/soapenv:Body&gt;<br />&lt;/soapenv:Envelope&gt;<br /></pre><br />其實在 <b>Web Service</b> 的 <b>Function</b> 不一定要傳入或返回基本型態 (short, int, long, float, double, char, byte, boolean)，可以傳入或返回 <b>Object</b> (物件)，例如:<br /><br /><b>Object Class</b>:<br /><pre class="brush: java">package sample.ws;<br /><br />public class Info{<br /><br />    private String firstName;<br />    private String lastName;<br /><br />    public String getFirstName(){<br />        return firstName;<br />    }<br /><br />    public String getLastName(){<br />        return lastName;<br />    }<br /><br />    public void setFirstName(String firstName){<br />        this.firstName = firstName;<br />    }<br /><br />    public void setLastName(String lastName){<br />        this.lastName = lastName;<br />    }<br /><br />}<br /></pre><br /><b>Web Service</b>:<br /><pre class="brush: java">@WebMethod<br />public String sayHello(Info info) {<br />    return &quot;Hello! &quot; + info.getFirstName() <br />            + &quot; &quot; + info.getLastName();<br />}<br /><br />@WebMethod<br />public Info getInfo(int id){<br />    return findInfo(id);<br />}<br /></pre><br />有時間會再講解 <b>Top Down</b> 的做法。<br /><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Java-Web-Services-Up-Running/dp/059652112X?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Java Web Services: Up and Running" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=059652112X&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=059652112X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Java-Soa-Cookbook-Eben-Hewitt/dp/0596520727?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Java Soa Cookbook" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0596520727&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0596520727" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Building-Web-Services-Java-Making/dp/0672326418?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Building Web Services with Java: Making Sense of XML, SOAP, WSDL, and UDDI (2nd Edition)" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0672326418&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0672326418" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-3470714314351219743?l=lawpronotes.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   

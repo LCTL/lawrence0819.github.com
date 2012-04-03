@@ -1,139 +1,4 @@
-
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Design Pattern - Factory - Programming Design Notes</title>
-  <meta name="author" content="Lawrence Cheung">
-
-  
-  <meta name="description" content="Factory Pattern 可以將創造實例的程式碼分離，令原本核心的程式碼不必太過依賴於某一個物件，
-並可以令其他要用到同一物件的地方使用同一套程式碼，方便集中管理。 看看以下例子應該有助你明白這個模式： 公司要你開發一個 Logger (記錄器)，用於記錄程式內的變化， &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory.html">
-  <link href="/favicon.ico" rel="icon">
-  
-  <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
-  <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css">
-  <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
-  <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css">
-  
-  <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml">
-  
-  
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-16811171-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-<body    data-spy="scroll">
-
-  <div class="container">
-    <header class="jumbotron subhead" id="overview">
-      <div class="subscribe">
-    <table>
-        <tr>
-            <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png" /></td>
-            <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png" /></a></td>
-            <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png" /></a></td>
-        </tr>
-    </table>
-</div>
-<h1 class="title">Programming Design Notes</h1>
-
-      <div class="navbar">
-    <div class="navbar-inner">
-        <div class="container" style="width: auto;">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
-            <div class="nav-collapse">
-                <ul class="nav">
-                    <li>
-                        <a href="/"><i class="icon icon-home"></i>Home</a>
-                    </li>
-                    <li>
-                        <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a>
-                    </li>
-                </ul>
-                
-                <form action="http://google.com/search" method="get" class="navbar-search pull-right">
-                    <fieldset role="search">
-                        <input type="hidden" name="q" value="site:pro.ctlok.com" />
-                        <input type="text" name="q" results="0" placeholder="Search" class="span3" />
-                    </fieldset>
-                </form>
-                
-            </div><!-- /.nav-collapse -->
-        </div>
-    </div><!-- /navbar-inner -->
-</div>
-
-    </header>
-    <div id="main">
-      <div id="content">
-        <div class="row">
-  <div class="span8">
-    
-  <header>
-    
-      <h2 class="entry-title">Design Pattern - Factory</h2>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-02T10:32:00+08:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2012</time>
-        
-         | <a href="#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Factory Pattern 可以將創造實例的程式碼分離，令原本核心的程式碼不必太過依賴於某一個物件，
-並可以令其他要用到同一物件的地方使用同一套程式碼，方便集中管理。</p>
-
-<p>看看以下例子應該有助你明白這個模式：</p>
-
-<hr />
-
-<p>公司要你開發一個 Logger (記錄器)，用於記錄程式內的變化，你一開始可能會設計成以下這樣:</p>
-
-<p><img src="/downloads/code/design-pattern-factory/sample1/uml.png"></p>
-
-<figure class='code'><figcaption><span> (Logger.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/Logger.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
+<!DOCTYPE html> <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]--> <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]--> <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]--> <head> <meta charset="utf-8"> <title>Design Pattern - Factory - Programming Design Notes</title> <meta name="author" content="Lawrence Cheung"> <meta name="description" content="Factory Pattern 可以將創造實例的程式碼分離，令原本核心的程式碼不必太過依賴於某一個物件， 並可以令其他要用到同一物件的地方使用同一套程式碼，方便集中管理。 看看以下例子應該有助你明白這個模式： 公司要你開發一個 Logger (記錄器)，用於記錄程式內的變化， &hellip;"> <meta name="HandheldFriendly" content="True"> <meta name="MobileOptimized" content="320"> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="canonical" href="http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory.html"> <link href="/favicon.ico" rel="icon"> <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css"> <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"> <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css"> <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml"> <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-16811171-1"]);_gaq.push(["_trackPageview"]);(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)})();</script> </head> <body data-spy="scroll"> <div class="container"> <header class="jumbotron subhead" id="overview"> <div class="subscribe"> <table> <tr> <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png"/></td> <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png"/></a></td> <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png"/></a></td> </tr> </table> </div> <h1 class="title">Programming Design Notes</h1> <div class="navbar"> <div class="navbar-inner"> <div class="container" style="width: auto;"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <div class="nav-collapse"> <ul class="nav"> <li> <a href="/"><i class="icon icon-home"></i>Home</a> </li> <li> <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a> </li> </ul> <form action="http://google.com/search" method="get" class="navbar-search pull-right"> <fieldset role="search"> <input type="hidden" name="q" value="site:pro.ctlok.com"/> <input type="text" name="q" results="0" placeholder="Search" class="span3"/> </fieldset> </form> </div> </div> </div> </div> </header> <div id="main"> <div id="content"> <div class="row"> <div class="span8"> <header> <h2 class="entry-title">Design Pattern - Factory</h2> <p class="meta"> <time datetime="2012-04-02T10:32:00+08:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2012</time> | <a href="#disqus_thread">Comments</a> </p> </header> <div class="entry-content"><p>Factory Pattern 可以將創造實例的程式碼分離，令原本核心的程式碼不必太過依賴於某一個物件， 並可以令其他要用到同一物件的地方使用同一套程式碼，方便集中管理。</p> <p>看看以下例子應該有助你明白這個模式：</p> <hr/> <p>公司要你開發一個 Logger (記錄器)，用於記錄程式內的變化，你一開始可能會設計成以下這樣:</p> <p><img src="/downloads/code/design-pattern-factory/sample1/uml.png"></p> <figure class='code'><figcaption><span> (Logger.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/Logger.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
@@ -141,11 +6,7 @@
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (ConsoleLogger.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/ConsoleLogger.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (ConsoleLogger.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/ConsoleLogger.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
 </span><span class='line'>
 </span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsoleLogger</span> <span class="kd">implements</span> <span class="n">Logger</span> <span class="o">{</span>
 </span><span class='line'>
@@ -180,13 +41,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其他程式要使用時會直接使用 <code>new ConsoleLogger()</code> 來取得 ConsoleLogger 的 Instance (實例)。</p>
-
-<figure class='code'><figcaption><span> (AService.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/AService.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <p>其他程式要使用時會直接使用 <code>new ConsoleLogger()</code> 來取得 ConsoleLogger 的 Instance (實例)。</p> <figure class='code'><figcaption><span> (AService.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/AService.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConsoleLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
 </span><span class='line'>
@@ -199,11 +54,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (BService.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/BService.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (BService.java)</span> <a href='/downloads/code/design-pattern-factory/sample1/BService.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConsoleLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
 </span><span class='line'>
@@ -216,19 +67,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>有沒有發現什麼問題? 如果使用 Logger 的物件超過 100 個，要轉換 ConsoleLogger 為其他 Logger 就要更改 100 次程式碼。</p>
-
-<hr />
-
-<p>我們可以使用 Factory Pattern 來解決這個問題:</p>
-
-<p><img src="/downloads/code/design-pattern-factory/sample2/uml.png"></p>
-
-<figure class='code'><figcaption><span> (Logger.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/Logger.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <p>有沒有發現什麼問題? 如果使用 Logger 的物件超過 100 個，要轉換 ConsoleLogger 為其他 Logger 就要更改 100 次程式碼。</p> <hr/> <p>我們可以使用 Factory Pattern 來解決這個問題:</p> <p><img src="/downloads/code/design-pattern-factory/sample2/uml.png"></p> <figure class='code'><figcaption><span> (Logger.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/Logger.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Logger</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">debug</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">info</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
@@ -236,11 +75,7 @@
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">error</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (ConsoleLogger.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/ConsoleLogger.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (ConsoleLogger.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/ConsoleLogger.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
 </span><span class='line'>
 </span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsoleLogger</span> <span class="kd">implements</span> <span class="n">Logger</span> <span class="o">{</span>
 </span><span class='line'>
@@ -275,11 +110,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (FileLogger.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/FileLogger.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.io.BufferedWriter</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (FileLogger.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/FileLogger.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.io.BufferedWriter</span><span class="o">;</span>
 </span><span class='line'><span class="kn">import</span> <span class="nn">java.io.FileWriter</span><span class="o">;</span>
 </span><span class='line'><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
 </span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
@@ -333,24 +164,14 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (LoggerFactory.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/LoggerFactory.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoggerFactory</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (LoggerFactory.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/LoggerFactory.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoggerFactory</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Logger</span> <span class="nf">createLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
 </span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">FileLogger</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>新增一個 LoggerFactory，用來建立 Logger 。</p>
-
-<figure class='code'><figcaption><span> (AService.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/AService.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <p>新增一個 LoggerFactory，用來建立 Logger 。</p> <figure class='code'><figcaption><span> (AService.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/AService.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
 </span><span class='line'>
@@ -363,11 +184,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (BService.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/BService.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (BService.java)</span> <a href='/downloads/code/design-pattern-factory/sample2/BService.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">createLogger</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
 </span><span class='line'>
@@ -380,32 +197,14 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以後要使用 Logger 時不必知道實際是使用 ConsoleLogger 或 FileLogger，只要物件實現了 Logger 這個介面就可以了。
-這個 Factory Pattern 解決了一些問題，但仍然差一點，例如: 在測試環境中我想使用 ConsoleLogger，
-但在正常環境中是使用 FileLogger，但以上的方法並不能解決這個問題。</p>
-
-<hr />
-
-<p>將 LoggerFactory 的 createLogger 變更為 Non-Static:</p>
-
-<figure class='code'><figcaption><span> (LoggerFactory.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/LoggerFactory.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoggerFactory</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <p>以後要使用 Logger 時不必知道實際是使用 ConsoleLogger 或 FileLogger，只要物件實現了 Logger 這個介面就可以了。 這個 Factory Pattern 解決了一些問題，但仍然差一點，例如: 在測試環境中我想使用 ConsoleLogger， 但在正常環境中是使用 FileLogger，但以上的方法並不能解決這個問題。</p> <hr/> <p>將 LoggerFactory 的 createLogger 變更為 Non-Static:</p> <figure class='code'><figcaption><span> (LoggerFactory.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/LoggerFactory.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoggerFactory</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="n">Logger</span> <span class="nf">createLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">){</span>
 </span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">FileLogger</span><span class="o">(</span><span class="n">clazz</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>新増一個 MockLoggerFactory 在測試環境:</p>
-
-<figure class='code'><figcaption><span> (MockLoggerFactory.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/MockLoggerFactory.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MockLoggerFactory</span> <span class="kd">extends</span> <span class="n">LoggerFactory</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <p>新増一個 MockLoggerFactory 在測試環境:</p> <figure class='code'><figcaption><span> (MockLoggerFactory.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/MockLoggerFactory.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MockLoggerFactory</span> <span class="kd">extends</span> <span class="n">LoggerFactory</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="nd">@Override</span>
 </span><span class='line'>    <span class="kd">public</span> <span class="n">Logger</span> <span class="nf">createLogger</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">clazz</span><span class="o">)</span> <span class="o">{</span>
@@ -414,13 +213,7 @@
 </span><span class='line'>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span> (AService.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/AService.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (AService.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/AService.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AService</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">;</span>
 </span><span class='line'>
@@ -437,11 +230,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (BService.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/BService.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (BService.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/BService.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BService</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">;</span>
 </span><span class='line'>
@@ -458,13 +247,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/Main.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-factory/sample3/Main.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="n">LoggerFactory</span> <span class="n">loggerFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LoggerFactory</span><span class="o">();</span>
@@ -482,214 +265,4 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這樣就可以在不同環境替換 LoggerFactory 來建立不同的 Logger。</p>
-
-<hr />
-
-<p>以下的圖片是描述 Factory Pattern 的 Class Diagram。（From Wiki）</p>
-
-<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/FactoryMethod.svg/349px-FactoryMethod.svg.png"></p>
-</div>
-
-
-    <footer>
-      <p class="meta">
-        
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span>
-
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-02T10:32:00+08:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2012</time>
-        
-
-<span class="categories">
-  
-    <a class='category' href='/blog/tag/design-pattern/'>Design Pattern</a>
-  
-</span>
-
-
-      </p>
-      
-        <div class="sharing">
-  <br/>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-      
-      <p class="meta">
-        
-          <a class="basic-alignment" href="/blog/2012/03/30/maven-setup-jetty-dev-server.html" title="Previous Post: Maven Setup Jetty Development Server">&laquo; Maven Setup Jetty Development Server</a>
-        
-        
-      </p>
-    </footer>
-    
-    
-      <section>
-        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-      </section>
-    
-  </div>
-
-  
-  <div class="span4 sidebar">
-      
-        <section>
-    <h2>About Me</h2>
-    <div class="well">
-        <p>Lawrence Cheung</p>
-        <a href="mailto:lawrence0819@gmail.com" target="_blank"><img src="/images/mail.png" /></a>
-    </div>
-</section>
-<section>
-    <h2>Recent Posts</h2>
-    <div class="well" style="padding: 8px 0;">
-        <ul id="recent_posts" class="nav nav-list">
-            
-            <li class="post">
-                <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a>
-            </li>
-            
-            <li class="post">
-                <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a>
-            </li>
-            
-            <li class="post">
-                <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a>
-            </li>
-            
-            <li class="post">
-                <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a>
-            </li>
-            
-            <li class="post">
-                <a href="/2011/12/speed-up-develop-web-site-twitter.html">助你快速開發網站的 Twitter Bootstrap</a>
-            </li>
-            
-        </ul>
-    </div>
-</section><section>
-    <div id="popularthreads" class="dsq-widget">
-        <h2 class="dsq-widget-title">Popular Posts</h2>
-        <div class="well">
-            <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script>
-        </div>
-    </div>
-</section>
-<section>
-    <div id="recentcomment" class="dsq-widget">
-        <h2 class="dsq-widget-title">Recent Comments</h2>
-        <div class="well">
-            <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script>
-        </div>
-    </div>
-</section>
-
-
-
-      
-  </div>
-
-</div>
-
-
-      </div>
-    </div>
-    <footer class="footer"><p>
-  Copyright &copy; 2012 - Lawrence Cheung -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p></footer>
-    
-
-<script type="text/javascript">
-      var disqus_shortname = 'pdn';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory.html';
-        var disqus_url = 'http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
-
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-<script src="/assets/google-code-prettify/js/prettify.js"></script>
-<script>
-    (function($){
-        $(function(){
-            $("pre").each(function(){
-            	if ($(this).parents(".gist").size() == 0){
-            		$(this).addClass("prettyprint linenums");
-            	}
-            })
-            prettyPrint()
-        });
-    })(jQuery)
-</script>
-
-
-  </div>
-</body>
-</html>
+</span></code></pre></td></tr></table></div></figure> <p>這樣就可以在不同環境替換 LoggerFactory 來建立不同的 Logger。</p> <hr/> <p>以下的圖片是描述 Factory Pattern 的 Class Diagram。（From Wiki）</p> <p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/FactoryMethod.svg/349px-FactoryMethod.svg.png"></p> </div> <footer> <p class="meta"> <span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span> <time datetime="2012-04-02T10:32:00+08:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2012</time> <span class="categories"> <a class='category' href='/blog/tag/design-pattern/'>Design Pattern</a> </span> </p> <div class="sharing"> <br/> <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div> </div> <p class="meta"> <a class="basic-alignment" href="/blog/2012/03/30/maven-setup-jetty-dev-server.html" title="Previous Post: Maven Setup Jetty Development Server">&laquo; Maven Setup Jetty Development Server</a> <a class="basic-alignment pull-right" href="/blog/2012/04/02/design-pattern-abstract-factory.html" title="Next Post: Design Pattern - Abstract Factory">Design Pattern - Abstract Factory &raquo;</a> </p> </footer> <section> <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript> </div> </section> </div> <div class="span4 sidebar"> <section> <h2>About Me</h2> <div class="well"> <p>Lawrence Cheung</p> <img src="/images/mail.png"/> </div> </section> <section> <h2>Recent Posts</h2> <div class="well" style="padding: 8px 0;"> <ul id="recent_posts" class="nav nav-list"> <li class="post"> <a href="/blog/2012/04/02/design-pattern-abstract-factory.html">Design Pattern - Abstract Factory</a> </li> <li class="post"> <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a> </li> <li class="post"> <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a> </li> <li class="post"> <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a> </li> <li class="post"> <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a> </li> <li class="post"> <a href="/blog/2012/03/26/windows-install-octopress.html">在 Windows 設定 Octopress</a> </li> <li class="post"> <a href="/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html">由 Blogspot 搬家到 Octopress Github Page</a> </li> <li class="post"> <a href="/2012/03/shacial-database-design.html">Shacial 的資料庫設計</a> </li> <li class="post"> <a href="/2012/02/shacial-web-application.html">自行開發的檔案分享應用程式 - Shacial</a> </li> <li class="post"> <a href="/2012/01/css.html">介紹一款 CSS 模組化工具 - LESS</a> </li> </ul> </div> </section><section> <div id="popularthreads" class="dsq-widget"> <h2 class="dsq-widget-title">Popular Posts</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/popular_threads_widget.js?num_items=5"></script> </div> </div> </section> <section> <div id="recentcomment" class="dsq-widget"> <h2 class="dsq-widget-title">Recent Comments</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script> </div> </div> </section> </div> </div> </div> </div> <footer class="footer"><p> Copyright &copy; 2012 - Lawrence Cheung - <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> </p></footer> <script type="text/javascript">var disqus_shortname="pdn",disqus_identifier="http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory.html",disqus_url="http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory.html",disqus_script="embed.js";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src="http://"+disqus_shortname+".disqus.com/"+disqus_script;(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();</script> <div id="fb-root"></div> <script>(function(a,b,c){var d=a.getElementsByTagName(b)[0];if(!a.getElementById(c))a=a.createElement(b),a.id=c,a.src="//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1",d.parentNode.insertBefore(a,d)})(document,"script","facebook-jssdk");</script> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> <script src="/assets/bootstrap/js/bootstrap.min.js"></script> <script src="/assets/google-code-prettify/js/prettify.js"></script> <script>(function(a){a(function(){a("pre").each(function(){a(this).parents(".gist").size()==0&&a(this).addClass("prettyprint linenums")});prettyPrint()})})(jQuery);</script> </div> </body> </html>
