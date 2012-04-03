@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Maven | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/maven/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-04-03T14:45:19+08:00</updated>
+  <updated>2012-04-03T14:56:13+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Maven Jetty JSF 2]]></title>
+    <title type="html"><![CDATA[Maven + Jetty 測試  JSF 2 Annotation]]></title>
     <link href="http://pro.ctlok.com/blog/2012/04/03/maven-jetty-jsf-2.html"/>
     <updated>2012-04-03T14:37:00+08:00</updated>
     <id>http://pro.ctlok.com/blog/2012/04/03/maven-jetty-jsf-2</id>
