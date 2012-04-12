@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Windows | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/windows/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-04-03T14:56:13+08:00</updated>
+  <updated>2012-04-12T14:23:10+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -38,6 +38,9 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
 ruby dk.rb init
 ruby dk.rb install
 </code></p>
+
+<!--more-->
+
 
 <h3>Install Python</h3>
 

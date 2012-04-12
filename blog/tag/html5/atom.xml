@@ -4,7 +4,7 @@
   <title><![CDATA[Category: HTML5 | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/html5/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-04-03T14:56:13+08:00</updated>
+  <updated>2012-04-12T14:23:10+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,121 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Web Development Cheat Sheet]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/04/03/web-app-development-cheat-sheet.html"/>
+    <updated>2012-04-03T23:06:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/04/03/web-app-development-cheat-sheet</id>
+    <content type="html"><![CDATA[<p>在網上收集了一些 Cheat Sheet 是關於開發 Web Application 的，可以幫助你快速查找想要的功能。</p>
+
+<h2>Git</h2>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/git-cheat-sheet.png" width="750" title="" >
+from <a href="http://zrusin.blogspot.com/2007/09/git-cheat-sheet.html">http://zrusin.blogspot.com/2007/09/git-cheat-sheet.html</a></p>
+
+<!--more-->
+
+
+<hr />
+
+<h2>HTML</h2>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/html/html5-cheat-sheet-tags.png" width="750" title="" >
+from <a href="http://www.inmotionhosting.com/infographics/_img/html5_cheat_sheet_tags.png">http://www.inmotionhosting.com/infographics/_img/html5_cheat_sheet_tags.png</a></p>
+
+<h3>HTML5 Web Applications</h3>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/html/html5-app-browser-cheat-sheet.png" width="750" title="" ></p>
+
+<h3>HTML5 Graphics &amp; Embedded Content</h3>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/html/html5-support-browser-cheat-sheet.png" width="750" title="" ></p>
+
+<h3>HTML5 Audio Codecs</h3>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/html/html5-audio-browser-cheat-sheet.png" width="750" title="" ></p>
+
+<h3>HTML5 Video Codecs</h3>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/html/html5-video-browser-cheat-sheet.png" width="750" title="" ></p>
+
+<h3>HTML5 Forms Inputs</h3>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/html/html5-form-browser-cheat-sheet.png" width="750" title="" ></p>
+
+<h3>HTML5 Forms Attributes</h3>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/html/html5-form-attribute-browser-cheat-sheet.png" width="750" title="" >
+from <a href="http://www.findmebyip.com/litmus/">http://www.findmebyip.com/litmus/</a></p>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/html/html-character-entities-cheat-sheet.png" width="750" title="" >
+from <a href="http://www.addedbytes.com/download/html-character-entities-cheat-sheet/png">http://www.addedbytes.com/download/html-character-entities-cheat-sheet/png</a></p>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/html/web-safe-fonts-cheat-sheet.png" width="750" title="" >
+from <a href="http://static.omglog.com/uploads/2010/06/web-safe-fonts-cheat-sheet-v1.png">http://static.omglog.com/uploads/2010/06/web-safe-fonts-cheat-sheet-v1.png</a></p>
+
+<hr />
+
+<h2>CSS</h2>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/css/css3-cheat-sheet1.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/css/css3-cheat-sheet2.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/css/css3-cheat-sheet3.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/css/css3-cheat-sheet4.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/css/css3-cheat-sheet5.png" width="750" title="" >
+from <a href="http://media.smashingmagazine.com/wp-content/uploads/images/css3-cheat-sheet/css3-cheat-sheet.pdf">http://media.smashingmagazine.com/wp-content/uploads/images/css3-cheat-sheet/css3-cheat-sheet.pdf</a></p>
+
+<h3>CSS3 Properties</h3>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/css/css3-properties-browser-cheat-sheet.png" width="750" title="" ></p>
+
+<h3>CSS3 Selectors</h3>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/css/css3-selector-browser-cheat-sheet.png" width="750" title="" >
+from <a href="http://www.findmebyip.com/litmus/">http://www.findmebyip.com/litmus/</a></p>
+
+<hr />
+
+<h2>Javascript</h2>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/javascript-cheat-sheet.png" width="750" title="" >
+from <a href="http://www.addedbytes.com/cheat-sheets/javascript-cheat-sheet/">http://www.addedbytes.com/cheat-sheets/javascript-cheat-sheet/</a></p>
+
+<hr />
+
+<h2>jQuery</h2>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/jquery/jQuery-17-Visual-Cheat-Sheet1.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/jquery/jQuery-17-Visual-Cheat-Sheet2.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/jquery/jQuery-17-Visual-Cheat-Sheet3.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/jquery/jQuery-17-Visual-Cheat-Sheet4.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/jquery/jQuery-17-Visual-Cheat-Sheet5.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/jquery/jQuery-17-Visual-Cheat-Sheet6.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/jquery/jQuery-17-Visual-Cheat-Sheet7.png" width="750" title="" >
+<img src="/downloads/code/web-app-development-cheat-sheet/jquery/jQuery-17-Visual-Cheat-Sheet8.png" width="750" title="" >
+from <a href="http://woorkup.com/wp-content/uploads/2011/12/jQuery-17-Visual-Cheat-Sheet1.pdf">http://woorkup.com/wp-content/uploads/2011/12/jQuery-17-Visual-Cheat-Sheet1.pdf</a></p>
+
+<hr />
+
+<h2>Regular Expressions</h2>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/regular-expressions-cheat-sheet.png" width="750" title="" >
+from <a href="http://www.addedbytes.com/download/regular-expressions-cheat-sheet-v2/png/">http://www.addedbytes.com/download/regular-expressions-cheat-sheet-v2/png/</a></p>
+
+<hr />
+
+<h2>MySQL</h2>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/mysql-cheat-sheet.png" width="750" title="" >
+from <a href="http://www.addedbytes.com/download/mysql-cheat-sheet-v1/png/">http://www.addedbytes.com/download/mysql-cheat-sheet-v1/png/</a></p>
+
+<h2>Color Theory</h2>
+
+<p><img src="/downloads/code/web-app-development-cheat-sheet/color-theory-cheat-sheet.png" width="750">
+from <a href="http://www.paper-leaf.com/blog/2010/01/color-theory-quick-reference-poster/">http://www.paper-leaf.com/blog/2010/01/color-theory-quick-reference-poster/</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[HTML5 - Web Storage]]></title>

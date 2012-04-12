@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Signleton | Programming Design Notes]]></title>
+  <link href="http://pro.ctlok.com/blog/tag/signleton/atom.xml" rel="self"/>
+  <link href="http://pro.ctlok.com/"/>
+  <updated>2012-04-12T14:23:10+08:00</updated>
+  <id>http://pro.ctlok.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Design Pattern - Singleton]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/04/04/design-pattern-singleton.html"/>
+    <updated>2012-04-04T10:50:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/04/04/design-pattern-singleton</id>
+    <content type="html"><![CDATA[<p>Singleton Pattern 幫助你創造出唯一一個實例，保證任何物件要使用這個物件時，也是使用相同的實例。
+那唯一一個實例有什麼用呢? 可減少系統負擔，不用建立多個實例，尤其是建立實例是需要複雜的計算，
+在情況許可下使用 Singleton Pattern 是有助提高系統效能。
+或在某些情況下例如 Cache 和 Pool 這些要共用物件的設計，大多數是只有一個實例存在於應用程式。</p>
+
+<p>看看以下例子應該有助你明白這個模式：</p>
+
+<!--more-->
+
+
+<hr />
+
+<p>公司要你開發一個 Cache 服務，以供應用程式其他服務使用。
+一開始你可能設計成這樣:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Cache.java)</span> <a href='/downloads/code/design-pattern-singleton/sample1/Cache.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Cache</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">container</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Object</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">container</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">container</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>這個看似沒有什麼問題，但其他物件可以使用 <code>new Cache()</code> 來建立實例，為了解決這個問題，
+更改一下 <code>Constructor</code>:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Cache.java)</span> <a href='/downloads/code/design-pattern-singleton/sample2/Cache.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Cache</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">container</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">Cache</span><span class="o">()</span> <span class="o">{}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Object</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">container</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">container</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Constructor 改為 <code>private</code> 就沒有其他物件建立到 Cache 實例，
+這樣就可以避免了其他物件可以使用 <code>new Cache()</code> 來建立實例這個問題。</p>
+
+<p>亦可以將 Class 改成 <code>abstract</code> 來解決這個問題。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Cache.java)</span> <a href='/downloads/code/design-pattern-singleton/sample3/Cache.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Cache</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">container</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Object</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">container</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">container</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<hr />
+
+<p>有測試人員測試出建立 <code>java.util.HashMap</code> 是要複雜的計算，又使用了大量的記憶體(假設)，
+而 Cache 這個物件又不是必須的，希望你可以改為使用到 Cache 時才建立相對應的物件 (Lazy Initialization)，
+以節省記憶體和 CPU 使用量。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Cache.java)</span> <a href='/downloads/code/design-pattern-singleton/sample4/Cache.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Cache</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">container</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">Cache</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">container</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">container</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">container</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Cache</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">InstanceHolder</span><span class="o">.</span><span class="na">instance</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InstanceHolder</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Cache</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Cache</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>你可能會奇怪，在 InstanceHolder 內不是有一句 <code>private static final Cache instance = new Cache();</code> 嗎。
+那裡有 Lazy Initialization? 其實在 JVM 載入 Cache.class 時會檢查有那些 static field 需要初始化，
+但這個過程並不包括 static class 亦即是 InstanceHolder。InstanceHolder 只會在執行 <code>Cache.getInstance()</code> 時
+被 JVM 載入，JVM 載入 InstanceHolder.class 時亦會檢查有那些 static field 需要初始化，
+那時就會將 InstanceHolder.instance 初始化。</p>
+
+<p>更詳細說明可以參考 Wiki: <a href="http://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom">http://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom</a></p>
+
+<hr />
+
+<p>公司又下了一個要求，在正確環境中會使用到 <code>java.util.TreeMap</code>實現的 Cache，
+而在測試環境中使用 <code>java.util.HashMap</code> 就可以了。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Cache.java)</span> <a href='/downloads/code/design-pattern-singleton/sample5/Cache.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Cache</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InstanceHolder</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">static</span> <span class="n">Cache</span> <span class="n">instance</span><span class="o">;</span>
+</span><span class='line'>        <span class="kd">static</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">instance</span> <span class="o">=</span> <span class="o">(</span><span class="n">Cache</span><span class="o">)</span> <span class="n">cacheImplClass</span><span class="o">.</span><span class="na">getMethod</span><span class="o">(</span><span class="s">&quot;getInstance&quot;</span><span class="o">).</span><span class="na">invoke</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cacheImplClass</span> <span class="o">+</span> <span class="s">&quot;.getInstance throw exception: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Use default cache &quot;</span> <span class="o">+</span> <span class="n">HashMapCache</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">instance</span> <span class="o">=</span> <span class="n">HashMapCache</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">Cache</span><span class="o">&gt;</span> <span class="n">cacheImplClass</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="n">Object</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Cache</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">InstanceHolder</span><span class="o">.</span><span class="na">instance</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">final</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setCacheImplClass</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">Cache</span><span class="o">&gt;</span> <span class="n">cacheImplClass</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">Cache</span><span class="o">.</span><span class="na">cacheImplClass</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+</span><span class='line'>            <span class="n">Cache</span><span class="o">.</span><span class="na">cacheImplClass</span> <span class="o">=</span> <span class="n">cacheImplClass</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">else</span>
+</span><span class='line'>        	<span class="k">new</span> <span class="nf">IllegalArgumentException</span><span class="o">(</span><span class="s">&quot;Cache implementation class already exist&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (HashMapCache.java)</span> <a href='/downloads/code/design-pattern-singleton/sample5/HashMapCache.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HashMapCache</span> <span class="kd">extends</span> <span class="n">Cache</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">container</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">HashMapCache</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">container</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">container</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">container</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Cache</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">InstanceHolder</span><span class="o">.</span><span class="na">instance</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InstanceHolder</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Cache</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMapCache</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (TreeMapCache.java)</span> <a href='/downloads/code/design-pattern-singleton/sample5/TreeMapCache.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.TreeMap</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TreeMapCache</span> <span class="kd">extends</span> <span class="n">Cache</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>	<span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">container</span><span class="o">;</span>
+</span><span class='line'>	
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">TreeMapCache</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    	<span class="n">container</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    	<span class="k">return</span> <span class="n">container</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    	<span class="n">container</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Cache</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">InstanceHolder</span><span class="o">.</span><span class="na">instance</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InstanceHolder</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Cache</span> <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeMapCache</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-singleton/sample5/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>		<span class="n">Cache</span><span class="o">.</span><span class="na">setCacheImplClass</span><span class="o">(</span><span class="n">TreeMapCache</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>		<span class="n">Cache</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+</span><span class='line'>		<span class="n">Cache</span> <span class="n">cache2</span> <span class="o">=</span> <span class="n">Cache</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cache</span><span class="o">);</span>
+</span><span class='line'>		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cache</span> <span class="o">==</span> <span class="n">cache2</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>		<span class="n">cache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">,</span> <span class="s">&quot;Object&quot;</span><span class="o">);</span>
+</span><span class='line'>		
+</span><span class='line'>		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cache2</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>	<span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><code>text 執行結果
+TreeMapCache@4e82701e
+true
+Object
+</code></p>
+
+<p>暫時只想到這個解決方法，如果你有更好的方法請告訴我。</p>
+
+<hr />
+
+<p>以下的圖片是描述 Singleton Pattern 的 Class Diagram。（From Wiki）</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Singleton_UML_class_diagram.svg/250px-Singleton_UML_class_diagram.svg.png"></p>
+]]></content>
+  </entry>
+  
+</feed>

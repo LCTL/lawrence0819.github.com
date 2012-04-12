@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Decorator | Programming Design Notes]]></title>
+  <link href="http://pro.ctlok.com/blog/tag/decorator/atom.xml" rel="self"/>
+  <link href="http://pro.ctlok.com/"/>
+  <updated>2012-04-12T14:23:10+08:00</updated>
+  <id>http://pro.ctlok.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Design Pattern - Decorator]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/04/11/design-pattern-decorator.html"/>
+    <updated>2012-04-11T15:29:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/04/11/design-pattern-decorator</id>
+    <content type="html"><![CDATA[<p>Decorator Pattern 可以令到不用改動原本物件的程式碼，而又可以擴充一些功能在這個物件上，
+就好像 Plugin 一樣。你可以想像一下，WordPress 的 Plugin 並不需要改動核心的程式，
+但又可以増加一些功能。
+Java 上的 InputStream 一樣採用這種模式去實現。</p>
+
+<p>看看以下例子應該有助你明白這個模式:</p>
+
+<!--more-->
+
+
+<hr />
+
+<p>公司要你開發一個手機用戶計費系統，因應用戶使用時間而去收費，
+使用時間愈多折扣亦愈多。而用戶亦有分普通用戶或 VIP 用戶，
+VIP 用戶亦有更多折扣。</p>
+
+<p>一開始你可能會設計成這樣:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (User.java)</span> <a href='/downloads/code/design-pattern-decorator/sample1/User.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">vip</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">User</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">vip</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">vip</span> <span class="o">=</span> <span class="n">vip</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isVip</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">vip</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setVip</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">vip</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">vip</span> <span class="o">=</span> <span class="n">vip</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (MobilePayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample1/MobilePayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MobilePayment</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">final</span> <span class="kt">double</span> <span class="n">moneyPerMinute</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">MobilePayment</span><span class="o">(</span><span class="kt">double</span> <span class="n">moneyPerMinute</span><span class="o">){</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">moneyPerMinute</span> <span class="o">=</span> <span class="n">moneyPerMinute</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">charge</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="kt">int</span> <span class="n">minute</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">double</span> <span class="n">fee</span> <span class="o">=</span> <span class="n">minute</span> <span class="o">*</span> <span class="n">moneyPerMinute</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">minute</span> <span class="o">&gt;=</span> <span class="mi">10000</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">fee</span> <span class="o">*=</span> <span class="mf">0.8</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">minute</span> <span class="o">&gt;=</span> <span class="mi">7000</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">fee</span> <span class="o">*=</span> <span class="mf">0.85</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">minute</span> <span class="o">&gt;=</span> <span class="mi">4000</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">fee</span> <span class="o">*=</span> <span class="mf">0.9</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">minute</span> <span class="o">&gt;=</span> <span class="mi">2000</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">fee</span> <span class="o">*=</span> <span class="mf">0.95</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">isVip</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">fee</span> <span class="o">*=</span> <span class="mf">0.9</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">fee</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-decorator/sample1/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// $1.2 per minute</span>
+</span><span class='line'>        <span class="n">MobilePayment</span> <span class="n">mobilePayment</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MobilePayment</span><span class="o">(</span><span class="mf">1.2</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">User</span> <span class="n">user1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&quot;Lawrence&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">User</span> <span class="n">user2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&quot;Tony&quot;</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">user1</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; usage: 10000 minute, charge: &quot;</span>
+</span><span class='line'>                <span class="o">+</span> <span class="n">mobilePayment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user1</span><span class="o">,</span> <span class="mi">10000</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">user2</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; usage: 4000 minute, charge: &quot;</span>
+</span><span class='line'>                <span class="o">+</span> <span class="n">mobilePayment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user2</span><span class="o">,</span> <span class="mi">4000</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><code>text 執行結果
+Lawrence usage: 10000 minute, charge: 8640.0
+Tony usage: 4000 minute, charge: 4320.0
+</code></p>
+
+<p>你可以看見所有計費的程式碼也在 <code>MobilePayment.charge</code> 內，如果再要增加計費條件
+就要修改這個地方的程式碼。</p>
+
+<hr />
+
+<p>現在公司又要增加一些收費條件，因為提供額外的服務給公司客戶，需要收取額外 10% 服務費。
+如果你只改動 <code>MobilePayment.charge</code> 內的程式碼，那愈來愈多條件時就難以維護，
+現在我們使用 Decorator Pattern 去解決這些問題，收費條件亦可以隨時抽換。</p>
+
+<p><img src="/downloads/code/design-pattern-decorator/sample2/uml.png"></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (User.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/User.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">vip</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">company</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">User</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">vip</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">company</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">vip</span> <span class="o">=</span> <span class="n">vip</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">company</span> <span class="o">=</span> <span class="n">company</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isVip</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">vip</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setVip</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">vip</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">vip</span> <span class="o">=</span> <span class="n">vip</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isCompany</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">company</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCompany</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">company</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">company</span> <span class="o">=</span> <span class="n">company</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Payment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/Payment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Payment</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">charge</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="kt">int</span> <span class="n">minute</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (BasicMobilePayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/BasicMobilePayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicMobilePayment</span> <span class="kd">implements</span> <span class="n">Payment</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">final</span> <span class="kt">double</span> <span class="n">moneyPerMinute</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">BasicMobilePayment</span><span class="o">(</span><span class="kt">double</span> <span class="n">moneyPerMinute</span><span class="o">){</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">moneyPerMinute</span> <span class="o">=</span> <span class="n">moneyPerMinute</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">charge</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="kt">int</span> <span class="n">minute</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">minute</span> <span class="o">*</span> <span class="n">moneyPerMinute</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (AdditionalPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/AdditionalPayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AdditionalPayment</span> <span class="kd">implements</span> <span class="n">Payment</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">protected</span> <span class="n">Payment</span> <span class="n">payment</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">AdditionalPayment</span><span class="o">(</span><span class="n">Payment</span> <span class="n">payment</span><span class="o">){</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">payment</span> <span class="o">=</span> <span class="n">payment</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">double</span> <span class="nf">charge</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="kt">int</span> <span class="n">minute</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (UsageAmountPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/UsageAmountPayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UsageAmountPayment</span> <span class="kd">extends</span> <span class="n">AdditionalPayment</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">UsageAmountPayment</span><span class="o">(</span><span class="n">Payment</span> <span class="n">payment</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">payment</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">charge</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="kt">int</span> <span class="n">minute</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">minute</span> <span class="o">&gt;=</span> <span class="mi">10000</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">minute</span><span class="o">)</span> <span class="o">*</span> <span class="mf">0.8</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">minute</span> <span class="o">&gt;=</span> <span class="mi">7000</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">minute</span><span class="o">)</span> <span class="o">*</span> <span class="mf">0.85</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">minute</span> <span class="o">&gt;=</span> <span class="mi">4000</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">minute</span><span class="o">)</span> <span class="o">*</span> <span class="mf">0.9</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">minute</span> <span class="o">&gt;=</span> <span class="mi">2000</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">minute</span><span class="o">)</span> <span class="o">*</span> <span class="mf">0.95</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">minute</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (VIPPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/VIPPayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">VIPPayment</span> <span class="kd">extends</span> <span class="n">AdditionalPayment</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">discount</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">VIPPayment</span><span class="o">(</span><span class="n">Payment</span> <span class="n">payment</span><span class="o">,</span> <span class="kt">double</span> <span class="n">discount</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">payment</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">discount</span> <span class="o">=</span> <span class="n">discount</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">charge</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="kt">int</span> <span class="n">minute</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">isVip</span><span class="o">()){</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">minute</span><span class="o">)</span> <span class="o">*</span> <span class="n">discount</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">minute</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (CompanyPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/CompanyPayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CompanyPayment</span> <span class="kd">extends</span> <span class="n">AdditionalPayment</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">serviceFee</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">CompanyPayment</span><span class="o">(</span><span class="n">Payment</span> <span class="n">payment</span><span class="o">,</span> <span class="kt">double</span> <span class="n">serviceFee</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">payment</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">serviceFee</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">serviceFee</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">charge</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="kt">int</span> <span class="n">minute</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">isCompany</span><span class="o">()){</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">minute</span><span class="o">)</span> <span class="o">*</span> <span class="n">serviceFee</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">minute</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// $1.2 per minute</span>
+</span><span class='line'>        <span class="n">Payment</span> <span class="n">mobilePayment</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BasicMobilePayment</span><span class="o">(</span><span class="mf">1.2</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Payment</span> <span class="n">usageAmountPayment</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UsageAmountPayment</span><span class="o">(</span><span class="n">mobilePayment</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Payment</span> <span class="n">vipPayment</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VIPPayment</span><span class="o">(</span><span class="n">usageAmountPayment</span><span class="o">,</span> <span class="mf">0.9</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Payment</span> <span class="n">companyPayment</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CompanyPayment</span><span class="o">(</span><span class="n">vipPayment</span><span class="o">,</span> <span class="mf">0.1</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Payment</span> <span class="n">payment</span> <span class="o">=</span> <span class="n">companyPayment</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">User</span> <span class="n">user1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&quot;Lawrence&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">User</span> <span class="n">user2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&quot;Tony&quot;</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">User</span> <span class="n">user3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&quot;ABC Company&quot;</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">user1</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; usage: 10000 minute, charge: &quot;</span>
+</span><span class='line'>                <span class="o">+</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user1</span><span class="o">,</span> <span class="mi">10000</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">user2</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; usage: 4000 minute, charge: &quot;</span>
+</span><span class='line'>                <span class="o">+</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user2</span><span class="o">,</span> <span class="mi">4000</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">user3</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; usage: 10000 minute, charge: &quot;</span>
+</span><span class='line'>                <span class="o">+</span> <span class="n">payment</span><span class="o">.</span><span class="na">charge</span><span class="o">(</span><span class="n">user3</span><span class="o">,</span> <span class="mi">10000</span><span class="o">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><code>text 執行結果
+Lawrence usage: 10000 minute, charge: 8640.0
+Tony usage: 4000 minute, charge: 4320.0
+ABC Company usage: 10000 minute, charge: 10560.0
+</code></p>
+
+<p>這樣就可以隨時新增條件或移除條件而又不會影響到核心的程式碼。</p>
+
+<hr />
+
+<p>以下的圖片是描述 Singleton Pattern 的 Class Diagram。（From Wiki）</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Decorator_UML_class_diagram.svg/400px-Decorator_UML_class_diagram.svg.png"></p>
+]]></content>
+  </entry>
+  
+</feed>

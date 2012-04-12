@@ -460,35 +460,47 @@
         <loc>
             http://pro.ctlok.com/blog/2012/03/25/blogger-migrate-to-octopress-github-page.html
         </loc>
-        <lastmod>2012-03-26T12:13:41+08:00</lastmod>
+        <lastmod>2012-04-11T12:34:12+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/blog/2012/03/26/windows-install-octopress.html</loc>
-        <lastmod>2012-03-28T15:09:18+08:00</lastmod>
+        <lastmod>2012-04-11T12:34:12+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/blog/2012/03/28/design-pattern-strategy-pattern.html</loc>
-        <lastmod>2012-03-29T17:47:12+08:00</lastmod>
+        <lastmod>2012-04-11T12:34:12+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/blog/2012/03/29/design-pattern-observer.html</loc>
-        <lastmod>2012-03-30T10:09:57+08:00</lastmod>
+        <lastmod>2012-04-11T12:34:12+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/blog/2012/03/30/maven-setup-jetty-dev-server.html</loc>
-        <lastmod>2012-03-30T16:00:01+08:00</lastmod>
+        <lastmod>2012-04-11T12:34:12+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/blog/2012/04/02/design-pattern-factory.html</loc>
-        <lastmod>2012-04-02T14:46:22+08:00</lastmod>
+        <lastmod>2012-04-11T12:34:12+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/blog/2012/04/02/design-pattern-abstract-factory.html</loc>
-        <lastmod>2012-04-03T10:16:49+08:00</lastmod>
+        <lastmod>2012-04-11T12:34:12+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/blog/2012/04/03/maven-jetty-jsf-2.html</loc>
         <lastmod>2012-04-03T14:55:58+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://pro.ctlok.com/blog/2012/04/03/web-app-development-cheat-sheet.html</loc>
+        <lastmod>2012-04-11T12:34:12+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://pro.ctlok.com/blog/2012/04/04/design-pattern-singleton.html</loc>
+        <lastmod>2012-04-11T12:34:12+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://pro.ctlok.com/blog/2012/04/11/design-pattern-decorator.html</loc>
+        <lastmod>2012-04-12T14:23:02+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/404.html</loc>
@@ -496,10 +508,10 @@
     </url>
     <url>
         <loc>http://pro.ctlok.com/blog/archives/</loc>
-        <lastmod>2012-04-03T14:55:58+08:00</lastmod>
+        <lastmod>2012-04-12T14:23:02+08:00</lastmod>
     </url>
     <url>
         <loc>http://pro.ctlok.com/</loc>
-        <lastmod>2012-04-03T14:55:58+08:00</lastmod>
+        <lastmod>2012-04-12T14:23:02+08:00</lastmod>
     </url>
 </urlset>

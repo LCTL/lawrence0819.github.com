@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Abstract Factory Pattern | Programming Design Notes]]></title>
+  <link href="http://pro.ctlok.com/blog/tag/abstract-factory-pattern/atom.xml" rel="self"/>
+  <link href="http://pro.ctlok.com/"/>
+  <updated>2012-04-12T14:23:10+08:00</updated>
+  <id>http://pro.ctlok.com/</id>
+  <author>
+    <name><![CDATA[Lawrence Cheung]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Design Pattern - Abstract Factory]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/04/02/design-pattern-abstract-factory.html"/>
+    <updated>2012-04-02T21:30:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/04/02/design-pattern-abstract-factory</id>
+    <content type="html"><![CDATA[<p>上一篇已經介紹過的 Factory Pattern 可以將建立實例的程式碼抽取出來，
+並可以提供絡不同的物件使用。Abstract Factory Pattern 其實和
+Factory Pattern 很相似，但 Abstract Factory 比較偏向建立同一系統的物件。</p>
+
+<p>同一系列的意思是彼此的物件有一定的關連，例如: 輪子、引擎、車架、方向盤、儀標板等等。
+這些都是組成車子的組件，這些組件亦由可以由不同廠商去開發，Abstract Factory 扮演角色就是廠商。
+更改廠商，就可以建立不同樣式的車子。</p>
+
+<p>看看以下例子應該有助你明白這個模式：</p>
+
+<!--more-->
+
+
+<hr />
+
+<p>公司要開發一款迷宮遊戲，建立迷宮的組件有：『牆壁』、『門』和『道路』。
+遊戲在不同的關卡會顯示不同風格的迷宮，首先要將做出組件的介面和建立一個工廠介面。</p>
+
+<p><img src="/downloads/code/design-pattern-abstract-factory/sample1/uml.png"></p>
+
+<p>組件介面:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Component.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/Component.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Door.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/Door.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Door</span> <span class="kd">extends</span> <span class="n">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Wall.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/Wall.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Wall</span> <span class="kd">extends</span> <span class="n">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Road.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/Road.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Road</span> <span class="kd">extends</span> <span class="n">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Labyrinth.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/Labyrinth.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">factory.LabyrinthComponentFactory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Labyrinth</span> <span class="kd">implements</span> <span class="n">Component</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">LabyrinthComponentFactory</span> <span class="n">labyrinthFactory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Labyrinth</span><span class="o">(</span><span class="n">LabyrinthComponentFactory</span> <span class="n">labyrinthFactory</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">labyrinthFactory</span> <span class="o">=</span> <span class="n">labyrinthFactory</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">switch</span> <span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">15</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+</span><span class='line'>                <span class="n">labyrinthFactory</span><span class="o">.</span><span class="na">createDoor</span><span class="o">().</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+</span><span class='line'>            <span class="k">case</span> <span class="mi">5</span><span class="o">:</span>
+</span><span class='line'>                <span class="n">labyrinthFactory</span><span class="o">.</span><span class="na">createRoad</span><span class="o">().</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">default</span><span class="o">:</span>
+</span><span class='line'>                <span class="n">labyrinthFactory</span><span class="o">.</span><span class="na">createWall</span><span class="o">().</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>藍色風格的組件:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (BlueDoor.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/blue/BlueDoor.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">blue</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlueDoor</span> <span class="kd">implements</span> <span class="n">Door</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Blue Door&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (BlueWall.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/blue/BlueWall.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">blue</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlueWall</span> <span class="kd">implements</span> <span class="n">Wall</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Blue Wall&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (BlueRoad.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/blue/BlueRoad.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">blue</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlueRoad</span> <span class="kd">implements</span> <span class="n">Road</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Blue Road&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>綠色風格的組件:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (GreenDoor.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/green/GreenDoor.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">green</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreenDoor</span> <span class="kd">implements</span> <span class="n">Door</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Green Door&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (GreenWall.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/green/GreenWall.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">green</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreenWall</span> <span class="kd">implements</span> <span class="n">Wall</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Green Wall&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (GreenRoad.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/component/green/GreenRoad.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">component</span><span class="o">.</span><span class="na">green</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreenRoad</span> <span class="kd">implements</span> <span class="n">Road</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">draw</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Green Road&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>工廠介面:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (LabyrinthComponentFactory.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/factory/LabyrinthComponentFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">factory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">LabyrinthComponentFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Wall</span> <span class="nf">createWall</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Door</span> <span class="nf">createDoor</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Road</span> <span class="nf">createRoad</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (BlueStyleLabyrinthComponentFactory.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/factory/BlueStyleLabyrinthComponentFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">factory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.blue.BlueDoor</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.blue.BlueRoad</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.blue.BlueWall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlueStyleLabyrinthComponentFactory</span> <span class="kd">implements</span>
+</span><span class='line'>        <span class="n">LabyrinthComponentFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Wall</span> <span class="nf">createWall</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">BlueWall</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Door</span> <span class="nf">createDoor</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">BlueDoor</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Road</span> <span class="nf">createRoad</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">BlueRoad</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (GreenStyleLabyrinthComponentFactory.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/factory/GreenStyleLabyrinthComponentFactory.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">factory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Door</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Road</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.Wall</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.green.GreenDoor</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.green.GreenRoad</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">component.green.GreenWall</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreenStyleLabyrinthComponentFactory</span> <span class="kd">implements</span>
+</span><span class='line'>        <span class="n">LabyrinthComponentFactory</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Wall</span> <span class="nf">createWall</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">GreenWall</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Door</span> <span class="nf">createDoor</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">GreenDoor</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Road</span> <span class="nf">createRoad</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">GreenRoad</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-abstract-factory/sample1/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">component.Labyrinth</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">factory.BlueStyleLabyrinthComponentFactory</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">factory.GreenStyleLabyrinthComponentFactory</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">factory.LabyrinthComponentFactory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">LabyrinthComponentFactory</span> <span class="n">blueStyleLabyrinthComponentFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BlueStyleLabyrinthComponentFactory</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">LabyrinthComponentFactory</span> <span class="n">greenStyleLabyrinthComponentFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GreenStyleLabyrinthComponentFactory</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">Labyrinth</span> <span class="n">blueStyleLabyrinth</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Labyrinth</span><span class="o">(</span><span class="n">blueStyleLabyrinthComponentFactory</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Labyrinth</span> <span class="n">greenStyleLabyrinth</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Labyrinth</span><span class="o">(</span><span class="n">greenStyleLabyrinthComponentFactory</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">blueStyleLabyrinth</span><span class="o">.</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;------------------&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">greenStyleLabyrinth</span><span class="o">.</span><span class="na">draw</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>```text 執行結果
+Blue Road
+Blue Road
+Blue Road
+Blue Wall
+Blue Road
+Blue Door
+Blue Wall
+Blue Road
+Blue Road</p>
+
+<h2>Blue Road</h2>
+
+<p>Green Wall
+Green Wall
+Green Wall
+Green Road
+Green Wall
+Green Wall
+Green Wall
+Green Road
+Green Wall
+Green Road
+```</p>
+
+<p>在建立 <code>Labyrinth</code> 時，只需將工廠交給 <code>Labyrinth</code> 就可以建立不同風格的迷宮。</p>
+
+<p>要新增更多風格的組件，只需要建立相對應的工廠就可以了，完全不需要改動 <code>Labyrinth.draw</code> 的程式碼。</p>
+
+<p>不過 Abstract Factory 有一個缺點，如果你要新増一個原先不存在的組件，例如加一個『陷阱』，
+你便需要更改 <code>LabyrinthFactory</code> 這個介面。</p>
+
+<hr />
+
+<p>以下的圖片是描述 Abstract Factory Pattern 的 Class Diagram。（From Wiki）</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Abstract_factory.svg/517px-Abstract_factory.svg.png"></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Maven | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/maven/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-04-03T14:56:13+08:00</updated>
+  <updated>2012-04-12T14:23:10+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -49,6 +49,9 @@
 
 <p>以後只需要輸入 <code>mvn jetty:run</code> 就會啟動 Jetty Web Server，輸入 <code>mvn jetty:stop</code> 則關閉，
 非常方便。啟動後打開 <code>http://localhost:8080</code> 就可以用了。</p>
+
+<!--more-->
+
 
 <hr />
 
