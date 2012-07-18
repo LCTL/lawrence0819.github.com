@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Spring | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/spring/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-04-16T10:00:31+08:00</updated>
+  <updated>2012-07-18T14:12:57+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,118 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Spring 整合 JPA]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/07/18/spring-integrate-jpa.html"/>
+    <updated>2012-07-18T12:16:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/07/18/spring-integrate-jpa</id>
+    <content type="html"><![CDATA[<p>很久沒寫文章，隨意找些東西來記錄一下。</p>
+
+<p>Spring 整合 JPA 是很簡單的，只需在 XML 檔案設定數個 Bean 就可以:</p>
+
+<p>先設定好 persistence.xml:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (persistence.xml)</span> <a href='/downloads/code/spring-integrate-jpa/persistence.xml'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;persistence</span> <span class="na">xmlns=</span><span class="s">&quot;http://java.sun.com/xml/ns/persistence&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+</span><span class='line'>    <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd&quot;</span>
+</span><span class='line'>    <span class="na">version=</span><span class="s">&quot;2.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;persistence-unit</span> <span class="na">name=</span><span class="s">&quot;defaultDS&quot;</span> <span class="na">transaction-type=</span><span class="s">&quot;RESOURCE_LOCAL&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;provider&gt;</span>org.hibernate.ejb.HibernatePersistence<span class="nt">&lt;/provider&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;non-jta-data-source&gt;</span>jdbc/ctlok<span class="nt">&lt;/non-jta-data-source&gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.ctlok.pro.entity.User<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nt">&lt;properties&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.dialect&quot;</span> <span class="na">value=</span><span class="s">&quot;org.hibernate.dialect.MySQL5Dialect&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/properties&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/persistence-unit&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/persistence&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<!--more-->
+
+
+<p>在 Spring config 加上以下設定
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (application-context.xml)</span> <a href='/downloads/code/spring-integrate-jpa/application-context.xml'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:context=</span><span class="s">&quot;http://www.springframework.org/schema/context&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:aop=</span><span class="s">&quot;http://www.springframework.org/schema/aop&quot;</span> <span class="na">xmlns:zksp=</span><span class="s">&quot;http://www.zkoss.org/2008/zkspring/core&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:tx=</span><span class="s">&quot;http://www.springframework.org/schema/tx&quot;</span>
+</span><span class='line'>    <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.springframework.org/schema/beans</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/aop </span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/context</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/context/spring-context-3.0.xsd</span>
+</span><span class='line'><span class="s">           http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;context:annotation-config</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;tx:annotation-driven</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.LocalEntityManagerFactoryBean&quot;</span> <span class="na">id=</span><span class="s">&quot;entityManagerFactory&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitName&quot;</span> <span class="na">value=</span><span class="s">&quot;defaultDS&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.JpaTransactionManager&quot;</span> <span class="na">id=</span><span class="s">&quot;transactionManager&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;entityManagerFactory&quot;</span> <span class="na">ref=</span><span class="s">&quot;entityManagerFactory&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>這樣就可以在 Repoitory bean 內使用 @PersistenceContext 注入 Entity Manager 了:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (UserDao.java)</span> <a href='/downloads/code/spring-integrate-jpa/UserDao.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">ctlok</span><span class="o">.</span><span class="na">pro</span><span class="o">.</span><span class="na">dao</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.persistence.EntityManager</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.persistence.PersistenceContext</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Repository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Repository</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserDao</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@PersistenceContext</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="n">EntityManager</span> <span class="n">em</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span class="n">findAll</span><span class="o">(){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Entity</span><span class="o">&gt;)</span> <span class="n">em</span><span class="o">.</span><span class="na">createQuery</span><span class="o">(</span><span class="s">&quot;SELECT e FROM User e&quot;</span><span class="o">,</span> <span class="n">User</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">getResultList</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>並可以在 Service bean 使用 @Transactional 令 Spring 自動管理 Transaction:
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (UserService.java)</span> <a href='/downloads/code/spring-integrate-jpa/UserService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">ctlok</span><span class="o">.</span><span class="na">pro</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Service</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Service</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Transactional</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createUser</span><span class="o">(){</span>
+</span><span class='line'>        <span class="c1">//..........</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在 JSP 使用 Expression Language 拿取 Spring Bean 內容]]></title>
@@ -46,15 +158,6 @@
     <updated>2010-06-28T22:55:00+08:00</updated>
     <id>http://pro.ctlok.com/2010/06/spring-web-mvc-rest</id>
     <content type="html"><![CDATA[<p>在 Spring Framework 幫助下，很容易便可以做出 REST 風格的 URL。<br />REST 的介紹: <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">Representational State Transfer</a><br /><br />REST 風格的 URL 會長成以下的樣子:<br /><pre class="brush: text">http://pro.ctlok.com/2010/06/28/bababa<br /></pre><br />各位是否覺得很熟悉? 經常瀏覽不同類型的 Blog 的朋友應該見慣這種 URL 吧，在 WordPress 也可以將文章 URL 設定為這種格式，是對搜尋器優化了的一種 URL。在 Spring Web MVC 也可以做到 REST 風格的 URL，而且很簡單。<br /><br />在這裡我不把 Spring Web MVC 重頭說一次了，有興趣的請在我的部落格找找 Spring 相關的文章。<br /><br />在這裡我跟以上的 URL 做一個示範:<br /><pre class="brush: java">@RequestMapping(value="/{year}/{month}/{day}/{postTitle}", method=RequestMethod.GET)<br />public String findPost(@PathVariable("year") String year, @PathVariable("month") String month, @PathVariable("day") String day, @PathVariable("postTitle") String postTitle, Model model) {<br />    Post post = postService.find(year, month, day, postTitle);  <br />    model.addAttribute("post", post);  <br />    return "post"; <br />}<br /></pre><br />就是這麼簡單就做到了，如果是以前不懂這種技術，可能會這麼做:<br /><pre class="brush: text">http://www.abcxyz.com/post?year=2010&amp;month=06&amp;day=28&amp;title=bababa<br /></pre><br />這樣雖然也可以達到相同目的，但這種 URL 不利於搜尋器。<br /><br />Spring 亦可以將參數自動轉換成其他格式:<br /><pre class="brush: java">@RequestMapping(value="/user/{userId}", method=RequestMethod.GET)<br />public String findPost(@PathVariable("userID") long userID, Model model) {<br />    //........ <br />}<br /></pre><br />在已註冊的 URI 後再加上其他參數也可以:<br /><pre class="brush: java">@RequestMapping(value="/user/{userId}", method=RequestMethod.GET)<br />public String findPost(@PathVariable("userID") long userID, Model model) {<br />    //........ <br />}<br /><br />@RequestMapping(value="/user/*/friend/{friendID}", method=RequestMethod.GET)<br />public String findPost(@PathVariable("friendID") long friendID, Model model) {<br />    //........ <br />}<br /></pre><br />亦可以將數據綁定在參數上:<br /><pre class="brush: java">@InitBinder<br />public void initBinder(WebDataBinder binder) {<br />    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");<br />    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));<br />}<br /><br />@RequestMapping(value="/{date}/{postTitle}", method=RequestMethod.GET)<br />public String findPost(@PathVariable("date") Date date, @PathVariable("postTitle") String postTitle, Model model) {<br />    //........ <br />}<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Expert-Spring-MVC-Web-Flow/dp/159059584X?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Expert Spring MVC and Web Flow" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=159059584X&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=159059584X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Expert-Spring-MVC-Flow-ebook/dp/B001D4V7RC?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Expert Spring MVC and Web Flow" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=B001D4V7RC&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=B001D4V7RC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Spring-Action-Craig-Walls/dp/1933988134?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Spring in Action" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1933988134&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1933988134" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-449880508701103446?l=lawpronotes.blogspot.com' alt='' /></div></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用 AspectJ 記錄 Spring Bean 丟出的 Exception]]></title>
-    <link href="http://pro.ctlok.com/2010/06/aspectj-record-spring-bean-method-throw.html"/>
-    <updated>2010-06-09T11:06:00+08:00</updated>
-    <id>http://pro.ctlok.com/2010/06/aspectj-record-spring-bean-method-throw</id>
-    <content type="html"><![CDATA[<p>在上一篇也提過使用 AspectJ 可輕鬆地將大量 Method 前後插入程式碼，網址: <a href="http://pro.ctlok.com/2010/06/aspectj-record-spring-bean-method.html">AspectJ 記錄執行時間</a><br /><br />今次這篇是使用 AspectJ 去記錄 Spring Bean 丟出的 Exception，一樣是非常簡單就可達成目的。<br /><br />首先要先在設定 bean 的 xml 檔案加上以下內容:<br /><pre class="brush: xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;<br />    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot;<br />    xmlns:context=&quot;http://www.springframework.org/schema/context&quot;<br /> xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;<br />    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd<br /> http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd<br /> http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd&quot;&gt;<br /> <br />    &lt;aop:aspectj-autoproxy /&gt;<br />    &lt;context:component-scan base-package=&quot;com.ctlok.pro.bean.aspect&quot; /&gt;<br /><br />&lt;/beans&gt;<br /></pre><br />製作一個 CommonLogger 的 class:<br /><pre class="brush: java">package com.ctlok.pro.bean.aspect;<br /><br />import org.aspectj.lang.annotation.Aspect;<br />import org.aspectj.lang.annotation.Pointcut;<br />import java.util.logging.Logger;<br />import org.springframework.stereotype.Component;<br /><br />@Aspect<br />@Component<br />public class CommonLogger {<br /><br />    private static final Logger logger = Logger.getLogger(CommonLogger.class.getName());<br /><br />    @Pointcut(&quot;execution(<em> com.ctlok.pro.bean.service.</em>.<em>(..))&quot;)<br />    public void service() {<br />    }<br /><br />}<br /></pre><br />首先定義那些 bean method 要被記錄，在這裡是些有 com.ctlok.pro.bean.service 內的 class 和所有 method 都記錄起來。<br /><br />再來是加入記錄程式碼:<br /><pre class="brush: java">@AfterThrowing(pointcut = &quot;service()&quot;, throwing = &quot;throwable&quot;)<br />public void exceptionLogger(JoinPoint joinPoint, Throwable throwable) {<br />    String clazz = joinPoint.getTarget().getClass().getSimpleName();<br />    String method = joinPoint.getSignature().getName();<br />    String log = &quot;Class: &quot; + clazz + &quot;run Method: &quot; + method + &quot; throw Exception: &quot; + throwable.toString();<br />    logger.warning(log);<br />}<br /></pre><br />@AfterThrowing 注解用來設定被記錄的 method 丟出 exception 後便執行。<br />throwing 用來設定 Throwable class 的名稱。<br /><br />完整的 CommonLogger:<br /><pre class="brush: java">package com.ctlok.pro.bean.aspect;<br /><br />import org.aspectj.lang.JoinPoint;<br />import org.aspectj.lang.annotation.AfterThrowing;<br />import org.aspectj.lang.annotation.Aspect;<br />import org.aspectj.lang.annotation.Pointcut;<br />import java.util.logging.Logger;<br />import org.springframework.stereotype.Component;<br /><br />@Aspect<br />@Component<br />public class CommonLogger {<br /><br />    private static final Logger logger = Logger.getLogger(CommonLogger.class<br />            .getName());<br /><br />    @Pointcut(&quot;execution(</em> com.ctlok.pro.bean.service.<em>.</em>(..))&quot;)<br />    public void service() {<br />    }<br /><br />    @AfterThrowing(pointcut = &quot;service()&quot;, throwing = &quot;throwable&quot;)<br />    public void exceptionLogger(JoinPoint joinPoint, Throwable throwable) {<br />        String clazz = joinPoint.getTarget().getClass().getSimpleName();<br />        String method = joinPoint.getSignature().getName();<br />        String log = &quot;Class: &quot; + clazz + &quot;run Method: &quot; + method<br />                + &quot; throw Exception: &quot; + throwable.toString();<br />        logger.warning(log);<br />    }<br /><br />}<br /></pre><br />相關書籍: <a imageanchor="1" target="_blank"  href="http://www.amazon.com/Aspectj-Action-Enterprise-Spring-Applications/dp/1933988053?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Aspectj in Action: Enterprise AOP with Spring Applications" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1933988053&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1933988053" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/AspectJ-Action-Practical-Aspect-Oriented-Programming/dp/1930110936?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="AspectJ in Action: Practical Aspect-Oriented Programming" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=1930110936&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=1930110936" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><a imageanchor="1" target="_blank"  href="http://www.amazon.com/Eclipse-AspectJ-Aspect-Oriented-Programming-Development/dp/0321245873?ie=UTF8&tag=program06-20&link_code=bil&camp=213689&creative=392969"><img alt="Eclipse AspectJ: Aspect-Oriented Programming with AspectJ and the Eclipse AspectJ Development Tools" src="http://ws.amazon.com/widgets/q?MarketPlace=US&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL160_&ASIN=0321245873&tag=program06-20" /></a><img src="http://www.assoc-amazon.com/e/ir?t=program06-20&l=bil&camp=213689&creative=392969&o=1&a=0321245873" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important; padding: 0px !important" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-1885450191955309087?l=lawpronotes.blogspot.com' alt='' /></div></p>
 ]]></content>
   </entry>
   

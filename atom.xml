@@ -4,7 +4,7 @@
   <title><![CDATA[Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-04-16T10:00:27+08:00</updated>
+  <updated>2012-07-18T14:12:57+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -12,6 +12,128 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Spring 整合 JPA]]></title>
+    <link href="http://pro.ctlok.com/blog/2012/07/18/spring-integrate-jpa.html"/>
+    <updated>2012-07-18T12:16:00+08:00</updated>
+    <id>http://pro.ctlok.com/blog/2012/07/18/spring-integrate-jpa</id>
+    <content type="html"><![CDATA[<p>很久沒寫文章，隨意找些東西來記錄一下。</p>
+
+<p>Spring 整合 JPA 是很簡單的，只需在 XML 檔案設定數個 Bean 就可以:</p>
+
+<p>先設定好 persistence.xml:</p>
+
+<figure class='code'><figcaption><span> (persistence.xml)</span> <a href='http://pro.ctlok.com/downloads/code/spring-integrate-jpa/persistence.xml'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;persistence</span> <span class="na">xmlns=</span><span class="s">&quot;http://java.sun.com/xml/ns/persistence&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+</span><span class='line'>    <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd&quot;</span>
+</span><span class='line'>    <span class="na">version=</span><span class="s">&quot;2.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;persistence-unit</span> <span class="na">name=</span><span class="s">&quot;defaultDS&quot;</span> <span class="na">transaction-type=</span><span class="s">&quot;RESOURCE_LOCAL&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;provider&gt;</span>org.hibernate.ejb.HibernatePersistence<span class="nt">&lt;/provider&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;non-jta-data-source&gt;</span>jdbc/ctlok<span class="nt">&lt;/non-jta-data-source&gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nt">&lt;class&gt;</span>com.ctlok.pro.entity.User<span class="nt">&lt;/class&gt;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nt">&lt;properties&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;hibernate.dialect&quot;</span> <span class="na">value=</span><span class="s">&quot;org.hibernate.dialect.MySQL5Dialect&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/properties&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/persistence-unit&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/persistence&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<p>在 Spring config 加上以下設定</p>
+
+<figure class='code'><figcaption><span> (application-context.xml)</span> <a href='http://pro.ctlok.com/downloads/code/spring-integrate-jpa/application-context.xml'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">&quot;http://www.springframework.org/schema/beans&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:context=</span><span class="s">&quot;http://www.springframework.org/schema/context&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:aop=</span><span class="s">&quot;http://www.springframework.org/schema/aop&quot;</span> <span class="na">xmlns:zksp=</span><span class="s">&quot;http://www.zkoss.org/2008/zkspring/core&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:tx=</span><span class="s">&quot;http://www.springframework.org/schema/tx&quot;</span>
+</span><span class='line'>    <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.springframework.org/schema/beans</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/aop </span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/context</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/context/spring-context-3.0.xsd</span>
+</span><span class='line'><span class="s">           http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd</span>
+</span><span class='line'><span class="s">           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;context:annotation-config</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;tx:annotation-driven</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.LocalEntityManagerFactoryBean&quot;</span> <span class="na">id=</span><span class="s">&quot;entityManagerFactory&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;persistenceUnitName&quot;</span> <span class="na">value=</span><span class="s">&quot;defaultDS&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">&quot;org.springframework.orm.jpa.JpaTransactionManager&quot;</span> <span class="na">id=</span><span class="s">&quot;transactionManager&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;entityManagerFactory&quot;</span> <span class="na">ref=</span><span class="s">&quot;entityManagerFactory&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/bean&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這樣就可以在 Repoitory bean 內使用 @PersistenceContext 注入 Entity Manager 了:</p>
+
+<figure class='code'><figcaption><span> (UserDao.java)</span> <a href='http://pro.ctlok.com/downloads/code/spring-integrate-jpa/UserDao.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">ctlok</span><span class="o">.</span><span class="na">pro</span><span class="o">.</span><span class="na">dao</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.persistence.EntityManager</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">javax.persistence.PersistenceContext</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Repository</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Repository</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserDao</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@PersistenceContext</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="n">EntityManager</span> <span class="n">em</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span class="n">findAll</span><span class="o">(){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Entity</span><span class="o">&gt;)</span> <span class="n">em</span><span class="o">.</span><span class="na">createQuery</span><span class="o">(</span><span class="s">&quot;SELECT e FROM User e&quot;</span><span class="o">,</span> <span class="n">User</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">getResultList</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>並可以在 Service bean 使用 @Transactional 令 Spring 自動管理 Transaction:</p>
+
+<figure class='code'><figcaption><span> (UserService.java)</span> <a href='http://pro.ctlok.com/downloads/code/spring-integrate-jpa/UserService.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">ctlok</span><span class="o">.</span><span class="na">pro</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Service</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Service</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Transactional</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">createUser</span><span class="o">(){</span>
+</span><span class='line'>        <span class="c1">//..........</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Design Pattern - Decorator]]></title>
@@ -2562,15 +2684,6 @@ RubyInstaller 已經包括了 <a href="http://rubygems.org/">Gem</a>。</p>
     <updated>2011-10-21T14:16:00+08:00</updated>
     <id>http://pro.ctlok.com/2011/10/closure-compiler-run-time-compress</id>
     <content type="html"><![CDATA[趁有空又寫寫文章，今次介紹的是 <b>Google Closure Compiler</b>，其實之前已經介紹過一次: <a href="http://pro.ctlok.com/2010/01/javascript_22.html">線上 <b>Javascript</b> 工具</a>，這個工具可以將 <b>Javascript</b> 的大小大幅降低。<br /><br />使用線上工具去壓縮有一個缺點就是要將 <b>Javascript</b> 檔案儲存成 <b>2</b> 份，1 份是原始檔案，另 1 份是經壓縮內容的 <b>Javascript</b>，因為不可能更改經壓縮過的內容，每一次更改檔案就需要更改原始檔案，然後利用 <b>Google Closure Compiler</b> 線上工具再壓縮一次，再更新壓縮內容，而且經壓縮的 <b>Javascript</b> 在瀏覽器 <b>debug</b> 亦比較困難。雖然你可以在 <b>HTML</b> 將引入的 <b>Javascript</b> 檔案改為未經壓縮然後 <b>debug</b>，但萬一忘記改回就麻煩了。<br /><br />幸好 <b>Google Closure Compiler</b> 有提供到 <b>Java</b> 使用的 <b>API</b> 來達到執行期間 <b>(Run Time)</b> 將 <b>Javascript</b> 壓縮。<br /><br />首先到 <b>Google Code</b> 下載: <a href="http://code.google.com/p/closure-compiler/downloads/list">Google Closure Compiler</a><br /><br />可用以下其中一個方法去壓縮:<br /><pre class="brush: java">protected String compress(InputStream inputStream) throws IOException{<br />    Compiler compiler = new Compiler();<br />    <br />    CompilerOptions options = new CompilerOptions();<br />    CompilationLevel.SIMPLE_OPTIMIZATIONS<br />            .setOptionsForCompilationLevel(options);<br />    <br />    JSSourceFile extern = JSSourceFile.fromCode(&quot;externs.js&quot;, &quot; &quot;);<br />    JSSourceFile input = JSSourceFile.fromInputStream(&quot;origin.js&quot;, inputStream);<br />    compiler.compile(extern, input, options);<br />    <br />    return compiler.toSource();<br />}<br /><br />protected String compress(String str) throws IOException{<br />    Compiler compiler = new Compiler();<br />    <br />    CompilerOptions options = new CompilerOptions();<br />    CompilationLevel.SIMPLE_OPTIMIZATIONS<br />            .setOptionsForCompilationLevel(options);<br />    <br />    JSSourceFile extern = JSSourceFile.fromCode(&quot;externs.js&quot;, &quot; &quot;);<br />    JSSourceFile input = JSSourceFile.fromCode(&quot;origin.js&quot;, str);<br />    compiler.compile(extern, input, options);<br />    <br />    return compiler.toSource();<br />}<br /></pre><br />其中 CompilationLevel 分別有 3 個選項:<br /><ul><li>CompilationLevel.WHITESPACE_ONLY</li><li>CompilationLevel.SIMPLE_OPTIMIZATIONS</li><li>CompilationLevel.ADVANCED_OPTIMIZATIONS</li></ul><br /><b>WHITESPACE_ONLY</b> 只會移除 <b>Javascript</b> 的空白。<br /><br /><b>SIMPLE_OPTIMIZATIONS</b> 是最常用的一種，移除 <b>Javascript</b> 的空白，而且將一些 <b>Local Variable</b> 或 <b>Local Function</b> 名稱改變，並將一些沒有用到的 <b>Variable</b> 移除，大幅提高 <b>Javascript</b> 的壓縮率。<br /><br /><b>ADVANCED_OPTIMIZATIONS</b> 是最高壓縮率的模式，將所有 <b>Variable</b> 或 <b>Function</b> 的名稱改變，有使用 <b>Javascript Framework</b> 不建議使用這個選項。<br /><br />在真實環境中我們可以加入一個 <b>Filter</b> 去將 <b>Javascript</b> 壓縮:<br /><pre class="brush: js">package com.ctlok.pro.filter;<br /><br />import java.io.IOException;<br />import java.io.InputStream;<br />import java.util.HashMap;<br />import java.util.Map;<br />import java.util.logging.Level;<br /><br />import javax.servlet.Filter;<br />import javax.servlet.FilterChain;<br />import javax.servlet.FilterConfig;<br />import javax.servlet.ServletException;<br />import javax.servlet.ServletRequest;<br />import javax.servlet.ServletResponse;<br />import javax.servlet.http.HttpServletRequest;<br />import javax.servlet.http.HttpServletResponse;<br /><br />import com.google.javascript.jscomp.CompilationLevel;<br />import com.google.javascript.jscomp.Compiler;<br />import com.google.javascript.jscomp.CompilerOptions;<br />import com.google.javascript.jscomp.JSSourceFile;<br />import com.google.javascript.jscomp.WarningLevel;<br /><br />public class ClosureCompilerFilter implements Filter {<br /><br />    //for cache<br />    private final Map&lt;String, String&gt; compressedJs = new HashMap&lt;String, String&gt;();<br />    private FilterConfig filterConfig;<br />    <br />    public void init(FilterConfig filterConfig) throws ServletException {<br />        this.filterConfig = filterConfig;<br />        <br />        //Turn off the compiler log<br />        Compiler.setLoggingLevel(Level.OFF);<br />    }<br /><br />    public void destroy() {<br /><br />    }<br /><br />    public void doFilter(ServletRequest request, ServletResponse response,<br />            FilterChain chain) throws IOException, ServletException {<br />        <br />        HttpServletRequest req = (HttpServletRequest) request;<br />        HttpServletResponse resp = (HttpServletResponse) response;<br />        <br />        String uri = req.getRequestURI();<br />        <br />        //Prevent compress the compressed Javascript, such as jquery.min.js, mootools.min.js, etc.<br />        if (!uri.matches(&quot;.*\\.min\\.js$&quot;)){<br />            String js = null;<br />            <br />            if (compressedJs.containsKey(uri)){<br />                //get from cache<br />                js = compressedJs.get(uri);<br />            }else{<br />                String contextPath = req.getContextPath();<br />                String jsPath = uri.substring(contextPath.length());<br />                <br />                //get javascript file as stream<br />                //getResourceAsStream cannot include context path<br />                InputStream inputStream = filterConfig.getServletContext().getResourceAsStream(jsPath);<br />                js = compress(inputStream);<br />                <br />                //put to cache<br />                compressedJs.put(uri, js);<br />            }<br />            <br />            resp.getWriter().write(js);<br />            return;<br />        }<br />        <br />        chain.doFilter(request, response);<br />    }<br />    <br />    protected String compress(InputStream inputStream) throws IOException{<br />        Compiler compiler = new Compiler();<br />        <br />        CompilerOptions options = new CompilerOptions();<br />        CompilationLevel.SIMPLE_OPTIMIZATIONS<br />                .setOptionsForCompilationLevel(options);<br />        WarningLevel.QUIET.setOptionsForWarningLevel(options);<br />        <br />        JSSourceFile extern = JSSourceFile.fromCode(&quot;externs.js&quot;, &quot;&quot;);<br />        JSSourceFile input = JSSourceFile.fromInputStream(&quot;origin.js&quot;, inputStream);<br />        compiler.compile(extern, input, options);<br /><br />        return compiler.toSource();<br />    }<br /><br />}<br /></pre><br />在 web.xml 加上:<br /><pre class="brush: xml">&lt;filter&gt;<br />    &lt;display-name&gt;ClosureCompilerFilter&lt;/display-name&gt;<br />    &lt;filter-name&gt;ClosureCompilerFilter&lt;/filter-name&gt;<br />    &lt;filter-class&gt;com.ctlok.pro.filter.ClosureCompilerFilter&lt;/filter-class&gt;<br />&lt;/filter&gt;<br />&lt;filter-mapping&gt;<br />    &lt;filter-name&gt;ClosureCompilerFilter&lt;/filter-name&gt;<br />    &lt;url-pattern&gt;*.js&lt;/url-pattern&gt;<br />&lt;/filter-mapping&gt;<br /></pre><br />這樣就可以令到 <b>.js</b> 結尾的 <b>Javascript</b> 檔案經壓縮再傳出去，又不會將 <b>.min.js</b> 已經壓縮過的 <b>Javascript</b> 又再壓縮一次。<br />經過壓縮後會儲存在 <b>Map</b> 內，畢竟壓縮的時間也不短。<br /><br />例如我有一個 /js/myjs.js 的檔案:<br /><pre class="brush: js">function ctlok() {<br />    var self = this;<br />    var $ = jQuery;<br /><br />     this.publicFunction = function() {<br />           localFunction();<br />      };<br /><br />     var localFunction = function() {<br />          var aaaaa = &#39;aaaaa&#39;;<br />          $(&#39;:input&#39;).val(aaaaa);<br />     };<br />}<br /></pre><br />經壓縮後變成:<br /><pre class="brush: js">function ctlok(){var a=jQuery;this.publicFunction=function(){a(&quot;:input&quot;).val(&quot;aaaaa&quot;)}};<br /></pre><br />範例下載:: <a href="https://sites.google.com/site/lawrencespace/lawpronotes/download/Google-Closure-Compiler.zip">Google-Closure-Compiler.zip</a><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-3261921414800777822?l=lawpronotes.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[試用 Google Cloud SQL]]></title>
-    <link href="http://pro.ctlok.com/2011/10/google-cloud-sql.html"/>
-    <updated>2011-10-12T15:25:00+08:00</updated>
-    <id>http://pro.ctlok.com/2011/10/google-cloud-sql</id>
-    <content type="html"><![CDATA[<br /><b>Google</b> 剛剛出的新服務 - <b>Google Cloud SQL</b>，可能有太多人抱怨認為 <b>Google App Engine</b> 的 <b>Datastore</b> 太難用，而且現有的 <b>App</b> 移植到 <b>Google App Engine</b> 最大問題也是 <b>Datastore</b>。傳統的應用程式大多數使用 <b>Relational Database Management System (RDBMS)</b> 關聯式資料庫管理系統作為儲存資料的系統，但 RDBMS 是比較難去擴展整個系統，起初可以靠升級系統硬件去加強效能，但硬件升級愈高，性價比愈低。而 <b>Google App Engine</b> 的 <b>Datastore</b> 是 <b>NoSQL Database</b>，擴展系統是一件很容易的事，可以買 5 台中級機器去組成整個系統，不夠可以再加上去，可以無限地伸延 (理論上)。<b>NoSQL Database</b> 是沒有 <b>Join Table</b> 之類的語法，你只能靠應用程式層面實現 <b>Join Table</b>，這會提高應用程式開發難度。<br /><br /><b>Google Cloud SQL</b> 是用來解決傳統的應用程式移植或對使用 <b>RDBMS</b> 有開發經驗的程式員有多一個選擇。而 <b>Google Cloud SQL</b> 底層是使用 <b>MySQL</b> 實作的。<br /><br />打開 <b>Google Cloud SQL</b> 的 <b>Console</b> 是這個樣子:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-AFL_B5qOkts/TpU1gdRFDbI/AAAAAAAAA2w/w9ChEdPHgbA/s1600/Google%2BAPIs%2BConsole.png" imageanchor="1"><img border="0" height="271" src="http://2.bp.blogspot.com/-AFL_B5qOkts/TpU1gdRFDbI/AAAAAAAAA2w/w9ChEdPHgbA/s400/Google%2BAPIs%2BConsole.png" width="400" /></a></div>而容量方面有三個選擇，分別是 <b>1GB, 5GB</b> 和 <b>10GB</b><br /><div class="separator" style="clear: both; text-align: center;"><br /><a href="http://2.bp.blogspot.com/-GwMRdzzAYHc/TpU13HyeQsI/AAAAAAAAA28/JmzTqt_Vp-8/s1600/create.png" imageanchor="1"><img border="0" height="259" src="http://2.bp.blogspot.com/-GwMRdzzAYHc/TpU13HyeQsI/AAAAAAAAA28/JmzTqt_Vp-8/s400/create.png" width="400" /></a></div>試試新增一個 <b>MySQL Instance</b> (暫時只有 <b>Google App Engine</b> 可以存取到，只需加入 <b>GAE</b> 的 <b>ID</b> 就可以了):<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-Iv86h1Z3L2U/TpU2Jl8OyMI/AAAAAAAAA3I/orPzKAOFaCg/s1600/create2png.png" imageanchor="1"><img border="0" height="259" src="http://4.bp.blogspot.com/-Iv86h1Z3L2U/TpU2Jl8OyMI/AAAAAAAAA3I/orPzKAOFaCg/s400/create2png.png" width="400" /></a></div><br />處理中:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-IxvqvjC8jpY/TpU2m2NxVFI/AAAAAAAAA3U/FJl6SQ7Y9sU/s1600/proccess.png" imageanchor="1"><img border="0" height="259" src="http://4.bp.blogspot.com/-IxvqvjC8jpY/TpU2m2NxVFI/AAAAAAAAA3U/FJl6SQ7Y9sU/s400/proccess.png" width="400" /></a></div><br />完成後看一看 <b>Log</b>:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-LjLRu5ATrJA/TpU255TptoI/AAAAAAAAA3g/bNREUDBB72Y/s1600/log.png" imageanchor="1"><img border="0" height="243" src="http://4.bp.blogspot.com/-LjLRu5ATrJA/TpU255TptoI/AAAAAAAAA3g/bNREUDBB72Y/s400/log.png" width="400" /></a></div><br />再到 <b>Prompt</b> 看看:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-49KpC4a39f0/TpU3Fnw6LqI/AAAAAAAAA3s/qnBGRoU4PGI/s1600/prompt.png" imageanchor="1"><img border="0" height="259" src="http://4.bp.blogspot.com/-49KpC4a39f0/TpU3Fnw6LqI/AAAAAAAAA3s/qnBGRoU4PGI/s400/prompt.png" width="400" /></a></div><br />新增一個 <b>Database</b>，命名為 <b>mydb</b>:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-I9VIUW3JCT4/TpU3hqVeZ2I/AAAAAAAAA34/10YramRrLy0/s1600/create%2Bdb.png" imageanchor="1"><img border="0" height="259" src="http://4.bp.blogspot.com/-I9VIUW3JCT4/TpU3hqVeZ2I/AAAAAAAAA34/10YramRrLy0/s400/create%2Bdb.png" width="400" /></a></div><br />再新增一個 <b>Table</b> 命名為 <b>User:</b><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-r-8wljKeA54/TpU4nTtEIlI/AAAAAAAAA4E/JzBBbwSHiFg/s1600/create%2Buser.png" imageanchor="1"><img border="0" height="243" src="http://1.bp.blogspot.com/-r-8wljKeA54/TpU4nTtEIlI/AAAAAAAAA4E/JzBBbwSHiFg/s400/create%2Buser.png" width="400" /></a></div><br />我發現每一次只可以輸入一行指令，有分號隔著也不行，希望遲點會改善。<br />當然 <b>Google Cloud SQL</b> 有提供 <b>Import</b> 的功能，但檔案一定要存放在 <b>Google Cloud Storage</b> 上。<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-i504Lpps5q4/TpU7RL21tbI/AAAAAAAAA4c/NBmd8t3NNmg/s1600/import.png" imageanchor="1"><img border="0" height="243" src="http://1.bp.blogspot.com/-i504Lpps5q4/TpU7RL21tbI/AAAAAAAAA4c/NBmd8t3NNmg/s400/import.png" width="400" /></a></div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-kDvbhJ22Js0/TpU7fXmKaeI/AAAAAAAAA4o/uAjXgZ-Be78/s1600/import-sql.png" imageanchor="1"><img border="0" height="243" src="http://3.bp.blogspot.com/-kDvbhJ22Js0/TpU7fXmKaeI/AAAAAAAAA4o/uAjXgZ-Be78/s400/import-sql.png" width="400" /></a></div><br /><br /><b>Import</b> 成功後就試試旗選取一埋資料:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-hVGDFOcJiSg/TpU82Jy9o4I/AAAAAAAAA40/quEBAuWWfiM/s1600/select%2Bcustomers.png" imageanchor="1" style=""><img border="0" height="400" width="116" src="http://1.bp.blogspot.com/-hVGDFOcJiSg/TpU82Jy9o4I/AAAAAAAAA40/quEBAuWWfiM/s400/select%2Bcustomers.png" /></a></div><br />再試試 <b>Join Table</b>:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-6nsvacH9BV0/TpU93-bZ4wI/AAAAAAAAA5A/SDrou4QGvHU/s1600/join%2Btable%2Border%2Border%2Bdetail.png" imageanchor="1" style=""><img border="0" height="400" width="74" src="http://4.bp.blogspot.com/-6nsvacH9BV0/TpU93-bZ4wI/AAAAAAAAA5A/SDrou4QGvHU/s400/join%2Btable%2Border%2Border%2Bdetail.png" /></a></div><br />一樣沒有問題。<br /><br /><b>SQL</b> 檔案: <a href="https://sites.google.com/site/lawrencespace/lawpronotes/download/sampledatabase.sql">sampledatabase.sql</a><br /><br />要申請 <b>Google Cloud SQL</b> 可到 <a href="https://code.google.com/apis/console/">https://code.google.com/apis/console/</a>，然後選取 <b>Service</b> 再在 <b>Google Cloud SQL</b> 按一下 <b>Request access</b>，填好表格後就等 <b>Google</b> 回覆就可以用了 (我是等了兩天才有回覆)。<br />遲一點再在 <b>GAE</b> 上試用。<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-8575963009302117038?l=lawpronotes.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
