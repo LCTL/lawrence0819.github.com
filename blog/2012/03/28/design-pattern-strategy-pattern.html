@@ -1,152 +1,4 @@
-
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Design Pattern - Strategy - Programming Design Notes</title>
-  <meta name="author" content="Lawrence Cheung">
-
-  
-  <meta name="description" content="近日拿出 Design Pattern 的書重溫，順便和大家分享一下。 Strategy Pattern 主要的目的是將一些有很大機會轉變的行為或演算法封裝起來，並抽出來，
-令到在執行期間也可以替換。這樣做的好處是不用變動核心程式碼，而又做到變更行為等等功能。 &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://pro.ctlok.com/blog/2012/03/28/design-pattern-strategy-pattern.html">
-  <link href="/favicon.ico" rel="icon">
-  
-  <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
-  <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css">
-  <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
-  <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css">
-  
-  <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml">
-  
-  <!--[if lt IE 9]>
-<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-  
-  
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-16811171-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-
-
-</head>
-
-<body    data-spy="scroll">
-
-    <a href="https://github.com/lawrence0819" target="_blank">
-        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
-    </a>
-    <div class="container">
-        <header class="jumbotron subhead" id="overview">
-            <div class="subscribe">
-    <table>
-        <tr>
-            <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png" /></td>
-            <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png" /></a></td>
-            <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png" /></a></td>
-        </tr>
-    </table>
-</div>
-<h1 class="title">Programming Design Notes</h1>
-
-            <div class="navbar">
-    <div class="navbar-inner">
-        <div class="container" style="width: auto;">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
-            <div class="nav-collapse">
-                <ul class="nav">
-                    <li>
-                        <a href="/"><i class="icon icon-home"></i>Home</a>
-                    </li>
-                    <li>
-                        <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a>
-                    </li>
-                </ul>
-                
-                <form action="http://google.com/search" method="get" class="navbar-search pull-right">
-                    <fieldset role="search">
-                        <input type="hidden" name="q" value="site:pro.ctlok.com" />
-                        <input type="text" name="q" results="0" placeholder="Search" class="span3" />
-                    </fieldset>
-                </form>
-                
-            </div><!-- /.nav-collapse -->
-        </div>
-    </div><!-- /navbar-inner -->
-</div>
-
-        </header>
-        <div id="main">
-            <div id="content">
-                <div class="row">
-  <div class="span8">
-    
-  <header>
-    
-      <h2 class="entry-title">Design Pattern - Strategy</h2>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-28T22:34:00+08:00" pubdate data-updated="true">Mar 28<span>th</span>, 2012</time>
-        
-         | <a href="#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>近日拿出 Design Pattern 的書重溫，順便和大家分享一下。</p>
-
-<p>Strategy Pattern 主要的目的是將一些有很大機會轉變的行為或演算法封裝起來，並抽出來，
-令到在執行期間也可以替換。這樣做的好處是不用變動核心程式碼，而又做到變更行為等等功能。</p>
-
-<p>以下的例子可能令你更明白這個模式的用途。</p>
-
-<!--more-->
-
-
-<hr />
-
-<p>你的公司要你開發一個遊戲，這個遊戲是一個古代戰爭遊戲，每個人扮演一個特定角色。
-公司希望可以隨時增加角色，你一開始的設計可能會這樣:</p>
-
-<p><img src="/downloads/code/design-pattern-strategy/sample1/uml.png"></p>
-
-<figure class='code'><figcaption><span> (Character.java)</span> <a href='/downloads/code/design-pattern-strategy/sample1/Character.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
+<!DOCTYPE html> <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]--> <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]--> <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]--> <head> <meta charset="utf-8"> <title>Design Pattern - Strategy - Programming Design Notes</title> <meta name="author" content="Lawrence Cheung"> <meta name="description" content="近日拿出 Design Pattern 的書重溫，順便和大家分享一下。 Strategy Pattern 主要的目的是將一些有很大機會轉變的行為或演算法封裝起來，並抽出來， 令到在執行期間也可以替換。這樣做的好處是不用變動核心程式碼，而又做到變更行為等等功能。 &hellip;"> <meta name="HandheldFriendly" content="True"> <meta name="MobileOptimized" content="320"> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="canonical" href="http://pro.ctlok.com/blog/2012/03/28/design-pattern-strategy-pattern.html"> <link href="/favicon.ico" rel="icon"> <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css"> <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"> <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css"> <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml"> <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]--> <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-16811171-1"]);_gaq.push(["_trackPageview"]);(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)})();</script> </head> <body data-spy="scroll"> <a href="https://github.com/lawrence0819" target="_blank"> <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"> </a> <div class="container"> <header class="jumbotron subhead" id="overview"> <div class="subscribe"> <table> <tr> <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png"/></td> <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png"/></a></td> <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png"/></a></td> </tr> </table> </div> <h1 class="title">Programming Design Notes</h1> <div class="navbar"> <div class="navbar-inner"> <div class="container" style="width: auto;"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <div class="nav-collapse"> <ul class="nav"> <li> <a href="/"><i class="icon icon-home"></i>Home</a> </li> <li> <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a> </li> </ul> <form action="http://google.com/search" method="get" class="navbar-search pull-right"> <fieldset role="search"> <input type="hidden" name="q" value="site:pro.ctlok.com"/> <input type="text" name="q" results="0" placeholder="Search" class="span3"/> </fieldset> </form> </div> </div> </div> </div> </header> <div id="main"> <div id="content"> <div class="row"> <div class="span8"> <header> <h2 class="entry-title">Design Pattern - Strategy</h2> <p class="meta"> <time datetime="2012-03-28T22:34:00+08:00" pubdate data-updated="true">Mar 28<span>th</span>, 2012</time> | <a href="#disqus_thread">Comments</a> </p> </header> <div class="entry-content"><p>近日拿出 Design Pattern 的書重溫，順便和大家分享一下。</p> <p>Strategy Pattern 主要的目的是將一些有很大機會轉變的行為或演算法封裝起來，並抽出來， 令到在執行期間也可以替換。這樣做的好處是不用變動核心程式碼，而又做到變更行為等等功能。</p> <p>以下的例子可能令你更明白這個模式的用途。</p> <hr/> <p>你的公司要你開發一個遊戲，這個遊戲是一個古代戰爭遊戲，每個人扮演一個特定角色。 公司希望可以隨時增加角色，你一開始的設計可能會這樣:</p> <p><img src="/downloads/code/design-pattern-strategy/sample1/uml.png"></p> <figure class='code'><figcaption><span> (Character.java)</span> <a href='/downloads/code/design-pattern-strategy/sample1/Character.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
 </span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">hp</span><span class="o">;</span>
@@ -187,42 +39,21 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (Human.java)</span> <a href='/downloads/code/design-pattern-strategy/sample1/Human.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Human.java)</span> <a href='/downloads/code/design-pattern-strategy/sample1/Human.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="nf">Human</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (Dwarve.java)</span> <a href='/downloads/code/design-pattern-strategy/sample1/Dwarve.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dwarve</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Dwarve.java)</span> <a href='/downloads/code/design-pattern-strategy/sample1/Dwarve.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dwarve</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="nf">Dwarve</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">150</span><span class="o">,</span> <span class="mi">50</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這樣的設計原本符合公司規格，隨時可以新增角色，亦利用了 OO 的特性。</p>
-
-<hr />
-
-<p>公司高層認為每個角色的攻擊都一樣，太乏味了，建議你改一改程式去令每一個角色都拿不同武器去攻擊。
-你可能會更改程式成為這樣:</p>
-
-<p><img src="/downloads/code/design-pattern-strategy/sample2/uml.png"></p>
-
-<figure class='code'><figcaption><span> (Character.java)</span> <a href='/downloads/code/design-pattern-strategy/sample2/Character.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <p>這樣的設計原本符合公司規格，隨時可以新增角色，亦利用了 OO 的特性。</p> <hr/> <p>公司高層認為每個角色的攻擊都一樣，太乏味了，建議你改一改程式去令每一個角色都拿不同武器去攻擊。 你可能會更改程式成為這樣:</p> <p><img src="/downloads/code/design-pattern-strategy/sample2/uml.png"></p> <figure class='code'><figcaption><span> (Character.java)</span> <a href='/downloads/code/design-pattern-strategy/sample2/Character.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
 </span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">hp</span><span class="o">;</span>
@@ -261,11 +92,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (Human.java)</span> <a href='/downloads/code/design-pattern-strategy/sample2/Human.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Human.java)</span> <a href='/downloads/code/design-pattern-strategy/sample2/Human.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="nf">Human</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
@@ -277,11 +104,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (Dwarve.java)</span> <a href='/downloads/code/design-pattern-strategy/sample2/Dwarve.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dwarve</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Dwarve.java)</span> <a href='/downloads/code/design-pattern-strategy/sample2/Dwarve.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dwarve</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="nf">Dwarve</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">150</span><span class="o">,</span> <span class="mi">50</span><span class="o">);</span>
@@ -293,23 +116,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Character 內的 attack() 改為 abstract ，每個角色自己實現自己的攻擊模式。
-這樣看好像沒有什麼問題，但如果以後增加角色，而這個角色和現有角色的武器一樣，那不是要將程式碼複製出來？
-同樣的程式碼可能會在不同角色內出現，以後維護起來便加倍困難。複製一次程式碼 = 連 Bug 也一起複製了。</p>
-
-<hr />
-
-<p>公司高層又想改一下遊戲，今次改動是可以令角色選擇不同武器。
-上次的程式是不容許角色更換武器，因為在 attack() 內限制了角色使用的武器。
-今次需要使用 Strategy Pattern 令程式更具彈性:</p>
-
-<p><img src="/downloads/code/design-pattern-strategy/sample3/uml.png"></p>
-
-<figure class='code'><figcaption><span> (Character.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/Character.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <p>Character 內的 attack() 改為 abstract ，每個角色自己實現自己的攻擊模式。 這樣看好像沒有什麼問題，但如果以後增加角色，而這個角色和現有角色的武器一樣，那不是要將程式碼複製出來？ 同樣的程式碼可能會在不同角色內出現，以後維護起來便加倍困難。複製一次程式碼 = 連 Bug 也一起複製了。</p> <hr/> <p>公司高層又想改一下遊戲，今次改動是可以令角色選擇不同武器。 上次的程式是不容許角色更換武器，因為在 attack() 內限制了角色使用的武器。 今次需要使用 Strategy Pattern 令程式更具彈性:</p> <p><img src="/downloads/code/design-pattern-strategy/sample3/uml.png"></p> <figure class='code'><figcaption><span> (Character.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/Character.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Character</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
 </span><span class='line'>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">hp</span><span class="o">;</span>
@@ -362,44 +169,26 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (Human.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/Human.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Human.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/Human.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Human</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="nf">Human</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">AttackBehavior</span> <span class="n">attackBehavior</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="n">attackBehavior</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (Dwarve.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/Dwarve.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dwarve</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Dwarve.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/Dwarve.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dwarve</span> <span class="kd">extends</span> <span class="n">Character</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="nf">Dwarve</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">AttackBehavior</span> <span class="n">attackBehavior</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">150</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="n">attackBehavior</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span> (AttackBehavior.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/AttackBehavior.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AttackBehavior</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (AttackBehavior.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/AttackBehavior.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AttackBehavior</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">();</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (SwordAttackBehavior.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/SwordAttackBehavior.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SwordAttackBehavior</span> <span class="kd">implements</span> <span class="n">AttackBehavior</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (SwordAttackBehavior.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/SwordAttackBehavior.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SwordAttackBehavior</span> <span class="kd">implements</span> <span class="n">AttackBehavior</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="nd">@Override</span>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">()</span> <span class="o">{</span>
@@ -407,11 +196,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<figure class='code'><figcaption><span> (AxeAttackBehavior.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/AxeAttackBehavior.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AxeAttackBehavior</span> <span class="kd">implements</span> <span class="n">AttackBehavior</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (AxeAttackBehavior.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/AxeAttackBehavior.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AxeAttackBehavior</span> <span class="kd">implements</span> <span class="n">AttackBehavior</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="nd">@Override</span>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">attack</span><span class="o">()</span> <span class="o">{</span>
@@ -419,13 +204,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/Main.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-strategy/sample3/Main.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="n">Character</span> <span class="n">character1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Human</span><span class="o">(</span><span class="s">&quot;Lawrence&quot;</span><span class="o">,</span> <span class="k">new</span> <span class="n">AxeAttackBehavior</span><span class="o">());</span>
@@ -439,210 +218,4 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>現在只需要在建立角色時將攻擊行為也一起加到角色中就可以了，而且可以隨時更改攻擊行為。</p>
-
-<hr />
-
-<p>以下的圖片是描述 Strategy Pattern 的 Class Diagram。（From Wiki）</p>
-
-<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/0/08/StrategyPatternClassDiagram.svg/400px-StrategyPatternClassDiagram.svg.png"></p>
-</div>
-
-
-    <footer>
-      <p class="meta">
-        
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span>
-
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-28T22:34:00+08:00" pubdate data-updated="true">Mar 28<span>th</span>, 2012</time>
-        
-
-<span class="categories">
-  
-    <a class='category' href='/blog/tag/design-pattern/'>Design Pattern</a>, <a class='category' href='/blog/tag/strategy-pattern/'>Strategy Pattern</a>
-  
-</span>
-
-
-      </p>
-      
-        <div class="sharing">
-  <br/>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-      
-      <p class="meta">
-        
-          <a class="basic-alignment" href="/blog/2012/03/26/windows-install-octopress.html" title="Previous Post: 在 Windows 設定 Octopress">&laquo; 在 Windows 設定 Octopress</a>
-        
-        
-          <a class="basic-alignment pull-right" href="/blog/2012/03/29/design-pattern-observer.html" title="Next Post: Design Pattern - Observer">Design Pattern - Observer &raquo;</a>
-        
-      </p>
-    </footer>
-    
-    
-      <section>
-        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-      </section>
-    
-  </div>
-
-  
-  <div class="span4 sidebar">
-      
-        <section>
-    <h2>About Me</h2>
-    <div class="well">
-        <p>Lawrence Cheung</p>
-        <img src="/images/mail.png" />
-    </div>
-</section>
-<section>
-    <h2>Recent Posts</h2>
-    <div class="well" style="padding: 8px 0;">
-        <ul id="recent_posts" class="nav nav-list">
-            
-            <li class="post">
-                <a href="/blog/2012/07/18/spring-integrate-jpa.html">Spring 整合 JPA</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/04/11/design-pattern-decorator.html">Design Pattern - Decorator</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/04/04/design-pattern-singleton.html">Design Pattern - Singleton</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/04/03/web-app-development-cheat-sheet.html">Web Development Cheat Sheet</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/04/03/maven-jetty-jsf-2.html">Maven + Jetty 測試  JSF 2 Annotation</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/04/02/design-pattern-abstract-factory.html">Design Pattern - Abstract Factory</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a>
-            </li>
-            
-            <li class="post">
-                <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a>
-            </li>
-            
-        </ul>
-    </div>
-</section><section>
-    <div id="recentcomment" class="dsq-widget">
-        <h2 class="dsq-widget-title">Recent Comments</h2>
-        <div class="well">
-            <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script>
-        </div>
-    </div>
-</section>
-
-
-
-      
-  </div>
-
-</div>
-
-
-            </div>
-        </div>
-        <footer class="footer">
-            <p>
-  Copyright &copy; 2012 - Lawrence Cheung -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-        </footer>
-        
-
-<script type="text/javascript">
-      var disqus_shortname = 'pdn';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://pro.ctlok.com/blog/2012/03/28/design-pattern-strategy-pattern.html';
-        var disqus_url = 'http://pro.ctlok.com/blog/2012/03/28/design-pattern-strategy-pattern.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
-
-
-
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-<script src="/assets/google-code-prettify/js/prettify.js"></script>
-<script>
-    (function($){
-        $(function(){
-            $("pre").each(function(){
-            	if ($(this).parents(".gist").size() == 0){
-            		$(this).addClass("prettyprint linenums");
-            	}
-            })
-            prettyPrint()
-        });
-    })(jQuery)
-</script>
-
-
-    </div>
-    </body>
-</html>
+</span></code></pre></td></tr></table></div></figure> <p>現在只需要在建立角色時將攻擊行為也一起加到角色中就可以了，而且可以隨時更改攻擊行為。</p> <hr/> <p>以下的圖片是描述 Strategy Pattern 的 Class Diagram。（From Wiki）</p> <p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/0/08/StrategyPatternClassDiagram.svg/400px-StrategyPatternClassDiagram.svg.png"></p> </div> <footer> <p class="meta"> <span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span> <time datetime="2012-03-28T22:34:00+08:00" pubdate data-updated="true">Mar 28<span>th</span>, 2012</time> <span class="categories"> <a class='category' href='/blog/tag/design-pattern/'>Design Pattern</a>, <a class='category' href='/blog/tag/strategy-pattern/'>Strategy Pattern</a> </span> </p> <div class="sharing"> <br/> <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div> </div> <p class="meta"> <a class="basic-alignment" href="/blog/2012/03/26/windows-install-octopress.html" title="Previous Post: 在 Windows 設定 Octopress">&laquo; 在 Windows 設定 Octopress</a> <a class="basic-alignment pull-right" href="/blog/2012/03/29/design-pattern-observer.html" title="Next Post: Design Pattern - Observer">Design Pattern - Observer &raquo;</a> </p> </footer> <section> <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript> </div> </section> </div> <div class="span4 sidebar"> <section> <h2>About Me</h2> <div class="well"> <p>Lawrence Cheung</p> <img src="/images/mail.png"/> </div> </section> <section> <h2>Recent Posts</h2> <div class="well" style="padding: 8px 0;"> <ul id="recent_posts" class="nav nav-list"> <li class="post"> <a href="/blog/2012/07/18/spring-integrate-jpa.html">Spring 整合 JPA</a> </li> <li class="post"> <a href="/blog/2012/04/11/design-pattern-decorator.html">Design Pattern - Decorator</a> </li> <li class="post"> <a href="/blog/2012/04/04/design-pattern-singleton.html">Design Pattern - Singleton</a> </li> <li class="post"> <a href="/blog/2012/04/03/web-app-development-cheat-sheet.html">Web Development Cheat Sheet</a> </li> <li class="post"> <a href="/blog/2012/04/03/maven-jetty-jsf-2.html">Maven + Jetty 測試 JSF 2 Annotation</a> </li> <li class="post"> <a href="/blog/2012/04/02/design-pattern-abstract-factory.html">Design Pattern - Abstract Factory</a> </li> <li class="post"> <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a> </li> <li class="post"> <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a> </li> <li class="post"> <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a> </li> <li class="post"> <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a> </li> </ul> </div> </section><section> <div id="recentcomment" class="dsq-widget"> <h2 class="dsq-widget-title">Recent Comments</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script> </div> </div> </section> </div> </div> </div> </div> <footer class="footer"> <p> Copyright &copy; 2012 - Lawrence Cheung - <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> </p> </footer> <script type="text/javascript">var disqus_shortname="pdn",disqus_identifier="http://pro.ctlok.com/blog/2012/03/28/design-pattern-strategy-pattern.html",disqus_url="http://pro.ctlok.com/blog/2012/03/28/design-pattern-strategy-pattern.html",disqus_script="embed.js";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src="http://"+disqus_shortname+".disqus.com/"+disqus_script;(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();</script> <div id="fb-root"></div> <script>(function(a,b,c){var d=a.getElementsByTagName(b)[0];if(!a.getElementById(c))a=a.createElement(b),a.id=c,a.src="//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1",d.parentNode.insertBefore(a,d)})(document,"script","facebook-jssdk");</script> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> <script src="/assets/bootstrap/js/bootstrap.min.js"></script> <script src="/assets/google-code-prettify/js/prettify.js"></script> <script>(function(a){a(function(){a("pre").each(function(){a(this).parents(".gist").size()==0&&a(this).addClass("prettyprint linenums")});prettyPrint()})})(jQuery);</script> </div> </body> </html>
