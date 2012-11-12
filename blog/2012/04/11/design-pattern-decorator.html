@@ -1,4 +1,155 @@
-<!DOCTYPE html> <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]--> <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]--> <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]--> <head> <meta charset="utf-8"> <title>Design Pattern - Decorator - Programming Design Notes</title> <meta name="author" content="Lawrence Cheung"> <meta name="description" content="Decorator Pattern 可以令到不用改動原本物件的程式碼，而又可以擴充一些功能在這個物件上， 就好像 Plugin 一樣。你可以想像一下，WordPress 的 Plugin 並不需要改動核心的程式， 但又可以増加一些功能。 Java 上的 InputStream &hellip;"> <meta name="HandheldFriendly" content="True"> <meta name="MobileOptimized" content="320"> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="canonical" href="http://pro.ctlok.com/blog/2012/04/11/design-pattern-decorator.html"> <link href="/favicon.ico" rel="icon"> <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css"> <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"> <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css"> <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml"> <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]--> <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-16811171-1"]);_gaq.push(["_trackPageview"]);(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)})();</script> </head> <body data-spy="scroll"> <div class="container"> <header class="jumbotron subhead" id="overview"> <div class="subscribe"> <table> <tr> <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png"/></td> <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png"/></a></td> <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png"/></a></td> </tr> </table> </div> <h1 class="title">Programming Design Notes</h1> <div class="navbar"> <div class="navbar-inner"> <div class="container" style="width: auto;"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <div class="nav-collapse"> <ul class="nav"> <li> <a href="/"><i class="icon icon-home"></i>Home</a> </li> <li> <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a> </li> </ul> <form action="http://google.com/search" method="get" class="navbar-search pull-right"> <fieldset role="search"> <input type="hidden" name="q" value="site:pro.ctlok.com"/> <input type="text" name="q" results="0" placeholder="Search" class="span3"/> </fieldset> </form> </div> </div> </div> </div> </header> <div id="main"> <div id="content"> <div class="row"> <div class="span8"> <header> <h2 class="entry-title">Design Pattern - Decorator</h2> <p class="meta"> <time datetime="2012-04-11T15:29:00+08:00" pubdate data-updated="true">Apr 11<span>th</span>, 2012</time> | <a href="#disqus_thread">Comments</a> </p> </header> <div class="entry-content"><p>Decorator Pattern 可以令到不用改動原本物件的程式碼，而又可以擴充一些功能在這個物件上， 就好像 Plugin 一樣。你可以想像一下，WordPress 的 Plugin 並不需要改動核心的程式， 但又可以増加一些功能。 Java 上的 InputStream 一樣採用這種模式去實現。</p> <p>看看以下例子應該有助你明白這個模式:</p> <hr/> <p>公司要你開發一個手機用戶計費系統，因應用戶使用時間而去收費， 使用時間愈多折扣亦愈多。而用戶亦有分普通用戶或 VIP 用戶， VIP 用戶亦有更多折扣。</p> <p>一開始你可能會設計成這樣:</p> <figure class='code'><figcaption><span> (User.java)</span> <a href='/downloads/code/design-pattern-decorator/sample1/User.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Design Pattern - Decorator - Programming Design Notes</title>
+  <meta name="author" content="Lawrence Cheung">
+
+  
+  <meta name="description" content="Decorator Pattern 可以令到不用改動原本物件的程式碼，而又可以擴充一些功能在這個物件上，
+就好像 Plugin 一樣。你可以想像一下，WordPress 的 Plugin 並不需要改動核心的程式，
+但又可以増加一些功能。
+Java 上的 InputStream &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pro.ctlok.com/blog/2012/04/11/design-pattern-decorator.html">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css">
+  
+  <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml">
+  
+  <!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-16811171-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    data-spy="scroll">
+
+    <a href="https://github.com/lawrence0819" target="_blank">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
+    </a>
+    <div class="container">
+        <header class="jumbotron subhead" id="overview">
+            <div class="subscribe">
+    <table>
+        <tr>
+            <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png" /></td>
+            <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png" /></a></td>
+            <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png" /></a></td>
+        </tr>
+    </table>
+</div>
+<h1 class="title">Programming Design Notes</h1>
+
+            <div class="navbar">
+    <div class="navbar-inner">
+        <div class="container" style="width: auto;">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="/"><i class="icon icon-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a>
+                    </li>
+                </ul>
+                
+                <form action="http://google.com/search" method="get" class="navbar-search pull-right">
+                    <fieldset role="search">
+                        <input type="hidden" name="q" value="site:pro.ctlok.com" />
+                        <input type="text" name="q" results="0" placeholder="Search" class="span3" />
+                    </fieldset>
+                </form>
+                
+            </div><!-- /.nav-collapse -->
+        </div>
+    </div><!-- /navbar-inner -->
+</div>
+
+        </header>
+        <div id="main">
+            <div id="content">
+                <div class="row">
+  <div class="span8">
+    
+  <header>
+    
+      <h2 class="entry-title">Design Pattern - Decorator</h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-11T15:29:00+08:00" pubdate data-updated="true">Apr 11<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Decorator Pattern 可以令到不用改動原本物件的程式碼，而又可以擴充一些功能在這個物件上，
+就好像 Plugin 一樣。你可以想像一下，WordPress 的 Plugin 並不需要改動核心的程式，
+但又可以増加一些功能。
+Java 上的 InputStream 一樣採用這種模式去實現。</p>
+
+<p>看看以下例子應該有助你明白這個模式:</p>
+
+<!--more-->
+
+
+<hr />
+
+<p>公司要你開發一個手機用戶計費系統，因應用戶使用時間而去收費，
+使用時間愈多折扣亦愈多。而用戶亦有分普通用戶或 VIP 用戶，
+VIP 用戶亦有更多折扣。</p>
+
+<p>一開始你可能會設計成這樣:</p>
+
+<figure class='code'><figcaption><span> (User.java)</span> <a href='/downloads/code/design-pattern-decorator/sample1/User.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
 </span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">vip</span><span class="o">;</span>
@@ -26,7 +177,11 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (MobilePayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample1/MobilePayment.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MobilePayment</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (MobilePayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample1/MobilePayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MobilePayment</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">final</span> <span class="kt">double</span> <span class="n">moneyPerMinute</span><span class="o">;</span>
 </span><span class='line'>
@@ -59,7 +214,11 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-decorator/sample1/Main.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-decorator/sample1/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>
@@ -77,9 +236,29 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span>執行結果</span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='text'><span class='line'>Lawrence usage: 10000 minute, charge: 8640.0
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>執行結果</span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='text'><span class='line'>Lawrence usage: 10000 minute, charge: 8640.0
 </span><span class='line'>Tony usage: 4000 minute, charge: 4320.0
-</span></code></pre></td></tr></table></div></figure> <p>你可以看見所有計費的程式碼也在 <code>MobilePayment.charge</code> 內，如果再要增加計費條件 就要修改這個地方的程式碼。</p> <hr/> <p>現在公司又要增加一些收費條件，因為提供額外的服務給公司客戶，需要收取額外 10% 服務費。 如果你只改動 <code>MobilePayment.charge</code> 內的程式碼，那愈來愈多條件時就難以維護， 現在我們使用 Decorator Pattern 去解決這些問題，收費條件亦可以隨時抽換。</p> <p><img src="/downloads/code/design-pattern-decorator/sample2/uml.png"></p> <figure class='code'><figcaption><span> (User.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/User.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>你可以看見所有計費的程式碼也在 <code>MobilePayment.charge</code> 內，如果再要增加計費條件
+就要修改這個地方的程式碼。</p>
+
+<hr />
+
+<p>現在公司又要增加一些收費條件，因為提供額外的服務給公司客戶，需要收取額外 10% 服務費。
+如果你只改動 <code>MobilePayment.charge</code> 內的程式碼，那愈來愈多條件時就難以維護，
+現在我們使用 Decorator Pattern 去解決這些問題，收費條件亦可以隨時抽換。</p>
+
+<p><img src="/downloads/code/design-pattern-decorator/sample2/uml.png"></p>
+
+<figure class='code'><figcaption><span> (User.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/User.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
 </span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">vip</span><span class="o">;</span>
@@ -117,12 +296,20 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Payment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/Payment.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Payment</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Payment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/Payment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Payment</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">charge</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="kt">int</span> <span class="n">minute</span><span class="o">);</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (BasicMobilePayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/BasicMobilePayment.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicMobilePayment</span> <span class="kd">implements</span> <span class="n">Payment</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (BasicMobilePayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/BasicMobilePayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicMobilePayment</span> <span class="kd">implements</span> <span class="n">Payment</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">final</span> <span class="kt">double</span> <span class="n">moneyPerMinute</span><span class="o">;</span>
 </span><span class='line'>
@@ -139,7 +326,11 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (AdditionalPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/AdditionalPayment.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AdditionalPayment</span> <span class="kd">implements</span> <span class="n">Payment</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (AdditionalPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/AdditionalPayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AdditionalPayment</span> <span class="kd">implements</span> <span class="n">Payment</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">protected</span> <span class="n">Payment</span> <span class="n">payment</span><span class="o">;</span>
 </span><span class='line'>
@@ -152,7 +343,11 @@
 </span><span class='line'>    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">double</span> <span class="nf">charge</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">,</span> <span class="kt">int</span> <span class="n">minute</span><span class="o">);</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (UsageAmountPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/UsageAmountPayment.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UsageAmountPayment</span> <span class="kd">extends</span> <span class="n">AdditionalPayment</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (UsageAmountPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/UsageAmountPayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UsageAmountPayment</span> <span class="kd">extends</span> <span class="n">AdditionalPayment</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="nf">UsageAmountPayment</span><span class="o">(</span><span class="n">Payment</span> <span class="n">payment</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">payment</span><span class="o">);</span>
@@ -176,7 +371,11 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (VIPPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/VIPPayment.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">VIPPayment</span> <span class="kd">extends</span> <span class="n">AdditionalPayment</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (VIPPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/VIPPayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">VIPPayment</span> <span class="kd">extends</span> <span class="n">AdditionalPayment</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">discount</span><span class="o">;</span>
 </span><span class='line'>
@@ -199,7 +398,11 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (CompanyPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/CompanyPayment.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CompanyPayment</span> <span class="kd">extends</span> <span class="n">AdditionalPayment</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (CompanyPayment.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/CompanyPayment.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CompanyPayment</span> <span class="kd">extends</span> <span class="n">AdditionalPayment</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">serviceFee</span><span class="o">;</span>
 </span><span class='line'>
@@ -222,7 +425,11 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/Main.java'>download</a></figcaption> <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-decorator/sample2/Main.java'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>
@@ -249,7 +456,218 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure> <figure class='code'><figcaption><span>執行結果</span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='text'><span class='line'>Lawrence usage: 10000 minute, charge: 8640.0
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>執行結果</span></figcaption><div class="highlight"><table><tr><td class='code'><pre><code class='text'><span class='line'>Lawrence usage: 10000 minute, charge: 8640.0
 </span><span class='line'>Tony usage: 4000 minute, charge: 4320.0
 </span><span class='line'>ABC Company usage: 10000 minute, charge: 10560.0
-</span></code></pre></td></tr></table></div></figure> <p>這樣就可以隨時新增條件或移除條件而又不會影響到核心的程式碼。</p> <hr/> <p>以下的圖片是描述 Singleton Pattern 的 Class Diagram。（From Wiki）</p> <p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Decorator_UML_class_diagram.svg/400px-Decorator_UML_class_diagram.svg.png"></p> </div> <footer> <p class="meta"> <span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span> <time datetime="2012-04-11T15:29:00+08:00" pubdate data-updated="true">Apr 11<span>th</span>, 2012</time> <span class="categories"> <a class='category' href='/blog/tag/decorator/'>Decorator</a>, <a class='category' href='/blog/tag/design-pattern/'>Design Pattern</a> </span> </p> <div class="sharing"> <br/> <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div> </div> <p class="meta"> <a class="basic-alignment" href="/blog/2012/04/04/design-pattern-singleton.html" title="Previous Post: Design Pattern - Singleton">&laquo; Design Pattern - Singleton</a> <a class="basic-alignment pull-right" href="/blog/2012/07/18/spring-integrate-jpa.html" title="Next Post: Spring 整合 JPA">Spring 整合 JPA &raquo;</a> </p> </footer> <section> <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript> </div> </section> </div> <div class="span4 sidebar"> <section> <h2>About Me</h2> <div class="well"> <p>Lawrence Cheung</p> <img src="/images/mail.png"/> </div> </section> <section> <h2>Recent Posts</h2> <div class="well" style="padding: 8px 0;"> <ul id="recent_posts" class="nav nav-list"> <li class="post"> <a href="/blog/2012/07/18/spring-integrate-jpa.html">Spring 整合 JPA</a> </li> <li class="post"> <a href="/blog/2012/04/11/design-pattern-decorator.html">Design Pattern - Decorator</a> </li> <li class="post"> <a href="/blog/2012/04/04/design-pattern-singleton.html">Design Pattern - Singleton</a> </li> <li class="post"> <a href="/blog/2012/04/03/web-app-development-cheat-sheet.html">Web Development Cheat Sheet</a> </li> <li class="post"> <a href="/blog/2012/04/03/maven-jetty-jsf-2.html">Maven + Jetty 測試 JSF 2 Annotation</a> </li> <li class="post"> <a href="/blog/2012/04/02/design-pattern-abstract-factory.html">Design Pattern - Abstract Factory</a> </li> <li class="post"> <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a> </li> <li class="post"> <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a> </li> <li class="post"> <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a> </li> <li class="post"> <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a> </li> </ul> </div> </section><section> <div id="recentcomment" class="dsq-widget"> <h2 class="dsq-widget-title">Recent Comments</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script> </div> </div> </section> </div> </div> </div> </div> <footer class="footer"><p> Copyright &copy; 2012 - Lawrence Cheung - <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> </p></footer> <script type="text/javascript">var disqus_shortname="pdn",disqus_identifier="http://pro.ctlok.com/blog/2012/04/11/design-pattern-decorator.html",disqus_url="http://pro.ctlok.com/blog/2012/04/11/design-pattern-decorator.html",disqus_script="embed.js";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src="http://"+disqus_shortname+".disqus.com/"+disqus_script;(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();</script> <div id="fb-root"></div> <script>(function(a,b,c){var d=a.getElementsByTagName(b)[0];if(!a.getElementById(c))a=a.createElement(b),a.id=c,a.src="//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1",d.parentNode.insertBefore(a,d)})(document,"script","facebook-jssdk");</script> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> <script src="/assets/bootstrap/js/bootstrap.min.js"></script> <script src="/assets/google-code-prettify/js/prettify.js"></script> <script>(function(a){a(function(){a("pre").each(function(){a(this).parents(".gist").size()==0&&a(this).addClass("prettyprint linenums")});prettyPrint()})})(jQuery);</script> </div> </body> </html>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這樣就可以隨時新增條件或移除條件而又不會影響到核心的程式碼。</p>
+
+<hr />
+
+<p>以下的圖片是描述 Singleton Pattern 的 Class Diagram。（From Wiki）</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Decorator_UML_class_diagram.svg/400px-Decorator_UML_class_diagram.svg.png"></p>
+</div>
+
+
+    <footer>
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-11T15:29:00+08:00" pubdate data-updated="true">Apr 11<span>th</span>, 2012</time>
+        
+
+<span class="categories">
+  
+    <a class='category' href='/blog/tag/decorator/'>Decorator</a>, <a class='category' href='/blog/tag/design-pattern/'>Design Pattern</a>
+  
+</span>
+
+
+      </p>
+      
+        <div class="sharing">
+  <br/>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+      
+      <p class="meta">
+        
+          <a class="basic-alignment" href="/blog/2012/04/04/design-pattern-singleton.html" title="Previous Post: Design Pattern - Singleton">&laquo; Design Pattern - Singleton</a>
+        
+        
+          <a class="basic-alignment pull-right" href="/blog/2012/07/18/spring-integrate-jpa.html" title="Next Post: Spring 整合 JPA">Spring 整合 JPA &raquo;</a>
+        
+      </p>
+    </footer>
+    
+    
+      <section>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <div class="span4 sidebar">
+      
+        <section>
+    <h2>About Me</h2>
+    <div class="well">
+        <p>Lawrence Cheung</p>
+        <img src="/images/mail.png" />
+    </div>
+</section>
+<section>
+    <h2>Recent Posts</h2>
+    <div class="well" style="padding: 8px 0;">
+        <ul id="recent_posts" class="nav nav-list">
+            
+            <li class="post">
+                <a href="/blog/2012/07/18/spring-integrate-jpa.html">Spring 整合 JPA</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/11/design-pattern-decorator.html">Design Pattern - Decorator</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/04/design-pattern-singleton.html">Design Pattern - Singleton</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/03/web-app-development-cheat-sheet.html">Web Development Cheat Sheet</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/03/maven-jetty-jsf-2.html">Maven + Jetty 測試  JSF 2 Annotation</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/02/design-pattern-abstract-factory.html">Design Pattern - Abstract Factory</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a>
+            </li>
+            
+        </ul>
+    </div>
+</section><section>
+    <div id="recentcomment" class="dsq-widget">
+        <h2 class="dsq-widget-title">Recent Comments</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script>
+        </div>
+    </div>
+</section>
+
+
+
+      
+  </div>
+
+</div>
+
+
+            </div>
+        </div>
+        <footer class="footer">
+            <p>
+  Copyright &copy; 2012 - Lawrence Cheung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+        </footer>
+        
+
+<script type="text/javascript">
+      var disqus_shortname = 'pdn';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://pro.ctlok.com/blog/2012/04/11/design-pattern-decorator.html';
+        var disqus_url = 'http://pro.ctlok.com/blog/2012/04/11/design-pattern-decorator.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/google-code-prettify/js/prettify.js"></script>
+<script>
+    (function($){
+        $(function(){
+            $("pre").each(function(){
+            	if ($(this).parents(".gist").size() == 0){
+            		$(this).addClass("prettyprint linenums");
+            	}
+            })
+            prettyPrint()
+        });
+    })(jQuery)
+</script>
+
+
+    </div>
+    </body>
+</html>

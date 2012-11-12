@@ -1,1 +1,327 @@
-<!DOCTYPE html> <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]--> <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]--> <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]--> <head> <meta charset="utf-8"> <title>使用 Java 開發 Facebook Web App - 1 - Programming Design Notes</title> <meta name="author" content="Lawrence Cheung"> <meta name="description" content="第一步當然要先在 Facebook 建立一個應用程式。網址:&nbsp;http://www.facebook.com/developers/createapp.php輸入應用程式名稱和同意 Facebook 條款，按下 Create Application 到下一步。建立完成後得到 API &hellip;"> <meta name="HandheldFriendly" content="True"> <meta name="MobileOptimized" content="320"> <meta name="viewport" content="width=device-width, initial-scale=1"> <link rel="canonical" href="http://pro.ctlok.com/2010/06/java-facebook-apps-1.html"> <link href="/favicon.ico" rel="icon"> <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"> <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css"> <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"> <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css"> <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml"> <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]--> <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-16811171-1"]);_gaq.push(["_trackPageview"]);(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var b=document.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b)})();</script> </head> <body data-spy="scroll"> <div class="container"> <header class="jumbotron subhead" id="overview"> <div class="subscribe"> <table> <tr> <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png"/></td> <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png"/></a></td> <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png"/></a></td> </tr> </table> </div> <h1 class="title">Programming Design Notes</h1> <div class="navbar"> <div class="navbar-inner"> <div class="container" style="width: auto;"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <div class="nav-collapse"> <ul class="nav"> <li> <a href="/"><i class="icon icon-home"></i>Home</a> </li> <li> <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a> </li> </ul> <form action="http://google.com/search" method="get" class="navbar-search pull-right"> <fieldset role="search"> <input type="hidden" name="q" value="site:pro.ctlok.com"/> <input type="text" name="q" results="0" placeholder="Search" class="span3"/> </fieldset> </form> </div> </div> </div> </div> </header> <div id="main"> <div id="content"> <div class="row"> <div class="span8"> <header> <h2 class="entry-title">使用 Java 開發 Facebook Web App - 1</h2> <p class="meta"> <time datetime="2010-06-03T13:13:00+08:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2010</time> | <a href="#disqus_thread">Comments</a> </p> </header> <div class="entry-content">第一步當然要先在 Facebook 建立一個應用程式。<br/>網址:&nbsp;<a href="http://www.facebook.com/developers/createapp.php">http://www.facebook.com/developers/createapp.php</a><br/><br/><div class="separator" style="clear: both; text-align: left;"><a href="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TAy77FltOeI/AAAAAAAAAfk/HFzGKvlkSJA/s1600/java-facebook-1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="139" src="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TAy77FltOeI/AAAAAAAAAfk/HFzGKvlkSJA/s320/java-facebook-1.png" width="320"/></a></div><div class="separator" style="clear: both; text-align: left;"><br/></div><div class="separator" style="clear: both; text-align: left;">輸入應用程式名稱和同意 Facebook 條款，按下 Create Application 到下一步。</div><div class="separator" style="clear: both; text-align: left;"><br/></div><div class="separator" style="clear: both; text-align: left;"><a href="http://2.bp.blogspot.com/_fDN8R2Wgbcs/TAy82GqzfII/AAAAAAAAAfo/Rt94KprgGKI/s1600/java-facebook-2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="102" src="http://2.bp.blogspot.com/_fDN8R2Wgbcs/TAy82GqzfII/AAAAAAAAAfo/Rt94KprgGKI/s320/java-facebook-2.png" width="320"/></a></div><br/>建立完成後得到 API Key 和 Application Secret，請不要公開這 Application Secret 這項資料，別人得到了 API Key 和 Application Secret 便可以任意更改你的應用程式。<br/><br/>在左邊的選單選取 Canvas。<br/><br/><div class="separator" style="clear: both; text-align: left;"><a href="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TAy9hxixu_I/AAAAAAAAAfs/hlF90YN8IdM/s1600/java-facebook-3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="252" src="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TAy9hxixu_I/AAAAAAAAAfs/hlF90YN8IdM/s320/java-facebook-3.png" width="320"/></a></div><div class="separator" style="clear: both; text-align: left;"><br/></div><div class="separator" style="clear: both; text-align: left;">Canvas Page URL 是你的應用程式在 Facebook 的位置，每一個應用程式的 URL 都不會相同的，請輸入令人比較容易記的地址。</div><div class="separator" style="clear: both; text-align: left;"><br/></div><div class="separator" style="clear: both; text-align: left;">Canvas Callback URL 是伺服器的位置，因為現在是試測性質，所以輸入本機的位置。如果你有自己的伺服器，可以輸入伺服器的位置，但初期測試不建議使用，因為在本機開發會比較快，待差不多完成再放上伺服器也可以。</div><div class="separator" style="clear: both; text-align: left;"><br/></div><div class="separator" style="clear: both; text-align: left;">Post-Authorize Redirect URL 是用戶同意你的應用程式能夠存取他的資料後，Facebook 會將他跳到那一個位置。</div><div class="separator" style="clear: both; text-align: left;"><br/></div><div class="separator" style="clear: both; text-align: left;">在左邊的選單選取 Migrations，並將&nbsp;New Data Permissions 設為 Disable。</div><div class="separator" style="clear: both; text-align: left;"><br/></div><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/TA9n02XgmjI/AAAAAAAAAf0/aL8TMLAhGns/s1600/java-facebook-4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="128" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/TA9n02XgmjI/AAAAAAAAAf0/aL8TMLAhGns/s320/java-facebook-4.png" width="320"/></a></div><div class="separator" style="clear: both; text-align: left;"><br/></div><div class="separator" style="clear: both; text-align: left;">因為現在的 facebook-java-api 還是使用舊的 Facebook Rest Server，這個設定是給新的 Graph Api 用的。</div><div class="separator" style="clear: both; text-align: left;"><br/></div><div class="separator" style="clear: both; text-align: left;">按下 Save Change 儲存所有設定。</div><br/>現在到 <a href="http://code.google.com/p/facebook-java-api/">facebook-java-api</a> 下載 Java 的 Facebook API Library，如果你是使用 Google App Engine 開發 Facebook 應用程式，使用官方的 Library 會有一點問題，可到這裡下載別人修改好的 <a href="http://bertrand.guiral.free.fr/facebook_generated_bg.zip">http://bertrand.guiral.free.fr/facebook_generated_bg.zip</a>。<br/><br/>下載別人修改好的還要到 <a href="http://code.google.com/p/facebook-java-api/downloads/list">http://code.google.com/p/facebook-java-api/downloads/list</a> 下載依賴包。<br/><br/>現在可以開始寫程式了，首先加入一個 Filter 確保所有進入這個頁面的用戶已經登入 Facebook。<br/><pre class="brush: java">package com.blogspot.lawpronotes.filter;<br /><br />import java.io.IOException;<br /><br />import javax.servlet.Filter;<br />import javax.servlet.FilterChain;<br />import javax.servlet.FilterConfig;<br />import javax.servlet.ServletException;<br />import javax.servlet.ServletRequest;<br />import javax.servlet.ServletResponse;<br />import javax.servlet.http.HttpServletRequest;<br />import javax.servlet.http.HttpServletResponse;<br />import javax.servlet.http.HttpSession;<br /><br />import org.w3c.dom.Document;<br /><br />import com.google.code.facebookapi.FacebookException;<br />import com.google.code.facebookapi.FacebookWebappHelper;<br />import com.google.code.facebookapi.FacebookXmlRestClient;<br />import com.google.code.facebookapi.IFacebookRestClient;<br /><br />public class FacebookFilter implements Filter {<br /><br />    private String api_key;<br />    private String secret;<br /><br />    public void init(FilterConfig fConfig) throws ServletException {<br />        // TODO Auto-generated method stub<br />        api_key = "your api key";<br />        secret = "your secret";<br />    }<br /><br />    public void destroy() {<br />        // TODO Auto-generated method stub<br />    }<br /><br />    public void doFilter(ServletRequest req, ServletResponse res,<br />            FilterChain chain) throws IOException, ServletException {<br />        HttpServletRequest request = (HttpServletRequest) req;<br />        HttpServletResponse response = (HttpServletResponse) res;<br /><br />        HttpSession session = request.getSession(true);<br />        IFacebookRestClient&lt;Document&gt; userClient = getUserClient(session);<br />        if (userClient == null) {<br />            userClient = new FacebookXmlRestClient(api_key, secret);<br />            session.setAttribute("facebook.user.client", userClient);<br />        }<br /><br />        FacebookWebappHelper&lt;Document&gt; facebook = new FacebookWebappHelper&lt;Document&gt;(<br />                request, response, api_key, secret, userClient);<br />        String nextPage = request.getRequestURI();<br />        nextPage = nextPage.substring(nextPage.indexOf("/", 1) + 1);<br />        boolean redirectOccurred = facebook.requireLogin(nextPage);<br /><br />        if (redirectOccurred) {<br />            return;<br />        }<br />        redirectOccurred = facebook.requireFrame(nextPage);<br />        if (redirectOccurred) {<br />            return;<br />        }<br /><br />        long facebookUserID;<br />        try {<br />            facebookUserID = userClient.users_getLoggedInUser();<br />        } catch (FacebookException ex) {</pre><pre class="brush: java">//Cannot get user's facebook ID<br />            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,<br />                    "Error while fetching user's facebook ID");<br />            return;<br />        }<br />        chain.doFilter(request, response);<br />    }<br /><br />    public static FacebookXmlRestClient getUserClient(HttpSession session) {<br />        return (FacebookXmlRestClient) session<br />                .getAttribute("facebook.user.client");<br />    }<br /><br />}<br /></pre><br/>請自行更改 api_key 和 secret，然後在 web.xml 加上以下內容。<br/><pre class="brush: xml">&lt;filter&gt;<br />    &lt;display-name&gt;FacebookFilter&lt;/display-name&gt;<br />    &lt;filter-name&gt;FacebookFilter&lt;/filter-name&gt;<br />    &lt;filter-class&gt;com.blogspot.lawpronotes.filter.FacebookFilter&lt;/filter-class&gt;<br />&lt;/filter&gt;<br />&lt;filter-mapping&gt;<br />    &lt;filter-name&gt;FacebookFilter&lt;/filter-name&gt;<br />    &lt;url-pattern&gt;*&lt;/url-pattern&gt;<br />&lt;/filter-mapping&gt;<br /></pre><br/>登出 Facebook 然後打開 <a href="http://apps.facebook.com/lawpronotes/">http://apps.facebook.com/lawpronotes/</a>&nbsp;頁面看看是否自動跳到 Facebook 登入頁面。<br/><br/>下一回: <a href="http://pro.ctlok.com/2010/06/java-develop-facebook-web-app-2.html">使用 Java 開發 Facebook Web App - 2</a><br/><br/>相關書籍: <a href="http://www.amazon.com/Facebook-Dummies-Leah-Pearlman/dp/0470527617?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Facebook For Dummies" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0470527617&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0470527617" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><a href="http://www.amazon.com/Facebook-Era-Networks-Products-Audiences/dp/0137152221?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="The Facebook Era: Tapping Online Social Networks to Build Better Products, Reach New Audiences, and Sell More Stuff" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0137152221&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0137152221" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><a href="http://www.amazon.com/Facebook-Missing-E-Vander-Veer/dp/0596517696?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Facebook: The Missing Manual" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0596517696&amp;tag=program06-20"/></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0596517696" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1"/><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-6365646868600068930?l=lawpronotes.blogspot.com' alt=''/></div> </div> <footer> <p class="meta"> <span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span> <time datetime="2010-06-03T13:13:00+08:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2010</time> <span class="categories"> <a class='category' href='/blog/tag/facebook/'>Facebook</a>, <a class='category' href='/blog/tag/java/'>Java</a>, <a class='category' href='/blog/tag/java-ee/'>Java EE</a> </span> </p> <div class="sharing"> <br/> <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div> </div> <p class="meta"> <a class="basic-alignment" href="/2010/05/oracle-forms-builder-ie-8.html" title="Previous Post: Oracle Forms Builder + IE 8">&laquo; Oracle Forms Builder + IE 8</a> <a class="basic-alignment pull-right" href="/2010/06/actionscript-3-javascript.html" title="Next Post: Actionscript 3 呼叫 Javascript">Actionscript 3 呼叫 Javascript &raquo;</a> </p> </footer> <section> <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript> </div> </section> </div> <div class="span4 sidebar"> <section> <h2>About Me</h2> <div class="well"> <p>Lawrence Cheung</p> <img src="/images/mail.png"/> </div> </section> <section> <h2>Recent Posts</h2> <div class="well" style="padding: 8px 0;"> <ul id="recent_posts" class="nav nav-list"> <li class="post"> <a href="/blog/2012/07/18/spring-integrate-jpa.html">Spring 整合 JPA</a> </li> <li class="post"> <a href="/blog/2012/04/11/design-pattern-decorator.html">Design Pattern - Decorator</a> </li> <li class="post"> <a href="/blog/2012/04/04/design-pattern-singleton.html">Design Pattern - Singleton</a> </li> <li class="post"> <a href="/blog/2012/04/03/web-app-development-cheat-sheet.html">Web Development Cheat Sheet</a> </li> <li class="post"> <a href="/blog/2012/04/03/maven-jetty-jsf-2.html">Maven + Jetty 測試 JSF 2 Annotation</a> </li> <li class="post"> <a href="/blog/2012/04/02/design-pattern-abstract-factory.html">Design Pattern - Abstract Factory</a> </li> <li class="post"> <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a> </li> <li class="post"> <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a> </li> <li class="post"> <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a> </li> <li class="post"> <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a> </li> </ul> </div> </section><section> <div id="recentcomment" class="dsq-widget"> <h2 class="dsq-widget-title">Recent Comments</h2> <div class="well"> <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script> </div> </div> </section> </div> </div> </div> </div> <footer class="footer"><p> Copyright &copy; 2012 - Lawrence Cheung - <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> </p></footer> <script type="text/javascript">var disqus_shortname="pdn",disqus_identifier="http://pro.ctlok.com/2010/06/java-facebook-apps-1.html",disqus_url="http://pro.ctlok.com/2010/06/java-facebook-apps-1.html",disqus_script="embed.js";(function(){var a=document.createElement("script");a.type="text/javascript";a.async=!0;a.src="http://"+disqus_shortname+".disqus.com/"+disqus_script;(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)})();</script> <div id="fb-root"></div> <script>(function(a,b,c){var d=a.getElementsByTagName(b)[0];if(!a.getElementById(c))a=a.createElement(b),a.id=c,a.src="//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1",d.parentNode.insertBefore(a,d)})(document,"script","facebook-jssdk");</script> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> <script src="/assets/bootstrap/js/bootstrap.min.js"></script> <script src="/assets/google-code-prettify/js/prettify.js"></script> <script>(function(a){a(function(){a("pre").each(function(){a(this).parents(".gist").size()==0&&a(this).addClass("prettyprint linenums")});prettyPrint()})})(jQuery);</script> </div> </body> </html>
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>使用 Java 開發 Facebook Web App - 1 - Programming Design Notes</title>
+  <meta name="author" content="Lawrence Cheung">
+
+  
+  <meta name="description" content="第一步當然要先在 Facebook 建立一個應用程式。網址:&nbsp;http://www.facebook.com/developers/createapp.php輸入應用程式名稱和同意 Facebook 條款，按下 Create Application 到下一步。建立完成後得到 API &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pro.ctlok.com/2010/06/java-facebook-apps-1.html">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/bootstrap/css/custom.min.css" rel="stylesheet" type="text/css">
+  <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="/assets/google-code-prettify/css/prettify.css" rel="stylesheet" type="text/css">
+  
+  <link href="http://feeds.feedburner.com/proctlok" rel="alternate" title="Programming Design Notes" type="application/atom+xml">
+  
+  <!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-16811171-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body    data-spy="scroll">
+
+    <a href="https://github.com/lawrence0819" target="_blank">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
+    </a>
+    <div class="container">
+        <header class="jumbotron subhead" id="overview">
+            <div class="subscribe">
+    <table>
+        <tr>
+            <td><a href="http://feeds.feedburner.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/rss.png" /></td>
+            <td><a href="https://www.facebook.com/pages/Programming-Design-Notes/134507029896063" target="_blank"><img src="/images/socialize-icons/64x64/facebook.png" /></a></td>
+            <td><a href="http://twitter.com/proctlok" target="_blank"><img src="/images/socialize-icons/64x64/twitter.png" /></a></td>
+        </tr>
+    </table>
+</div>
+<h1 class="title">Programming Design Notes</h1>
+
+            <div class="navbar">
+    <div class="navbar-inner">
+        <div class="container" style="width: auto;">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li>
+                        <a href="/"><i class="icon icon-home"></i>Home</a>
+                    </li>
+                    <li>
+                        <a href="/blog/archives"><i class="icon icon-book"></i>Blog</a>
+                    </li>
+                </ul>
+                
+                <form action="http://google.com/search" method="get" class="navbar-search pull-right">
+                    <fieldset role="search">
+                        <input type="hidden" name="q" value="site:pro.ctlok.com" />
+                        <input type="text" name="q" results="0" placeholder="Search" class="span3" />
+                    </fieldset>
+                </form>
+                
+            </div><!-- /.nav-collapse -->
+        </div>
+    </div><!-- /navbar-inner -->
+</div>
+
+        </header>
+        <div id="main">
+            <div id="content">
+                <div class="row">
+  <div class="span8">
+    
+  <header>
+    
+      <h2 class="entry-title">使用 Java 開發 Facebook Web App - 1</h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-03T13:13:00+08:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2010</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">第一步當然要先在 Facebook 建立一個應用程式。<br />網址:&nbsp;<a href="http://www.facebook.com/developers/createapp.php">http://www.facebook.com/developers/createapp.php</a><br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TAy77FltOeI/AAAAAAAAAfk/HFzGKvlkSJA/s1600/java-facebook-1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="139" src="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TAy77FltOeI/AAAAAAAAAfk/HFzGKvlkSJA/s320/java-facebook-1.png" width="320" /></a></div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">輸入應用程式名稱和同意 Facebook 條款，按下 Create Application 到下一步。</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;"><a href="http://2.bp.blogspot.com/_fDN8R2Wgbcs/TAy82GqzfII/AAAAAAAAAfo/Rt94KprgGKI/s1600/java-facebook-2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="102" src="http://2.bp.blogspot.com/_fDN8R2Wgbcs/TAy82GqzfII/AAAAAAAAAfo/Rt94KprgGKI/s320/java-facebook-2.png" width="320" /></a></div><br />建立完成後得到 API Key 和 Application Secret，請不要公開這 Application Secret 這項資料，別人得到了 API Key 和 Application Secret 便可以任意更改你的應用程式。<br /><br />在左邊的選單選取 Canvas。<br /><br /><div class="separator" style="clear: both; text-align: left;"><a href="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TAy9hxixu_I/AAAAAAAAAfs/hlF90YN8IdM/s1600/java-facebook-3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="252" src="http://3.bp.blogspot.com/_fDN8R2Wgbcs/TAy9hxixu_I/AAAAAAAAAfs/hlF90YN8IdM/s320/java-facebook-3.png" width="320" /></a></div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Canvas Page URL 是你的應用程式在 Facebook 的位置，每一個應用程式的 URL 都不會相同的，請輸入令人比較容易記的地址。</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Canvas Callback URL 是伺服器的位置，因為現在是試測性質，所以輸入本機的位置。如果你有自己的伺服器，可以輸入伺服器的位置，但初期測試不建議使用，因為在本機開發會比較快，待差不多完成再放上伺服器也可以。</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">Post-Authorize Redirect URL 是用戶同意你的應用程式能夠存取他的資料後，Facebook 會將他跳到那一個位置。</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">在左邊的選單選取 Migrations，並將&nbsp;New Data Permissions 設為 Disable。</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;"><a href="http://4.bp.blogspot.com/_fDN8R2Wgbcs/TA9n02XgmjI/AAAAAAAAAf0/aL8TMLAhGns/s1600/java-facebook-4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="128" src="http://4.bp.blogspot.com/_fDN8R2Wgbcs/TA9n02XgmjI/AAAAAAAAAf0/aL8TMLAhGns/s320/java-facebook-4.png" width="320" /></a></div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">因為現在的 facebook-java-api 還是使用舊的 Facebook Rest Server，這個設定是給新的 Graph Api 用的。</div><div class="separator" style="clear: both; text-align: left;"><br /></div><div class="separator" style="clear: both; text-align: left;">按下 Save Change 儲存所有設定。</div><br />現在到 <a href="http://code.google.com/p/facebook-java-api/">facebook-java-api</a> 下載 Java 的 Facebook API Library，如果你是使用 Google App Engine 開發 Facebook 應用程式，使用官方的 Library 會有一點問題，可到這裡下載別人修改好的 <a href="http://bertrand.guiral.free.fr/facebook_generated_bg.zip">http://bertrand.guiral.free.fr/facebook_generated_bg.zip</a>。<br /><br />下載別人修改好的還要到 <a href="http://code.google.com/p/facebook-java-api/downloads/list">http://code.google.com/p/facebook-java-api/downloads/list</a> 下載依賴包。<br /><br />現在可以開始寫程式了，首先加入一個 Filter 確保所有進入這個頁面的用戶已經登入 Facebook。<br /><pre class="brush: java">package com.blogspot.lawpronotes.filter;<br /><br />import java.io.IOException;<br /><br />import javax.servlet.Filter;<br />import javax.servlet.FilterChain;<br />import javax.servlet.FilterConfig;<br />import javax.servlet.ServletException;<br />import javax.servlet.ServletRequest;<br />import javax.servlet.ServletResponse;<br />import javax.servlet.http.HttpServletRequest;<br />import javax.servlet.http.HttpServletResponse;<br />import javax.servlet.http.HttpSession;<br /><br />import org.w3c.dom.Document;<br /><br />import com.google.code.facebookapi.FacebookException;<br />import com.google.code.facebookapi.FacebookWebappHelper;<br />import com.google.code.facebookapi.FacebookXmlRestClient;<br />import com.google.code.facebookapi.IFacebookRestClient;<br /><br />public class FacebookFilter implements Filter {<br /><br />    private String api_key;<br />    private String secret;<br /><br />    public void init(FilterConfig fConfig) throws ServletException {<br />        // TODO Auto-generated method stub<br />        api_key = "your api key";<br />        secret = "your secret";<br />    }<br /><br />    public void destroy() {<br />        // TODO Auto-generated method stub<br />    }<br /><br />    public void doFilter(ServletRequest req, ServletResponse res,<br />            FilterChain chain) throws IOException, ServletException {<br />        HttpServletRequest request = (HttpServletRequest) req;<br />        HttpServletResponse response = (HttpServletResponse) res;<br /><br />        HttpSession session = request.getSession(true);<br />        IFacebookRestClient&lt;Document&gt; userClient = getUserClient(session);<br />        if (userClient == null) {<br />            userClient = new FacebookXmlRestClient(api_key, secret);<br />            session.setAttribute("facebook.user.client", userClient);<br />        }<br /><br />        FacebookWebappHelper&lt;Document&gt; facebook = new FacebookWebappHelper&lt;Document&gt;(<br />                request, response, api_key, secret, userClient);<br />        String nextPage = request.getRequestURI();<br />        nextPage = nextPage.substring(nextPage.indexOf("/", 1) + 1);<br />        boolean redirectOccurred = facebook.requireLogin(nextPage);<br /><br />        if (redirectOccurred) {<br />            return;<br />        }<br />        redirectOccurred = facebook.requireFrame(nextPage);<br />        if (redirectOccurred) {<br />            return;<br />        }<br /><br />        long facebookUserID;<br />        try {<br />            facebookUserID = userClient.users_getLoggedInUser();<br />        } catch (FacebookException ex) {</pre><pre class="brush: java">//Cannot get user's facebook ID<br />            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,<br />                    "Error while fetching user's facebook ID");<br />            return;<br />        }<br />        chain.doFilter(request, response);<br />    }<br /><br />    public static FacebookXmlRestClient getUserClient(HttpSession session) {<br />        return (FacebookXmlRestClient) session<br />                .getAttribute("facebook.user.client");<br />    }<br /><br />}<br /></pre><br />請自行更改 api_key 和 secret，然後在 web.xml 加上以下內容。<br /><pre class="brush: xml">&lt;filter&gt;<br />    &lt;display-name&gt;FacebookFilter&lt;/display-name&gt;<br />    &lt;filter-name&gt;FacebookFilter&lt;/filter-name&gt;<br />    &lt;filter-class&gt;com.blogspot.lawpronotes.filter.FacebookFilter&lt;/filter-class&gt;<br />&lt;/filter&gt;<br />&lt;filter-mapping&gt;<br />    &lt;filter-name&gt;FacebookFilter&lt;/filter-name&gt;<br />    &lt;url-pattern&gt;*&lt;/url-pattern&gt;<br />&lt;/filter-mapping&gt;<br /></pre><br />登出 Facebook 然後打開 <a href="http://apps.facebook.com/lawpronotes/">http://apps.facebook.com/lawpronotes/</a>&nbsp;頁面看看是否自動跳到 Facebook 登入頁面。<br /><br />下一回: <a href="http://pro.ctlok.com/2010/06/java-develop-facebook-web-app-2.html">使用 Java 開發 Facebook Web App - 2</a><br /><br />相關書籍: <a href="http://www.amazon.com/Facebook-Dummies-Leah-Pearlman/dp/0470527617?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Facebook For Dummies" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0470527617&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0470527617" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Facebook-Era-Networks-Products-Audiences/dp/0137152221?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="The Facebook Era: Tapping Online Social Networks to Build Better Products, Reach New Audiences, and Sell More Stuff" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0137152221&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0137152221" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><a href="http://www.amazon.com/Facebook-Missing-E-Vander-Veer/dp/0596517696?ie=UTF8&amp;tag=program06-20&amp;link_code=bil&amp;camp=213689&amp;creative=392969" imageanchor="1" target="_blank"><img alt="Facebook: The Missing Manual" src="http://ws.amazon.com/widgets/q?MarketPlace=US&amp;ServiceVersion=20070822&amp;ID=AsinImage&amp;WS=1&amp;Format=_SL160_&amp;ASIN=0596517696&amp;tag=program06-20" /></a><img alt="" border="0" height="1" src="http://www.assoc-amazon.com/e/ir?t=program06-20&amp;l=bil&amp;camp=213689&amp;creative=392969&amp;o=1&amp;a=0596517696" style="border: none !important; margin: 0px !important; padding: 0px !important;" width="1" /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/5998578522192555089-6365646868600068930?l=lawpronotes.blogspot.com' alt='' /></div>
+</div>
+
+
+    <footer>
+      <p class="meta">
+        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Lawrence Cheung</span></span>
+
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-03T13:13:00+08:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2010</time>
+        
+
+<span class="categories">
+  
+    <a class='category' href='/blog/tag/facebook/'>Facebook</a>, <a class='category' href='/blog/tag/java/'>Java</a>, <a class='category' href='/blog/tag/java-ee/'>Java EE</a>
+  
+</span>
+
+
+      </p>
+      
+        <div class="sharing">
+  <br/>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+      
+      <p class="meta">
+        
+          <a class="basic-alignment" href="/2010/05/oracle-forms-builder-ie-8.html" title="Previous Post: Oracle Forms Builder + IE 8">&laquo; Oracle Forms Builder + IE 8</a>
+        
+        
+          <a class="basic-alignment pull-right" href="/2010/06/actionscript-3-javascript.html" title="Next Post: Actionscript 3 呼叫 Javascript">Actionscript 3 呼叫 Javascript &raquo;</a>
+        
+      </p>
+    </footer>
+    
+    
+      <section>
+        <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+      </section>
+    
+  </div>
+
+  
+  <div class="span4 sidebar">
+      
+        <section>
+    <h2>About Me</h2>
+    <div class="well">
+        <p>Lawrence Cheung</p>
+        <img src="/images/mail.png" />
+    </div>
+</section>
+<section>
+    <h2>Recent Posts</h2>
+    <div class="well" style="padding: 8px 0;">
+        <ul id="recent_posts" class="nav nav-list">
+            
+            <li class="post">
+                <a href="/blog/2012/07/18/spring-integrate-jpa.html">Spring 整合 JPA</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/11/design-pattern-decorator.html">Design Pattern - Decorator</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/04/design-pattern-singleton.html">Design Pattern - Singleton</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/03/web-app-development-cheat-sheet.html">Web Development Cheat Sheet</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/03/maven-jetty-jsf-2.html">Maven + Jetty 測試  JSF 2 Annotation</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/02/design-pattern-abstract-factory.html">Design Pattern - Abstract Factory</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/04/02/design-pattern-factory.html">Design Pattern - Factory</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/30/maven-setup-jetty-dev-server.html">Maven Setup Jetty Development Server</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/29/design-pattern-observer.html">Design Pattern - Observer</a>
+            </li>
+            
+            <li class="post">
+                <a href="/blog/2012/03/28/design-pattern-strategy-pattern.html">Design Pattern - Strategy</a>
+            </li>
+            
+        </ul>
+    </div>
+</section><section>
+    <div id="recentcomment" class="dsq-widget">
+        <h2 class="dsq-widget-title">Recent Comments</h2>
+        <div class="well">
+            <script type="text/javascript" src="http://pdn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=48&excerpt_length=70"></script>
+        </div>
+    </div>
+</section>
+
+
+
+      
+  </div>
+
+</div>
+
+
+            </div>
+        </div>
+        <footer class="footer">
+            <p>
+  Copyright &copy; 2012 - Lawrence Cheung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+        </footer>
+        
+
+<script type="text/javascript">
+      var disqus_shortname = 'pdn';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://pro.ctlok.com/2010/06/java-facebook-apps-1.html';
+        var disqus_url = 'http://pro.ctlok.com/2010/06/java-facebook-apps-1.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/google-code-prettify/js/prettify.js"></script>
+<script>
+    (function($){
+        $(function(){
+            $("pre").each(function(){
+            	if ($(this).parents(".gist").size() == 0){
+            		$(this).addClass("prettyprint linenums");
+            	}
+            })
+            prettyPrint()
+        });
+    })(jQuery)
+</script>
+
+
+    </div>
+    </body>
+</html>
