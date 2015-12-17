@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Observer Pattern | Programming Design Notes]]></title>
   <link href="http://pro.ctlok.com/blog/tag/observer-pattern/atom.xml" rel="self"/>
   <link href="http://pro.ctlok.com/"/>
-  <updated>2012-11-12T11:03:16+08:00</updated>
+  <updated>2015-12-17T10:59:14+08:00</updated>
   <id>http://pro.ctlok.com/</id>
   <author>
     <name><![CDATA[Lawrence Cheung]]></name>
@@ -35,110 +35,11 @@
 
 <p>你一開始可能會用 Pull 的方法，每隔一段時間會主動去向主題拿取新的內容：</p>
 
-<p><img src="/downloads/code/design-pattern-observer/sample1/uml.png"></p>
+<p>{% img /downloads/code/design-pattern-observer/sample1/uml.png %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (NewsTopic.java)</span> <a href='/downloads/code/design-pattern-observer/sample1/NewsTopic.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.UUID</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NewsTopic</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">messages</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">getMessages</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">messages</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// Assign unique ID to each message for determine is it old message.</span>
-</span><span class='line'>        <span class="n">messages</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">UUID</span><span class="o">.</span><span class="na">randomUUID</span><span class="o">().</span><span class="na">toString</span><span class="o">(),</span> <span class="n">message</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Client.java)</span> <a href='/downloads/code/design-pattern-observer/sample1/Client.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Map.Entry</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.TimerTask</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="kd">extends</span> <span class="n">TimerTask</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">displayedIds</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">NewsTopic</span> <span class="n">topic</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">Client</span><span class="o">(</span><span class="n">NewsTopic</span> <span class="n">topic</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">topic</span> <span class="o">=</span> <span class="n">topic</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">displayNews</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">messages</span> <span class="o">=</span> <span class="n">topic</span><span class="o">.</span><span class="na">getMessages</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">displayedIds</span><span class="o">.</span><span class="na">containsAll</span><span class="o">(</span><span class="n">messages</span><span class="o">.</span><span class="na">keySet</span><span class="o">()))</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="n">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">messages</span><span class="o">.</span><span class="na">entrySet</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">if</span> <span class="o">(!</span><span class="n">displayedIds</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">()))</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span>
-</span><span class='line'>                            <span class="s">&quot;Client %s display message: %s at time: %s&quot;</span><span class="o">,</span>
-</span><span class='line'>                            <span class="n">Integer</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">hashCode</span><span class="o">()),</span>
-</span><span class='line'>                            <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">(),</span> <span class="k">new</span> <span class="n">Date</span><span class="o">()));</span>
-</span><span class='line'>                    <span class="n">displayedIds</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">());</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">displayNews</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-observer/sample1/Main.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Timer</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">NewsTopic</span> <span class="n">topic</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NewsTopic</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Client</span> <span class="n">client1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">(</span><span class="n">topic</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Client</span> <span class="n">client2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">(</span><span class="n">topic</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Client</span> <span class="n">client3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">(</span><span class="n">topic</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Timer</span> <span class="n">timer1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timer</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">timer1</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">client1</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">3000</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Timer</span> <span class="n">timer2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timer</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">timer2</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">client2</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">5000</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Timer</span> <span class="n">timer3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timer</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">timer3</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">client3</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">7000</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">topic</span><span class="o">.</span><span class="na">addMessage</span><span class="o">(</span><span class="s">&quot;News &quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
-</span><span class='line'>                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">5000</span><span class="o">));</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">timer1</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">timer2</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">timer3</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% include_code design-pattern-observer/sample1/NewsTopic.java %}
+{% include_code design-pattern-observer/sample1/Client.java %}
+{% include_code design-pattern-observer/sample1/Main.java %}</p>
 
 <p><code>text 執行結果
 Client 109a4c display message: News 0 at time: Fri Mar 30 00:41:23 CST 2012
@@ -160,103 +61,13 @@ Client 109a4c display message: News 1 at time: Fri Mar 30 00:41:26 CST 2012
 這個方法雖然可以解決延遲的問題，但如果客戶多達 10000 人時，每一個也不停重覆去檢查資料是非常浪費系統資源，
 CPU 長期高工作量，會拖跨了系統的其他程式。</p>
 
-<p><img src="/downloads/code/design-pattern-observer/sample2/uml.png"></p>
+<p>{% img /downloads/code/design-pattern-observer/sample2/uml.png %}</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Subject.java)</span> <a href='/downloads/code/design-pattern-observer/sample2/Subject.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Subject</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerObserver</span><span class="o">(</span><span class="n">Observer</span> <span class="n">observer</span><span class="o">);</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unregisterObserver</span><span class="o">(</span><span class="n">Observer</span> <span class="n">observer</span><span class="o">);</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notifyObservers</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Observer.java)</span> <a href='/downloads/code/design-pattern-observer/sample2/Observer.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Observer</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notify</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (NewsTopic.java)</span> <a href='/downloads/code/design-pattern-observer/sample2/NewsTopic.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.HashSet</span><span class="o">;</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Set</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">NewsTopic</span> <span class="kd">implements</span> <span class="n">Subject</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Set</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;</span> <span class="n">obervers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Observer</span><span class="o">&gt;();</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pushMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">notifyObservers</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerObserver</span><span class="o">(</span><span class="n">Observer</span> <span class="n">observer</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">obervers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">observer</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unregisterObserver</span><span class="o">(</span><span class="n">Observer</span> <span class="n">observer</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">obervers</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">observer</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notifyObservers</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Observer</span> <span class="nl">observer:</span> <span class="n">obervers</span><span class="o">){</span>
-</span><span class='line'>            <span class="n">observer</span><span class="o">.</span><span class="na">notify</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Client.java)</span> <a href='/downloads/code/design-pattern-observer/sample2/Client.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="kd">implements</span> <span class="n">Observer</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notify</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span>
-</span><span class='line'>                <span class="s">&quot;Client %s display message: %s at time: %s&quot;</span><span class="o">,</span>
-</span><span class='line'>                <span class="n">Integer</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">hashCode</span><span class="o">()),</span> <span class="n">message</span><span class="o">,</span> <span class="k">new</span> <span class="n">Date</span><span class="o">()));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Main.java)</span> <a href='/downloads/code/design-pattern-observer/sample2/Main.java'>download</a></figcaption>
- <div class="highlight"><table><tr><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">NewsTopic</span> <span class="n">topic</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NewsTopic</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Client</span> <span class="n">client1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">Client</span> <span class="n">client2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">Client</span> <span class="n">client3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">topic</span><span class="o">.</span><span class="na">registerObserver</span><span class="o">(</span><span class="n">client1</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">topic</span><span class="o">.</span><span class="na">registerObserver</span><span class="o">(</span><span class="n">client2</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">topic</span><span class="o">.</span><span class="na">registerObserver</span><span class="o">(</span><span class="n">client3</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">topic</span><span class="o">.</span><span class="na">pushMessage</span><span class="o">(</span><span class="s">&quot;News &quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
-</span><span class='line'>                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">5000</span><span class="o">));</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% include_code design-pattern-observer/sample2/Subject.java %}
+{% include_code design-pattern-observer/sample2/Observer.java %}
+{% include_code design-pattern-observer/sample2/NewsTopic.java %}
+{% include_code design-pattern-observer/sample2/Client.java %}
+{% include_code design-pattern-observer/sample2/Main.java %}</p>
 
 <p><code>text 執行結果
 Client 10b30a7 display message: News 0 at time: Fri Mar 30 00:54:03 CST 2012
@@ -276,7 +87,7 @@ Client 14318bb display message: News 2 at time: Fri Mar 30 00:54:09 CST 2012
 
 <p>以下的圖片是描述 Observer Pattern 的 Class Diagram。（From Wiki）</p>
 
-<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Observer.svg/500px-Observer.svg.png"></p>
+<p>{% img http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Observer.svg/500px-Observer.svg.png %}</p>
 ]]></content>
   </entry>
   
